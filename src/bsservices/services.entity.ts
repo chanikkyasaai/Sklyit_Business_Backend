@@ -5,10 +5,10 @@ import { Booking } from './../bsbookings/bsbookings.entity'; // Assuming Booking
 
 @Entity('Services')
 export class Services {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     Sid: string;
 
-    @ManyToOne(() => BusinessClients, (businessClient) => businessClient.services)
+    @ManyToOne(() => BusinessClients, (businessClient) => businessClient.services, { onDelete: 'CASCADE' })
     businessClient: BusinessClients;
 
     @Column()
@@ -27,6 +27,6 @@ export class Services {
     @IsDecimal()
     ServiceCost: number;
 
-    @OneToMany(() => Booking, (booking) => booking.service)
+    @OneToMany(() => Booking, (booking) => booking.service, { onDelete: 'CASCADE' })
     bookings: Booking[];
 }

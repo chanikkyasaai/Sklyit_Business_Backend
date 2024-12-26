@@ -4,7 +4,7 @@ import { BusinessClients } from './../business_clients/business_clients.entity';
 
 @Entity('Products')
 export class Products {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     PId: string;
 
     @Column()
@@ -26,6 +26,6 @@ export class Products {
     @Column('int')
     Pqty: number;
 
-    @ManyToOne(() => BusinessClients, (businessClient) => businessClient.products)
+    @ManyToOne(() => BusinessClients, (businessClient) => businessClient.products, { onDelete: 'CASCADE' })
     businessClient: BusinessClients;
 }

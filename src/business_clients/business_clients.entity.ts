@@ -3,10 +3,11 @@ import { IsString } from 'class-validator';
 import { Customers } from './../business_customers/business_customers.entity'; // Assuming the Customers table exists
 import { Services } from './../bsservices/services.entity'; // Assuming the Services table exists
 import { Products } from './../bsproducts/bsproducts.entity'; // Assuming the Products table exists
+import { HasLoyalty } from 'src/loyalty_system/loyalty_system.entity';
 
 @Entity('SKLYIT_business_clients')
 export class BusinessClients {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     BusinessId: string;
 
     @Column({ unique: true })
@@ -52,12 +53,15 @@ export class BusinessClients {
     @Column('text', { array: true })
     BusinessSubTags: string[];
 
-    @OneToMany(() => Customers, (customer) => customer.businessClient)
+    @OneToMany(() => Customers, (customer) => customer.businessClient, { onDelete: 'CASCADE' })
     customers: Customers[];
 
-    @OneToMany(() => Services, (service) => service.businessClient)
+    @OneToMany(() => Services, (service) => service.businessClient, { onDelete: 'CASCADE' })
     services: Services[];
 
-    @OneToMany(() => Products, (product) => product.businessClient)
+    @OneToMany(() => Products, (product) => product.businessClient, { onDelete: 'CASCADE' })
     products: Products[];
+
+    @OneToMany(() => HasLoyalty, (hasLoyalty) => hasLoyalty.businessClient, { onDelete: 'CASCADE' })
+    hasLoyalty: HasLoyalty[];
 }

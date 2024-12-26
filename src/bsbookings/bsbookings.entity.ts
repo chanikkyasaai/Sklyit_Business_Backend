@@ -6,17 +6,17 @@ import { BusinessClients } from './../business_clients/business_clients.entity';
 
 @Entity('Booking')
 export class Booking {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     BookingID: string;
 
-    @ManyToOne(() => Customers, (customer) => customer.bookings)
+    @ManyToOne(() => Customers, (customer) => customer.bookings, { onDelete: 'CASCADE' })
     customer: Customers;
 
-    @ManyToOne(() => Services, (service) => service.bookings)
+    @ManyToOne(() => Services, (service) => service.bookings, { onDelete: 'CASCADE' })
     service: Services;
 
-    @ManyToOne(() => BusinessClients, (businessClient) => businessClient.bookings)
-    businessClient: BusinessClients;
+    // @ManyToOne(() => BusinessClients, (businessClient) => businessClient.bookings)
+    // businessClient: BusinessClients;
 
     @Column()
     @IsString()

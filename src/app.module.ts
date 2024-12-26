@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ExampleModule } from './example/example.module';
 import { BsservicesModule } from './bsservices/bsservices.module';
-// import { Service } from './bsservices/services.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BusinessClientsModule } from './business_clients/business_clients.module';
 import { BusinessCustomersModule } from './business_customers/business_customers.module';
@@ -14,10 +13,20 @@ import { BsbookingsModule } from './bsbookings/bsbookings.module';
 import { BsordersModule } from './bsorders/bsorders.module';
 import { BsproductsModule } from './bsproducts/bsproducts.module';
 import { LoyaltySystemModule } from './loyalty_system/loyalty_system.module';
+import { Services } from './bsservices/services.entity';
+import { BusinessClients } from './business_clients/business_clients.entity';
+import { Customers } from './business_customers/business_customers.entity';
+import { Booking } from './bsbookings/bsbookings.entity';
+import { Orders } from './bsorders/bsorders.entity';
+import { Subscribers } from './subscribers/subscribers.entity';
+import { HasLoyalty } from './loyalty_system/loyalty_system.entity';
+import { Products } from './bsproducts/bsproducts.entity';
+import { Users } from './sklyit_users/sklyit_users.entity';
 // import * as dotenv from 'dotenv';
 @Module({
   imports: [ExampleModule,BsservicesModule,
     ConfigModule.forRoot({
+      isGlobal: true,
       envFilePath: './../.env',
     }),
     TypeOrmModule.forRootAsync({
@@ -30,6 +39,7 @@ import { LoyaltySystemModule } from './loyalty_system/loyalty_system.module';
         const database = configService.get('DB_DATABASE');
 
         if (!host || !port || !username || !password || !database) {
+          console.log(host, port, username)
           throw new Error('DB configuration is not set');
         }
 
@@ -40,7 +50,7 @@ import { LoyaltySystemModule } from './loyalty_system/loyalty_system.module';
           username,
           password,
           database,
-          entities: ['dist//*.entity{.ts,.js}'],
+          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscribers,HasLoyalty,Products,Users],
           autoLoadEntities: true,
           synchronize: true,
           ssl: {

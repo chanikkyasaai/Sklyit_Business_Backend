@@ -6,10 +6,10 @@ import { BusinessClients } from './../business_clients/business_clients.entity';
 
 @Entity('Orders')
 export class Orders {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     Oid: string;
 
-    @ManyToOne(() => Customers, (customer) => customer.orders)
+    @ManyToOne(() => Customers, (customer) => customer.orders, { onDelete: 'CASCADE' })
     customer: Customers;
 
     @Column('timestamp')
@@ -21,6 +21,6 @@ export class Orders {
     @Column('json')
     Products: object[];
 
-    @ManyToOne(() => BusinessClients, (businessClient) => businessClient.orders)
-    businessClient: BusinessClients;
+    // @ManyToOne(() => BusinessClients, (businessClient) => businessClient.orders)
+    // businessClient: BusinessClients;
 }

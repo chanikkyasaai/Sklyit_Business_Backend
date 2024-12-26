@@ -4,7 +4,7 @@ import { Subscribers } from './../subscribers/subscribers.entity'; // Assuming t
 
 @Entity('SKLYIT_users')
 export class Users {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     userId: string;
 
     @Column()
@@ -35,7 +35,7 @@ export class Users {
     @IsString()
     gender: string;
 
-    @ManyToOne(() => Subscribers, (subscriber) => subscriber.premiumId)
+    @ManyToOne(() => Subscribers, (subscriber) => subscriber.premiumId, { onDelete: 'CASCADE' })
     premiumId: number; // Foreign key relation with Subscribers
 
     @Column()

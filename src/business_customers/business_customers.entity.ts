@@ -3,10 +3,11 @@ import { IsString } from 'class-validator';
 import { BusinessClients } from './../business_clients/business_clients.entity'; // Assuming BusinessClients table exists
 import { Booking } from './../bsbookings/bsbookings.entity'; // Assuming Booking table exists
 import { Orders } from './../bsorders/bsorders.entity'; // Assuming Orders table exists
+import { HasLoyalty } from 'src/loyalty_system/loyalty_system.entity';
 
 @Entity('Customers')
 export class Customers {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     CustId: string;
 
     @Column()
@@ -25,12 +26,15 @@ export class Customers {
     @IsString()
     email: string;
 
-    @ManyToOne(() => BusinessClients, (businessClient) => businessClient.customers)
+    @ManyToOne(() => BusinessClients, (businessClient) => businessClient.customers, { onDelete: 'CASCADE' })
     businessClient: BusinessClients;
 
-    @OneToMany(() => Booking, (booking) => booking.customer)
+    @OneToMany(() => Booking, (booking) => booking.customer, { onDelete: 'CASCADE' })
     bookings: Booking[];
 
-    @OneToMany(() => Orders, (order) => order.customer)
+    @OneToMany(() => Orders, (order) => order.customer, { onDelete: 'CASCADE' })
     orders: Orders[];
+
+    @OneToMany(() => HasLoyalty, (hasLoyalty) => hasLoyalty.customer, { onDelete: 'CASCADE' })
+    hasLoyalty: HasLoyalty[];
 }
