@@ -4,8 +4,6 @@ import { SubscribersService } from './subscribers.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Subscribers } from './subscribers.entity';
 
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Subscribers } from './subscribers.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Subscribers])],
