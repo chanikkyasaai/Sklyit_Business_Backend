@@ -9,7 +9,7 @@ import { SubscribersModule } from 'src/subscribers/subscribers.module';
   imports: [TypeOrmModule.forFeature([Users]), SubscribersModule], // Import the SubscribersModule
   controllers: [SklyitUsersController],
   providers: [SklyitUsersService],
-  exports: [SklyitUsersService],
+  exports: [SklyitUsersService,TypeOrmModule.forFeature([Users])],
 })
 export class SklyitUsersModule {}
 
