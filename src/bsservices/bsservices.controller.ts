@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { BsservicesService } from './bsservices.service';
 import { Services } from './services.entity';
 import { CreateServiceDto } from './dto/createServiceDto';
@@ -24,4 +24,19 @@ export class BsservicesController {
     ):Promise<Services>{
         return this.bsservicesService.createServices(bs_id,createServicesDto);
     }
+
+    @Put('services/:service_id')
+    updateServices(
+        @Param('business_id') bs_id: string,
+        @Param('service_id') service_id: string,
+        @Body() updateServicesDto: CreateServiceDto
+    ):Promise<Services>{
+        return this.bsservicesService.updateServices(bs_id,service_id,updateServicesDto);
+    }
+
+    @Delete('services/:service_id')
+    deleteServices(@Param('business_id') bs_id: string, @Param('service_id') service_id: string):Promise<void>{
+        return this.bsservicesService.deleteServices(bs_id,service_id);
+    }
 }
+

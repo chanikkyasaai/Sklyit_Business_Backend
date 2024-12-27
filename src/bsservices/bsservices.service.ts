@@ -12,21 +12,34 @@ export class BsservicesService {
     }
 
     async getServices(bs_id: string): Promise<Services[]> {
-        if (bs_id === null || bs_id === undefined) {
-            throw new Error('bs_id is null or undefined');
+        if (!bs_id) {
+            throw new Error('Business ID is required');
         }
         try {
-            return await this.serviceRepository
-                .createQueryBuilder('service')
-                .innerJoin('service.businessClient', 'businessClient')
-                .where('businessClient.business_id = :bs_id', { bs_id })
-                .getMany();
+            return await this.serviceRepository.find({
+                where: { businessClient: { BusinessId: bs_id } },
+                relations: ['businessClient'], // Ensure the relation is loaded
+            });
         } catch (error) {
             console.log(error);
             throw error;
         }
     }
 
+    async getServiceById(bs_id: string, service_id: string): Promise<Services> {
+        if (!bs_id || !service_id) {
+            throw new Error('Business ID and Service ID are required');
+        }
+        try {
+            return await this.serviceRepository.findOne({
+                where: { businessClient: { BusinessId: bs_id }, Sid: service_id },
+                relations: ['businessClient'], // Ensure the relation is loaded
+            });
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async createServices(bs_id: string, createServicesDto: CreateServiceDto): Promise<Services> {
         if (!bs_id) {
             throw new Error('Business ID is required');
@@ -48,6 +61,48 @@ export class BsservicesService {
         try {
             return await this.serviceRepository.save(service);
             
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async updateServices(bs_id: string, service_id: string, updateServicesDto: CreateServiceDto): Promise<Services> {
+        if (!bs_id || !service_id) {
+            throw new Error('Business ID and Service ID are required');
+        }
+        const { name, description, price } = updateServicesDto;
+        const service = await this.serviceRepository.findOne({
+            where: { businessClient: { BusinessId: bs_id }, Sid: service_id },
+            relations: ['businessClient'], // Ensure the relation is loaded
+        });
+        if (!service) {
+            throw new Error('Service not found');
+        }
+        service.ServiceName = name || service.ServiceName;
+        service.ServiceDesc = description || service.ServiceDesc;
+        service.ServiceCost = price || service.ServiceCost;
+        try {
+            return await this.serviceRepository.save(service);
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async deleteServices(bs_id: string, service_id: string): Promise<void> {
+        if (!bs_id || !service_id) {
+            throw new Error('Business ID and Service ID are required');
+        }
+        const service = await this.serviceRepository.findOne({
+            where: { businessClient: { BusinessId: bs_id }, Sid: service_id },
+            relations: ['businessClient'], // Ensure the relation is loaded
+        });
+        if (!service) {
+            throw new Error('Service not found');
+        }
+        try {
+            await this.serviceRepository.remove(service);
         } catch (error) {
             console.log(error);
             throw error;
