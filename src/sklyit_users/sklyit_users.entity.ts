@@ -15,7 +15,7 @@ export class Users {
     @IsEmail()
     gmail: string;
 
-    @Column('date',{ name: 'date_of_birth'})
+    @Column({ type: 'date',name: 'date_of_birth'})
     @IsDate()
     dob: Date;
 
@@ -41,22 +41,23 @@ export class Users {
     @Column({ name: 'address_doorno', nullable: true })
     addressDoorno: string;
 
-    @Column({ name: 'address_street', nullable: true })
-    addressStreet: string;
+  @Column({ name: 'address_street', nullable: true })
+  addressStreet: string;
 
-    @Column({ name: 'address_city'})
-    addressCity: string;
+  @Column({ name: 'address_city' })
+  addressCity: string;
 
-    @Column({ name: 'address_state'})
-    addressState: string;
+  @Column({ name: 'address_state'})
+  addressState: string;
 
-    @Column({ name: 'address_pincode', nullable: true })
-    addressPincode: string;
+  @Column({ name: 'address_pincode', nullable: true })
+  addressPincode: string;
 
     @Column()
     @IsString()
     usertype: string;
 
     @Column('date', { default: () => 'CURRENT_DATE' })
-    dateofjoining: Date;//
-}
+    dateofjoining: Date;
+
+  }
