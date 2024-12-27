@@ -15,11 +15,11 @@ export class Users {
     @IsEmail()
     gmail: string;
 
-    @Column('date')
+    @Column({ type: 'date',name: 'date_of_birth'})
     @IsDate()
     dob: Date;
 
-    @Column()
+    @Column({ nullable: true })
     @IsString()
     imgurl: string;
 
@@ -31,32 +31,27 @@ export class Users {
     @IsString()
     wtappNo: string;
 
-    @Column()
+    @Column({ nullable: true })
     @IsString()
     gender: string;
 
-    @ManyToOne(() => Subscribers, (subscriber) => subscriber.premiumId, { onDelete: 'CASCADE' })
-    premiumId: number; // Foreign key relation with Subscribers
+    @ManyToOne(() => Subscribers, (subscriber) => subscriber.premiumId)
+    premiumId: string; // Foreign key relation with Subscribers
 
-    @Column()
-    @IsString()
-    address_doorno: string;
+    @Column({ name: 'address_doorno', nullable: true })
+    addressDoorno: string;
 
-    @Column()
-    @IsString()
-    address_street: string;
+  @Column({ name: 'address_street', nullable: true })
+  addressStreet: string;
 
-    @Column()
-    @IsString()
-    address_city: string;
+  @Column({ name: 'address_city' })
+  addressCity: string;
 
-    @Column()
-    @IsString()
-    address_state: string;
+  @Column({ name: 'address_state'})
+  addressState: string;
 
-    @Column()
-    @IsString()
-    address_pincode: string;
+  @Column({ name: 'address_pincode', nullable: true })
+  addressPincode: string;
 
     @Column()
     @IsString()
@@ -64,4 +59,5 @@ export class Users {
 
     @Column('date', { default: () => 'CURRENT_DATE' })
     dateofjoining: Date;
-}
+
+  }
