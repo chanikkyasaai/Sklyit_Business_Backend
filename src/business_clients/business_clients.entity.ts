@@ -72,3 +72,4 @@ export class BusinessClients {
     @OneToMany(() => HasLoyalty, (hasLoyalty) => hasLoyalty.businessClient, { onDelete: 'CASCADE' })
     hasLoyalty: HasLoyalty[];
 }
+
