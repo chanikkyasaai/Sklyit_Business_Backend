@@ -11,17 +11,17 @@ export class Services {
     @ManyToOne(() => BusinessClients, (businessClient) => businessClient.services, { onDelete: 'CASCADE' })
     businessClient: BusinessClients;
 
-    @Column()
+    @Column({ nullable: true })
     @IsString()
-    ImageUrl: string;
+    ImageUrl?: string;
 
     @Column()
     @IsString()
     ServiceName: string;
 
-    @Column()
+    @Column({nullable:true})
     @IsString()
-    ServiceDesc: string;
+    ServiceDesc?: string;
 
     @Column('decimal')
     @IsDecimal()
