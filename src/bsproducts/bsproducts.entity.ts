@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { IsString, IsDecimal } from 'class-validator';
 import { BusinessClients } from './../business_clients/business_clients.entity'; // Assuming BusinessClients table exists
 
@@ -27,5 +27,6 @@ export class Products {
     Pqty: number;
 
     @ManyToOne(() => BusinessClients, (businessClient) => businessClient.products, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'business_id' })
     businessClient: BusinessClients;
 }

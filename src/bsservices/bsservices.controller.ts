@@ -17,6 +17,10 @@ export class BsservicesController {
         return this.bsservicesService.getServices(bs_id);
     }
 
+    @Get('services/:service_id')
+    getServiceById(@Param('business_id') bs_id: string, @Param('service_id') service_id: string): Promise<Services> {
+        return this.bsservicesService.getServiceById(bs_id,service_id);
+    }
     @Post('services')
     createServices(
         @Param('business_id') bs_id: string,
