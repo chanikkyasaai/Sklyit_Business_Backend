@@ -5,6 +5,7 @@ import { Services } from './../bsservices/services.entity'; // Assuming the Serv
 import { Products } from './../bsproducts/bsproducts.entity'; // Assuming the Products table exists
 import { HasLoyalty } from 'src/loyalty_system/loyalty_system.entity';
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
+import { Orders } from 'src/bsorders/bsorders.entity';
 
 @Entity('SKLYIT_business_clients')
 export class BusinessClients {
@@ -71,5 +72,8 @@ export class BusinessClients {
 
     @OneToMany(() => HasLoyalty, (hasLoyalty) => hasLoyalty.businessClient, { onDelete: 'CASCADE' })
     hasLoyalty: HasLoyalty[];
+    
+    @OneToMany(() => Orders, (order) => order.businessClient, { onDelete: 'CASCADE' })
+    orders: Orders[];
 }
 
