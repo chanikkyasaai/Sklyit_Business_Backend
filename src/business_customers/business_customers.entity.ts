@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
-import { IsString } from 'class-validator';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { IsOptional, IsString } from 'class-validator';
 import { BusinessClients } from './../business_clients/business_clients.entity'; // Assuming BusinessClients table exists
 import { Booking } from './../bsbookings/bsbookings.entity'; // Assuming Booking table exists
 import { Orders } from './../bsorders/bsorders.entity'; // Assuming Orders table exists
@@ -27,6 +27,7 @@ export class Customers {
     email: string;
 
     @ManyToOne(() => BusinessClients, (businessClient) => businessClient.customers, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'business_id' })
     businessClient: BusinessClients;
 
     @OneToMany(() => Booking, (booking) => booking.customer, { onDelete: 'CASCADE' })

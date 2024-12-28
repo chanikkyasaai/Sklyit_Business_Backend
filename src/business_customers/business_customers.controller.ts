@@ -1,4 +1,37 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { BusinessCustomersService } from './business_customers.service';
+import { Customers } from './business_customers.entity';
+import { CreateBusinessCustomerDto } from './bscustomer.dto';
 
-@Controller('business-customers')
-export class BusinessCustomersController {}
+@Controller('bs/:business_id/')
+export class BusinessCustomersController {
+    constructor(private readonly businessCustomersService: BusinessCustomersService) { }
+    
+    @Get('bs_customers')
+    async getAllBusinessCustomers(@Param('business_id') bs_id: string): Promise<Customers[]> {
+        return await this.businessCustomersService.getAllBusinessCustomers(bs_id);
+    }
+
+    @Get('bs_customers/:cust_id')
+    async getBusinessCustomerByID(@Param('business_id') bs_id: string, @Param('cust_id') cust_id: string): Promise<Customers> {
+        return await this.businessCustomersService.getBusinessCustomerByID(bs_id, cust_id);
+    }
+
+    @Post('bs_customers')
+    async createBusinessCustomer(
+        @Param('business_id') bs_id: string,
+        @Body() createCustomerDto: CreateBusinessCustomerDto
+    ): Promise<Customers> {
+        return await this.businessCustomersService.createBusinessCustomer(bs_id, createCustomerDto);
+    }
+
+    @Put('bs_customers/:cust_id')
+    async updateBusinessCustomer(@Param('business_id') bs_id: string, @Param('cust_id') cust_id: string, @Body() updateCustomerDto: CreateBusinessCustomerDto): Promise<Customers> {
+        return await this.businessCustomersService.updateBusinessCustomer(bs_id, cust_id, updateCustomerDto);
+    }
+
+    @Delete('bs_customers/:cust_id')
+    async deleteBusinessCustomer(@Param('business_id') bs_id: string, @Param('cust_id') cust_id: string): Promise<void> {
+        return await this.businessCustomersService.deleteBusinessCustomer(bs_id, cust_id);
+    }
+}
