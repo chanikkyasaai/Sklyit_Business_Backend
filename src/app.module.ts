@@ -22,6 +22,10 @@ import { Subscribers } from './subscribers/subscribers.entity';
 import { HasLoyalty } from './loyalty_system/loyalty_system.entity';
 import { Products } from './bsproducts/bsproducts.entity';
 import { Users } from './sklyit_users/sklyit_users.entity';
+import { ChatAppModule } from './chat_app/chatapp.module';
+import { BspostModule } from './bspost/bspost.module';
+import { MongooseModule } from '@nestjs/mongoose';
+
 // import * as dotenv from 'dotenv';
 @Module({
   imports: [ExampleModule,BsservicesModule,
@@ -60,6 +64,14 @@ import { Users } from './sklyit_users/sklyit_users.entity';
       },
       inject: [ConfigService]
     }),
+    MongooseModule.forRootAsync(
+      {
+        useFactory: (configService: ConfigService) => ({
+          uri: configService.get('MONGO_URI'),
+        }),
+        inject: [ConfigService],
+      }
+    ),
     BusinessClientsModule,
     BusinessCustomersModule,
     SubscribersModule,
@@ -67,8 +79,9 @@ import { Users } from './sklyit_users/sklyit_users.entity';
     BsbookingsModule,
     BsordersModule,
     BsproductsModule,
-    LoyaltySystemModule
-
+    LoyaltySystemModule,
+    ChatAppModule,
+    BspostModule
   ],
   controllers: [AppController],
   providers: [AppService],
