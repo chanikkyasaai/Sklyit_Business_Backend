@@ -57,4 +57,11 @@ export class SklyitUsersService {
         return user;
     }
 
+    async validateUser( mobileno: string): Promise<Users> {
+        const user = await this.userRepository.findOne({ where: [{ wtappNo:mobileno }] });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        return user;
+    }
 }

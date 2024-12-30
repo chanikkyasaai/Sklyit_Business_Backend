@@ -41,5 +41,32 @@ export class BspostController {
         @Param('business_id') bs_id: string,
         @Param('id') id: string): Promise<void> {
             return this.postsService.deletePost(bs_id,id);
-        }
+    }
+    
+    @Put('post/:id/like')
+    async likePost(
+        @Param('business_id') bs_id: string,
+        @Param('id') id: string,
+        @Body() likedBy: string
+    ): Promise<PostDocument> {
+        return this.postsService.likePost(bs_id,id,likedBy);
+    }
+
+    @Put('post/:id/unlike')
+    async unlikePost(
+        @Param('business_id') bs_id: string,
+        @Param('id') id: string,
+        @Body() likedBy: string
+    ): Promise<PostDocument> {
+        return this.postsService.unlikePost(bs_id,id,likedBy);
+    }
+
+    @Put('post/:id/comment')
+    async commentPost(
+        @Param('business_id') bs_id: string,
+        @Param('id') id: string,
+        @Body() updateComment:any
+    ): Promise<PostDocument> {
+        return this.postsService.commentPost(bs_id,id,updateComment);
+    }
 }

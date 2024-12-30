@@ -6,6 +6,7 @@ import { CreatePostDto } from './createpost.dto';
 
 @Injectable()
 export class BspostService {
+    
     constructor(
         @InjectModel(Post.name)
         private postModel: Model<Post>) { }
@@ -87,5 +88,65 @@ export class BspostService {
             throw error;
         }
         
+    }
+
+    async likePost(bs_id: string, id: string, likedBy: string): Promise<Post> {
+        if (!bs_id || !id) {
+            throw new Error('Business ID and ID are required');
+        }
+        try {
+            const post = await this.postModel.findOneAndUpdate(
+                { _id: id, business_id: bs_id },
+                { $inc: { likes: 1 } },
+            
+                { new: true }).exec();
+            if (!post) {
+                throw new Error('Post not found');
+            }
+            post.likedBy.push(likedBy);
+            return post;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async unlikePost(bs_id: string, id: string, likedBy: string): Promise<Post> {
+        if (!bs_id || !id) {
+            throw new Error('Business ID and ID are required');
+        }
+        try {
+            const post = await this.postModel.findOneAndUpdate(
+                { _id: id, business_id: bs_id },
+                { $inc: { likes: -1 } },
+                { new: true }).exec();
+            if (!post) {
+                throw new Error('Post not found');
+            }
+            post.likedBy = post.likedBy.filter(user => user !== likedBy);
+            return post;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async commentPost(bs_id: string, id: string,updateComment:any): Promise<Post> {
+        if (!bs_id || !id) {
+            throw new Error('Business ID and ID are required');
+        }
+        try {
+            const post = await this.postModel.findOneAndUpdate(
+                { _id: id, business_id: bs_id },
+                { $push: { comments: { user: updateComment.user, comment: updateComment.comment } } },
+                { new: true }).exec();
+            if (!post) {
+                throw new Error('Post not found');
+            }
+            return post;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
     }
 }

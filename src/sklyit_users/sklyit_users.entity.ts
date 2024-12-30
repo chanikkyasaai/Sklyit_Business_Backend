@@ -4,42 +4,42 @@ import { Subscribers } from './../subscribers/subscribers.entity'; // Assuming t
 
 @Entity('SKLYIT_users')
 export class Users {
-    @PrimaryGeneratedColumn()
-    userId: string;//
+  @PrimaryGeneratedColumn()
+  userId: string;//
 
-    @Column()
-    @IsString()
-    name: string;
+  @Column()
+  @IsString()
+  name: string;
 
-    @Column()
-    @IsEmail()
-    gmail: string;
+  @Column()
+  @IsEmail()
+  gmail: string;
 
-    @Column({ type: 'date',name: 'date_of_birth'})
-    @IsDate()
-    dob: Date;
+  @Column({ type: 'date', name: 'date_of_birth' })
+  @IsDate()
+  dob: Date;
 
-    @Column({ nullable: true })
-    @IsString()
-    imgurl: string;
+  @Column({ nullable: true })
+  @IsString()
+  imgurl: string;
 
-    @Column()
-    @IsString()
-    mobileno: string;
+  @Column()
+  @IsString()
+  mobileno: string;
 
-    @Column()
-    @IsString()
-    wtappNo: string;
+  @Column()
+  @IsString()
+  wtappNo: string;
 
-    @Column({ nullable: true })
-    @IsString()
-    gender: string;
+  @Column({ nullable: true })
+  @IsString()
+  gender: string;
 
-    @ManyToOne(() => Subscribers, (subscriber) => subscriber.premiumId)
-    premiumId: string; // Foreign key relation with Subscribers
+  @ManyToOne(() => Subscribers, (subscriber) => subscriber.premiumId)
+  premiumId: string; // Foreign key relation with Subscribers
 
-    @Column({ name: 'address_doorno', nullable: true })
-    addressDoorno: string;
+  @Column({ name: 'address_doorno', nullable: true })
+  addressDoorno: string;
 
   @Column({ name: 'address_street', nullable: true })
   addressStreet: string;
@@ -47,17 +47,17 @@ export class Users {
   @Column({ name: 'address_city' })
   addressCity: string;
 
-  @Column({ name: 'address_state'})
+  @Column({ name: 'address_state' })
   addressState: string;
 
   @Column({ name: 'address_pincode', nullable: true })
   addressPincode: string;
 
-    @Column()
-    @IsString()
-    usertype: string;
+  @Column()
+  @IsString()
+  usertype: string;
 
-    @Column('date', { default: () => 'CURRENT_DATE' })
-    dateofjoining: Date;
+  @Column('date', { default: () => 'CURRENT_DATE' })
+  dateofjoining: Date;
 
-  }
+}

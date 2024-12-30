@@ -17,6 +17,15 @@ export class Post extends Document {
 
     @Prop({ default: Date.now })
     createdAt: Date;
+
+    @Prop({ default: 0 })
+    likes: number;
+
+    @Prop()
+    likedBy: string[];
+
+    @Prop()
+    comments: Array<{ user: string; comment: string }>;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

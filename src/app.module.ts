@@ -25,6 +25,7 @@ import { Users } from './sklyit_users/sklyit_users.entity';
 import { ChatAppModule } from './chat_app/chatapp.module';
 import { BspostModule } from './bspost/bspost.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from './auth/auth.module';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -81,7 +82,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     BsproductsModule,
     LoyaltySystemModule,
     ChatAppModule,
-    BspostModule
+    BspostModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
