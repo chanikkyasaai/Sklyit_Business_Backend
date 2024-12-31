@@ -26,6 +26,7 @@ import { ChatAppModule } from './chat_app/chatapp.module';
 import { ImageBlobModule } from './imageBlob/imageBlob.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
+import { BspostModule } from './bspost/bspost.module';
 
 // import * as dotenv from 'dotenv';
 @Module({
