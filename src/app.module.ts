@@ -23,8 +23,9 @@ import { HasLoyalty } from './loyalty_system/loyalty_system.entity';
 import { Products } from './bsproducts/bsproducts.entity';
 import { Users } from './sklyit_users/sklyit_users.entity';
 import { ChatAppModule } from './chat_app/chatapp.module';
-import { BspostModule } from './bspost/bspost.module';
+import { ImageBlobModule } from './imageBlob/imageBlob.module';
 import { MongooseModule } from '@nestjs/mongoose';
+
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -64,14 +65,15 @@ import { MongooseModule } from '@nestjs/mongoose';
       },
       inject: [ConfigService]
     }),
-    MongooseModule.forRootAsync(
-      {
-        useFactory: (configService: ConfigService) => ({
-          uri: configService.get('MONGO_URI'),
-        }),
-        inject: [ConfigService],
-      }
-    ),
+   
+  //   MongooseModule.forRootAsync(
+  //     {
+  //       useFactory: (configService: ConfigService) => ({
+  //         uri: configService.get('MONGO_URI'),
+  //       }),
+  //       inject: [ConfigService],
+  //     }
+  //   ),
     BusinessClientsModule,
     BusinessCustomersModule,
     SubscribersModule,
@@ -81,7 +83,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     BsproductsModule,
     LoyaltySystemModule,
     ChatAppModule,
-    BspostModule
+    ImageBlobModule
   ],
   controllers: [AppController],
   providers: [AppService],
