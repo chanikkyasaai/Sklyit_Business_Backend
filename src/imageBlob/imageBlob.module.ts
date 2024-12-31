@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AzureBlobService } from './imageBlob.service';
-import {BlobController} from './imageBlob.controller';
+import { BlobController } from './imageBlob.controller';
 @Module({
-controllers: [BlobController],
+  controllers: [BlobController],
   providers: [AzureBlobService],
   exports: [AzureBlobService], // Make it accessible to other modules
 })
-export class ImageBlobModule {}
+export class ImageBlobModule { }
 
 
 //whereever require do like this
@@ -15,7 +15,7 @@ export class ImageBlobModule {}
 // import { SharedModule } from '../shared/shared.module';
 
 // @Module({
-//    
+//
 //   imports: [ImageBlobModule], // Import the shared module
 //   controllers: [OrderController],
 // })

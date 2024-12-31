@@ -67,14 +67,14 @@ import { BspostModule } from './bspost/bspost.module';
       inject: [ConfigService]
     }),
    
-  //   MongooseModule.forRootAsync(
-  //     {
-  //       useFactory: (configService: ConfigService) => ({
-  //         uri: configService.get('MONGO_URI'),
-  //       }),
-  //       inject: [ConfigService],
-  //     }
-  //   ),
+    MongooseModule.forRootAsync(
+      {
+        useFactory: (configService: ConfigService) => ({
+          uri: configService.get('MONGO_URI'),
+        }),
+        inject: [ConfigService],
+      }
+    ),
     BusinessClientsModule,
     BusinessCustomersModule,
     SubscribersModule,
@@ -85,7 +85,8 @@ import { BspostModule } from './bspost/bspost.module';
     LoyaltySystemModule,
     ChatAppModule,
     BspostModule,
-    AuthModule
+    AuthModule,
+    ImageBlobModule
   ],
   controllers: [AppController],
   providers: [AppService],

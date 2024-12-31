@@ -3,22 +3,27 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post } from './bspost.schema';
 import { Model } from 'mongoose';
 import { CreatePostDto } from './createpost.dto';
+import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 
 @Injectable()
 export class BspostService {
+    private readonly containerName = 'upload-file';
     
     constructor(
         @InjectModel(Post.name)
-        private postModel: Model<Post>) { }
+        private postModel: Model<Post>,
+        private azureBlobService: AzureBlobService
+    ) { }
 
-    async createPost(bs_id: string, createPostDto: CreatePostDto): Promise<Post> {
+    async createPost(bs_id: string, createPostDto: CreatePostDto, file: Express.Multer.File): Promise<Post> {
         if (!bs_id) {
             throw new Error('Business ID is required'); // Throw a clear error if `bs_id` is missing
         }
-        //console.log('CreatePostDto:', createPostDto);
-        // Merge `business_id` into the post data
+        const imageUrl = await this.azureBlobService.upload(file, this.containerName);
+        
         const newPost = new this.postModel({
             ...createPostDto,
+            image: imageUrl,
             business_id: bs_id,
         });
 

@@ -3,10 +3,19 @@ import { Services } from './services.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateServiceDto } from './dto/createServiceDto';
+import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 
 @Injectable()
 export class BsservicesService {
-    constructor(@InjectRepository(Services) private readonly serviceRepository: Repository<Services>,) { }
+
+    private readonly containerName = 'upload-file';
+
+    constructor(
+        @InjectRepository(Services)
+        private readonly serviceRepository: Repository<Services>,
+        private azureBlobService: AzureBlobService
+
+    ) { }
     getHello(): string {
         return 'Hello World!';
     }
@@ -40,13 +49,13 @@ export class BsservicesService {
             throw error;
         }
     }
-    async createServices(bs_id: string, createServicesDto: CreateServiceDto): Promise<Services> {
+    async createServices(bs_id: string, createServicesDto: CreateServiceDto, file: Express.Multer.File): Promise<Services> {
         if (!bs_id) {
             throw new Error('Business ID is required');
         }
-        
+
         const { name, description, price } = createServicesDto;
-        
+        const imageUrl = await this.azureBlobService.upload(file,this.containerName)
         if (!name || !price) {
             throw new Error('Name and Price are required fields');
         }
@@ -55,12 +64,13 @@ export class BsservicesService {
             ServiceName: name,
             ServiceDesc: description || '',
             ServiceCost: price,
+            ImageUrl:imageUrl,
             businessClient: { BusinessId: bs_id }
         });
 
         try {
             return await this.serviceRepository.save(service);
-            
+
         } catch (error) {
             console.log(error);
             throw error;

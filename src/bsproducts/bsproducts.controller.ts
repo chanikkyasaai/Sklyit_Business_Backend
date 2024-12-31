@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { BsproductsService } from './bsproducts.service';
 import { Products } from './bsproducts.entity';
 import { create } from 'domain';
 import { CreateProductDto } from './bsproducts.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('bs/:business_id')
 export class BsproductsController {
@@ -22,9 +23,19 @@ export class BsproductsController {
     }
     
     @Post('products')
+    @UseInterceptors(
+        FileInterceptor('image', {
+            fileFilter: (req, file, callback) => {
+                const isAllowed = ['image/jpeg', 'image/png', 'image/jpg'].some(mime => mime === file.mimetype);
+                callback(isAllowed ? null : new BadRequestException('Only jpeg, png, and jpg files are allowed'), isAllowed);
+            },
+        }),
+    )
     createProducts(@Param('business_id') bs_id: string,
-        @Body() createProductDto: CreateProductDto): Promise<Products> {
-        return this.bsproductsService.createProduct(bs_id, createProductDto);
+        @Body() createProductDto: CreateProductDto,
+        @UploadedFile() file:Express.Multer.File,
+    ): Promise<Products> {
+        return this.bsproductsService.createProduct(bs_id, createProductDto,file);
     }
 
     @Put('products/:product_id')

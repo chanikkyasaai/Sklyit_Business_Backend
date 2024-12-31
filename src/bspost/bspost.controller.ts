@@ -1,17 +1,30 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { BspostService } from './bspost.service';
 import { CreatePostDto } from './createpost.dto';
 import { Post as PostDocument } from './bspost.schema';
+import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('bs/:business_id/')
 export class BspostController {
     constructor(
-        private readonly postsService: BspostService) { }
+        private readonly postsService: BspostService,
+        private readonly azureBlobService: AzureBlobService) { }
 
     @Post('post')
+    @UseInterceptors(
+        FileInterceptor('image', {
+            fileFilter: (req, file, callback) => {
+                const isAllowed = ['image/jpeg', 'image/png', 'image/jpg'].some(mime => mime === file.mimetype);
+                callback(isAllowed ? null : new BadRequestException('Only jpeg, png, and jpg files are allowed'), isAllowed);
+            },
+        }),
+    )
     async createPost(
         @Param('business_id') bs_id: string,
-        @Body() createPostDto: CreatePostDto): Promise<PostDocument> {
-        return this.postsService.createPost(bs_id,createPostDto);
+        @Body() createPostDto: CreatePostDto,
+        @UploadedFile() file: Express.Multer.File
+    ): Promise<PostDocument> {
+        return this.postsService.createPost(bs_id, createPostDto,file);
     }
 
     @Get('post')
@@ -25,7 +38,7 @@ export class BspostController {
     async getPostById(
         @Param('business_id') bs_id: string,
         @Param('id') id: string): Promise<PostDocument> {
-        return this.postsService.getPostById(bs_id,id);
+        return this.postsService.getPostById(bs_id, id);
     }
 
     @Put('post/:id')
@@ -33,23 +46,23 @@ export class BspostController {
         @Param('business_id') bs_id: string,
         @Param('id') id: string,
         @Body() updatePostDto: CreatePostDto): Promise<PostDocument> {
-        return this.postsService.updatePost(bs_id,id,updatePostDto);
+        return this.postsService.updatePost(bs_id, id, updatePostDto);
     }
 
     @Delete('post/:id')
     async deletePost(
         @Param('business_id') bs_id: string,
         @Param('id') id: string): Promise<void> {
-            return this.postsService.deletePost(bs_id,id);
+        return this.postsService.deletePost(bs_id, id);
     }
-    
+
     @Put('post/:id/like')
     async likePost(
         @Param('business_id') bs_id: string,
         @Param('id') id: string,
         @Body() likedBy: string
     ): Promise<PostDocument> {
-        return this.postsService.likePost(bs_id,id,likedBy);
+        return this.postsService.likePost(bs_id, id, likedBy);
     }
 
     @Put('post/:id/unlike')
@@ -58,15 +71,15 @@ export class BspostController {
         @Param('id') id: string,
         @Body() likedBy: string
     ): Promise<PostDocument> {
-        return this.postsService.unlikePost(bs_id,id,likedBy);
+        return this.postsService.unlikePost(bs_id, id, likedBy);
     }
 
     @Put('post/:id/comment')
     async commentPost(
         @Param('business_id') bs_id: string,
         @Param('id') id: string,
-        @Body() updateComment:any
+        @Body() updateComment: any
     ): Promise<PostDocument> {
-        return this.postsService.commentPost(bs_id,id,updateComment);
+        return this.postsService.commentPost(bs_id, id, updateComment);
     }
 }

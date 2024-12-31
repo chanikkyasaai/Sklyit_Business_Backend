@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from './sklyit_users.dto';
 import { Users } from './sklyit_users.entity';
 import { SklyitUsersService } from './sklyit_users.service';
@@ -9,14 +9,23 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class SklyitUsersController {
   constructor(
     private readonly userService: SklyitUsersService,
-  ) {}
+  ) { }
 
   @Post('register')
-  @UseInterceptors(FileInterceptor('myfile'))
-  async registerUser(@Body() createUserDto: CreateUserDto,
-  @UploadedFile() file: Express.Multer.File,): Promise<Users> {
-    if(!file)throw new Error('File is required');
-    return this.userService.registerUser(createUserDto);
+  @UseInterceptors(
+    FileInterceptor('image', {
+      fileFilter: (req, file, callback) => {
+        const isAllowed = ['image/jpeg', 'image/png', 'image/jpg'].some(mime => mime === file.mimetype);
+        callback(isAllowed ? null : new BadRequestException('Only jpeg, png, and jpg files are allowed'), isAllowed);
+      },
+    }),
+  )
+  async registerUser(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<Users> {
+    if (!file) throw new Error('File is required');
+    return this.userService.registerUser(createUserDto,file);
     //return this.userService.registerUser(createUserDto, file);
   }
 

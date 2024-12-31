@@ -9,6 +9,8 @@ import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 
 @Injectable()
 export class SklyitUsersService {
+    private readonly containerName = 'upload-file';
+
     constructor(
         @InjectRepository(Users)
         private readonly userRepository: Repository<Users>,
@@ -19,9 +21,9 @@ export class SklyitUsersService {
         private readonly azureBlobService: AzureBlobService, // Inject AzureBlobService
     ) { }
 
-    async registerUser(createUserDto: CreateUserDto, file?: Express.Multer.File): Promise<Users> {
-        const { gmail, mobileno, premiumId, imgurl } = createUserDto;
-
+    async registerUser(createUserDto: CreateUserDto, file: Express.Multer.File): Promise<Users> {
+        const { gmail, mobileno, premiumId } = createUserDto;
+        
         // Check if user already exists
         const existingUser = await this.userRepository.findOne({
             where: [{ gmail }, { mobileno }],

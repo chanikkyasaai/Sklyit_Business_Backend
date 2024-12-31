@@ -3,19 +3,24 @@ import { Products } from './bsproducts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './bsproducts.dto';
+import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 
 @Injectable()
 export class BsproductsService {
+    private readonly containerName = 'upload-file';
+
     constructor(
         @InjectRepository(Products)
         private readonly productRepository: Repository<Products>,
+                private azureBlobService: AzureBlobService
     ) { }
     
-    async createProduct(bs_id:string,createProductDto: CreateProductDto): Promise<Products> {
+    async createProduct(bs_id:string,createProductDto: CreateProductDto,file:Express.Multer.File): Promise<Products> {
         if (!bs_id) {
             throw new Error('Business ID is required');
         }
-        const { name, description, imageUrl, price, quantity } = createProductDto;
+        const { name, description, price, quantity } = createProductDto;
+        const imageUrl = await this.azureBlobService.upload(file, this.containerName);
         const product = this.productRepository.create({
             Pname: name,
             Pdesc: description || '',

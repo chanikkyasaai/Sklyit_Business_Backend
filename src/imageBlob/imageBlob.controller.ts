@@ -35,7 +35,6 @@ export class BlobController {
   ) // Ensure 'myfile' matches the key in your Postman request
   async upload(@UploadedFile() file: Express.Multer.File): Promise<string> {
     console.log('Uploaded file:', file);
-
     if (!file) {
       throw new BadRequestException('No file was uploaded.');
     }
