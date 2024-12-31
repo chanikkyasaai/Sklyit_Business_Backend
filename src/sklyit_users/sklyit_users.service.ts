@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from './sklyit_users.entity';
 import { CreateUserDto } from './sklyit_users.dto';
+import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 
 
 @Injectable()
@@ -14,10 +15,12 @@ export class SklyitUsersService {
 
         @InjectRepository(Subscribers)
         private readonly subscribersRepository: Repository<Subscribers>,
+
+        private readonly azureBlobService: AzureBlobService, // Inject AzureBlobService
     ) { }
 
-    async registerUser(createUserDto: CreateUserDto): Promise<Users> {
-        const { gmail, mobileno, premiumId } = createUserDto;
+    async registerUser(createUserDto: CreateUserDto, file?: Express.Multer.File): Promise<Users> {
+        const { gmail, mobileno, premiumId, imgurl } = createUserDto;
 
         // Check if user already exists
         const existingUser = await this.userRepository.findOne({
@@ -35,6 +38,17 @@ export class SklyitUsersService {
             subscriber = await this.subscribersRepository.findOne({ where: { premiumId } });
             if (!subscriber) {
                 throw new NotFoundException(`Subscriber with premiumId ${premiumId} not found`);
+            }
+        }
+
+        // If a file is provided, upload it to Azure Blob Storage
+        if (file) {
+            try {
+                const imageUrl = await this.azureBlobService.upload(file, 'upload-file');
+                createUserDto.imgurl = imageUrl; // Add image URL to DTO
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                throw new Error('Failed to upload image');
             }
         }
 

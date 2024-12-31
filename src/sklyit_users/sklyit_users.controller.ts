@@ -1,16 +1,23 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { CreateUserDto } from './sklyit_users.dto';
 import { Users } from './sklyit_users.entity';
 import { SklyitUsersService } from './sklyit_users.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 
 @Controller('users')
 export class SklyitUsersController {
-  constructor(private readonly userService: SklyitUsersService) {}
+  constructor(
+    private readonly userService: SklyitUsersService,
+  ) {}
 
   @Post('register')
-  async registerUser(@Body() createUserDto: CreateUserDto): Promise<Users> {
+  @UseInterceptors(FileInterceptor('myfile'))
+  async registerUser(@Body() createUserDto: CreateUserDto,
+  @UploadedFile() file: Express.Multer.File,): Promise<Users> {
+    if(!file)throw new Error('File is required');
     return this.userService.registerUser(createUserDto);
+    //return this.userService.registerUser(createUserDto, file);
   }
 
   @Get()
