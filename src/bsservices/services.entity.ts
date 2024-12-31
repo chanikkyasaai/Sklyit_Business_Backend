@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
-import { IsString, IsDecimal } from 'class-validator';
+import { IsString, IsDecimal, IsNumber } from 'class-validator';
 import { BusinessClients } from './../business_clients/business_clients.entity'; // Assuming BusinessClients table exists
 import { Booking } from './../bsbookings/bsbookings.entity'; // Assuming Booking table exists
 
@@ -28,6 +28,10 @@ export class Services {
     @IsDecimal()
     ServiceCost: number;
 
+    @Column({ default: 0 })
+    @IsNumber()
+    Sflag: number;
+    
     @OneToMany(() => Booking, (booking) => booking.service, { onDelete: 'CASCADE' })
     bookings: Booking[];
 }

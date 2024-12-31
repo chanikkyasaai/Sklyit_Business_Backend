@@ -14,14 +14,30 @@ export class BsservicesController {
     }
 
     @Get('services')
-    getServices(@Param('business_id')bs_id: string): Promise<Services[]> {
+    getServices(@Param('business_id') bs_id: string): Promise<Services[]> {
         return this.bsservicesService.getServices(bs_id);
     }
 
     @Get('services/:service_id')
     getServiceById(@Param('business_id') bs_id: string, @Param('service_id') service_id: string): Promise<Services> {
-        return this.bsservicesService.getServiceById(bs_id,service_id);
+        return this.bsservicesService.getServiceById(bs_id, service_id);
     }
+
+    @Get('service')
+    getServicesByFlag(
+        @Param('business_id') bs_id: string,
+    ): Promise<Services[]> {
+        return this.bsservicesService.getServicesByFlag(bs_id);
+    }
+
+    @Get('service/:service_id')
+    getServiceByFlag(
+        @Param('business_id') bs_id: string,
+        @Param('service_id') service_id:string,
+    ): Promise<Services>{
+        return this.bsservicesService.getServiceByFlag(bs_id, service_id);
+    }
+    
     @Post('services')
     @UseInterceptors(
         FileInterceptor('image', {
@@ -35,8 +51,8 @@ export class BsservicesController {
         @Param('business_id') bs_id: string,
         @Body() createServicesDto: CreateServiceDto,
         @UploadedFile() file: Express.Multer.File
-    ):Promise<Services>{
-        return this.bsservicesService.createServices(bs_id,createServicesDto,file);
+    ): Promise<Services> {
+        return this.bsservicesService.createServices(bs_id, createServicesDto, file);
     }
 
     @Put('services/:service_id')
@@ -44,13 +60,21 @@ export class BsservicesController {
         @Param('business_id') bs_id: string,
         @Param('service_id') service_id: string,
         @Body() updateServicesDto: CreateServiceDto
-    ):Promise<Services>{
-        return this.bsservicesService.updateServices(bs_id,service_id,updateServicesDto);
+    ): Promise<Services> {
+        return this.bsservicesService.updateServices(bs_id, service_id, updateServicesDto);
     }
 
+    @Put('service/:service:id')
+    updateFlag(
+        @Param('business_id') bs_id: string,
+        @Param('service_id') service_id: string
+    ): Promise<Services> {
+        return this.bsservicesService.updateServiceFlag(bs_id, service_id);
+    }    
+        
     @Delete('services/:service_id')
-    deleteServices(@Param('business_id') bs_id: string, @Param('service_id') service_id: string):Promise<void>{
-        return this.bsservicesService.deleteServices(bs_id,service_id);
+    deleteServices(@Param('business_id') bs_id: string, @Param('service_id') service_id: string): Promise<void> {
+        return this.bsservicesService.deleteServices(bs_id, service_id);
     }
 }
 

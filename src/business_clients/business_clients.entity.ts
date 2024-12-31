@@ -1,11 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
-import { IsEmail, IsString, Matches } from 'class-validator';
+import { IsEmail, IsNumber, IsString, Matches } from 'class-validator';
 import { Customers } from './../business_customers/business_customers.entity'; // Assuming the Customers table exists
 import { Services } from './../bsservices/services.entity'; // Assuming the Services table exists
 import { Products } from './../bsproducts/bsproducts.entity'; // Assuming the Products table exists
 import { HasLoyalty } from 'src/loyalty_system/loyalty_system.entity';
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
 import { Orders } from 'src/bsorders/bsorders.entity';
+import { Booking } from 'src/bsbookings/bsbookings.entity';
 
 @Entity('SKLYIT_business_clients')
 export class BusinessClients {
@@ -37,6 +38,7 @@ export class BusinessClients {
     @IsEmail()
     shopemail: string;
 
+    
     @Column()
     @IsString()
     @Matches(/^[0-9]{10}$/, { message: 'Mobile number must be 10 digits' })
@@ -57,6 +59,10 @@ export class BusinessClients {
     @Column('text', { array: true, nullable: true })
     BusinessSubTags?: string[];
 
+    @Column({ nullable: true })
+    @IsNumber()
+    loyaltypts?: number;
+
     @OneToOne(() => Users, { onDelete: 'CASCADE', cascade: true })
     @JoinColumn({ name: 'userId' })
     userId: Users;
@@ -75,5 +81,8 @@ export class BusinessClients {
     
     @OneToMany(() => Orders, (order) => order.businessClient, { onDelete: 'CASCADE' })
     orders: Orders[];
+
+    @OneToMany(() => Booking, (booking) => booking.businessClient, { onDelete: 'CASCADE' })
+    bookings: Booking[];
 }
 

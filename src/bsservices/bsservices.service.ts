@@ -49,6 +49,38 @@ export class BsservicesService {
             throw error;
         }
     }
+
+    async getServicesByFlag(
+        bs_id:string
+    ): Promise<Services[]>{
+        if (!bs_id) {
+            throw new Error("Business id is required")
+        }
+        try {
+            return await this.serviceRepository.find({
+                where: { businessClient: { BusinessId: bs_id } ,Sflag:0},
+                relations: ['businessClient'], // Ensure the relation is loaded
+            });
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async getServiceByFlag(bs_id: string, service_id: string): Promise<Services>{
+        if (!bs_id || !service_id) {
+            throw new Error('Business ID and Service ID are required');
+        }
+        try {
+            return await this.serviceRepository.findOne({
+                where: { businessClient: { BusinessId: bs_id }, Sid: service_id },
+                relations: ['businessClient'], // Ensure the relation is loaded
+            });
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async createServices(bs_id: string, createServicesDto: CreateServiceDto, file: Express.Multer.File): Promise<Services> {
         if (!bs_id) {
             throw new Error('Business ID is required');
@@ -100,6 +132,28 @@ export class BsservicesService {
         }
     }
 
+    async updateServiceFlag(
+        bs_id: string,
+        service_id: string
+    ):Promise<Services> {
+        if (!bs_id || !service_id) {
+            throw new Error('Business ID and Service ID are required');
+        }
+        const service = await this.serviceRepository.findOne({
+            where: { businessClient: { BusinessId: bs_id }, Sid: service_id },
+            relations: ['businessClient'], // Ensure the relation is loaded
+        });
+        if (!service) {
+            throw new Error('Service not found');
+        }
+        service.Sflag = 1;
+        try {
+            return await this.serviceRepository.save(service);
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async deleteServices(bs_id: string, service_id: string): Promise<void> {
         if (!bs_id || !service_id) {
             throw new Error('Business ID and Service ID are required');

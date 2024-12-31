@@ -22,6 +22,21 @@ export class BsproductsController {
         return this.bsproductsService.getProductById(bs_id, product_id);
     }
     
+    @Get('product')
+    getProductsByFlag(
+        @Param('business_id') bs_id: string,
+    ): Promise<Products[]> {
+        return this.bsproductsService.getProductsByFlag(bs_id);
+    }
+
+    @Get('product/:product_id')
+    getProductByFlag(
+        @Param('product_id') product_id: string,
+        @Param('business_id') bs_id: string,
+    ): Promise<Products> {
+        return this.bsproductsService.getProductByFlag(bs_id, product_id);
+    }
+        
     @Post('products')
     @UseInterceptors(
         FileInterceptor('image', {
@@ -45,6 +60,14 @@ export class BsproductsController {
         return this.bsproductsService.updateProduct(bs_id, product_id, updateProductDto);
     }
 
+    @Put('product/:product_id')
+    updateFlag(
+        @Param('business_id') bs_id: string,
+        @Param('product_id') product_id: string,
+    ): Promise<Products>{
+        return this.bsproductsService.updateFlag(bs_id, product_id);
+    }
+    
     @Delete('products/:product_id')
     deleteProducts(@Param('business_id') bs_id: string,
         @Param('product_id') product_id: string): Promise<void> {

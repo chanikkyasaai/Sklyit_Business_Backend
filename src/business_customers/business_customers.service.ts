@@ -35,6 +35,38 @@ export class BusinessCustomersService {
         }
     }
 
+    async getAllBusinessCustomersByFlag(bs_id: string): Promise<Customers[]> {
+        if(!bs_id) {
+            throw new Error('Business ID is required');
+        }
+        try{
+            return await this.CustomersRepository.find({
+                where: { businessClient: { BusinessId: bs_id }, Bflag: 0 },
+                relations: ['businessClient'], // Ensure the relation is loaded
+            });
+        }
+        catch(error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async getBusinessCustomerByFlag(bs_id: string, cust_id: string): Promise<Customers> {
+        if (!bs_id || !cust_id) {
+            throw new Error('Business ID and Customer ID are required');
+        }
+        try {
+
+            return await this.CustomersRepository.findOne({
+                where: { businessClient: { BusinessId: bs_id }, CustId: cust_id , Bflag: 0 },
+                relations: ['businessClient'], // Ensure the relation is loaded
+            });
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async createBusinessCustomer(bs_id: string, createCustomerDto: CreateBusinessCustomerDto): Promise<Customers> {
         const { Name, email, MobileNo, address } = createCustomerDto;
         const exists = await this.CustomersRepository.findOne({
@@ -89,6 +121,22 @@ export class BusinessCustomersService {
         }
     }
 
+    async updateBusinessCustomerFlag(bs_id: string, cust_id: string): Promise<Customers> {
+        const customer = await this.CustomersRepository.findOne({
+            where: { businessClient: { BusinessId: bs_id }, CustId: cust_id },
+            relations: ['businessClient'], // Ensure the relation is loaded
+        });
+        if (!customer) {
+            throw new Error('Customer not found');
+        }
+        customer.Bflag = 1;
+        try {
+            return await this.CustomersRepository.save(customer);
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async deleteBusinessCustomer(bs_id: string, cust_id: string): Promise<void> {
         const customer = await this.CustomersRepository.findOne({
             where: { businessClient: { BusinessId: bs_id }, CustId: cust_id },

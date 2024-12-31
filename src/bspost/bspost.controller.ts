@@ -10,7 +10,7 @@ export class BspostController {
         private readonly postsService: BspostService,
         private readonly azureBlobService: AzureBlobService) { }
 
-    @Post('post')
+    @Post('posts')
     @UseInterceptors(
         FileInterceptor('image', {
             fileFilter: (req, file, callback) => {
@@ -24,24 +24,38 @@ export class BspostController {
         @Body() createPostDto: CreatePostDto,
         @UploadedFile() file: Express.Multer.File
     ): Promise<PostDocument> {
-        return this.postsService.createPost(bs_id, createPostDto,file);
+        return this.postsService.createPost(bs_id, createPostDto, file);
     }
 
-    @Get('post')
+    @Get('posts')
     async getAllPosts(
         @Param('business_id') bs_id: string
     ): Promise<PostDocument[]> {
         return this.postsService.getAllPosts(bs_id);
     }
 
-    @Get('post/:id')
+    @Get('post')
+    async getAllPostsByFlag(
+        @Param('business_id') bs_id: string
+    ): Promise<PostDocument[]> {
+        return this.postsService.getAllPostsByFlag(bs_id);
+    }
+    
+    @Get('posts/:id')
     async getPostById(
         @Param('business_id') bs_id: string,
         @Param('id') id: string): Promise<PostDocument> {
         return this.postsService.getPostById(bs_id, id);
     }
 
-    @Put('post/:id')
+    @Get('post/:id')
+    async getPostByFlag(
+        @Param('business_id') bs_id: string,
+        @Param('id') id: string): Promise<PostDocument> {
+        return this.postsService.getPostByFlag(bs_id, id);
+    }
+
+    @Put('posts/:id')
     async updatePost(
         @Param('business_id') bs_id: string,
         @Param('id') id: string,
@@ -49,14 +63,14 @@ export class BspostController {
         return this.postsService.updatePost(bs_id, id, updatePostDto);
     }
 
-    @Delete('post/:id')
+    @Delete('posts/:id')
     async deletePost(
         @Param('business_id') bs_id: string,
         @Param('id') id: string): Promise<void> {
         return this.postsService.deletePost(bs_id, id);
     }
 
-    @Put('post/:id/like')
+    @Put('posts/:id/like')
     async likePost(
         @Param('business_id') bs_id: string,
         @Param('id') id: string,
@@ -65,7 +79,7 @@ export class BspostController {
         return this.postsService.likePost(bs_id, id, likedBy);
     }
 
-    @Put('post/:id/unlike')
+    @Put('posts/:id/unlike')
     async unlikePost(
         @Param('business_id') bs_id: string,
         @Param('id') id: string,
@@ -74,12 +88,21 @@ export class BspostController {
         return this.postsService.unlikePost(bs_id, id, likedBy);
     }
 
-    @Put('post/:id/comment')
+    @Put('posts/:id/comment')
     async commentPost(
         @Param('business_id') bs_id: string,
         @Param('id') id: string,
         @Body() updateComment: any
     ): Promise<PostDocument> {
         return this.postsService.commentPost(bs_id, id, updateComment);
+    }
+
+    @Put('posts/:id/uncomment')
+    async uncommentPost(
+        @Param('business_id') bs_id: string,
+        @Param('id') id: string,
+        @Body() user: string
+    ): Promise<PostDocument> {
+        return this.postsService.uncommentPost(bs_id, id,user);
     }
 }

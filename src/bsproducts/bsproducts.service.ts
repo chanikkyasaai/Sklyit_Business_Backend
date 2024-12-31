@@ -7,12 +7,13 @@ import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 
 @Injectable()
 export class BsproductsService {
+    
     private readonly containerName = 'upload-file';
-
+    
     constructor(
         @InjectRepository(Products)
         private readonly productRepository: Repository<Products>,
-                private azureBlobService: AzureBlobService
+        private azureBlobService: AzureBlobService
     ) { }
     
     async createProduct(bs_id:string,createProductDto: CreateProductDto,file:Express.Multer.File): Promise<Products> {
@@ -62,7 +63,53 @@ export class BsproductsService {
             console.log(error);
         }
     }
-
+    
+    async getProductsByFlag( bs_id: string): Promise<Products[]> {
+        if ( !bs_id) {
+            throw new Error('Product ID and Business ID are required');
+        }
+        try {
+            return await this.productRepository.find({
+                where: { businessClient: { BusinessId: bs_id } ,Pflag:0},
+                relations: ['businessClient'], // Ensure the relation is loaded
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+    async getProductByFlag(bs_id: string, product_id: string): Promise<Products> {
+        if (!bs_id || !product_id) {
+            throw new Error('Business ID and Product ID are required');
+        }
+        try {
+            return await this.productRepository.findOne({
+                where: { businessClient: { BusinessId: bs_id }, PId: product_id ,Pflag:0},
+                relations: ['businessClient'], // Ensure the relation is loaded
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        
+    }
+    async updateFlag(bs_id: string, product_id: string): Promise<Products> {
+        if (!bs_id || !product_id) {
+            throw new Error('Business ID and Product ID are required');
+        }
+        const product = await this.productRepository.findOne({
+            where: { businessClient: { BusinessId: bs_id }, PId: product_id },
+            relations: ['businessClient'], // Ensure the relation is loaded
+        });
+        if (!product) {
+            throw new Error('Product not found');
+        }
+        product.Pflag = 1;
+        try {
+            return await this.productRepository.save(product);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     async deleteProduct(bs_id: string, product_id: string): Promise<void> {
         if (!bs_id || !product_id) {
             throw new Error('Business ID and Product ID are required');

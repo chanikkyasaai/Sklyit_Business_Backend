@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { IsString } from 'class-validator';
 import { Customers } from './../business_customers/business_customers.entity'; // Assuming Customers table exists
 import { Services } from './../bsservices/services.entity'; // Assuming Services table exists
@@ -15,8 +15,9 @@ export class Booking {
     @ManyToOne(() => Services, (service) => service.bookings, { onDelete: 'CASCADE' })
     service: Services;
 
-    // @ManyToOne(() => BusinessClients, (businessClient) => businessClient.bookings)
-    // businessClient: BusinessClients;
+    @ManyToOne(() => BusinessClients, (businessClient) => businessClient.bookings)
+    @JoinColumn({ name: 'business_id' })
+    businessClient: BusinessClients;
 
     @Column()
     @IsString()

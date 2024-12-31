@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { BusinessClients } from './../business_clients/business_clients.entity'; // Assuming BusinessClients table exists
 import { Booking } from './../bsbookings/bsbookings.entity'; // Assuming Booking table exists
 import { Orders } from './../bsorders/bsorders.entity'; // Assuming Orders table exists
@@ -25,6 +25,10 @@ export class Customers {
     @Column()
     @IsString()
     email: string;
+
+    @Column({ default: 0 })
+    @IsNumber()
+    Bflag: number;
 
     @ManyToOne(() => BusinessClients, (businessClient) => businessClient.customers, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'business_id' })

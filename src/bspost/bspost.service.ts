@@ -45,12 +45,23 @@ export class BspostService {
         
     }
 
+    async getAllPostsByFlag(bs_id: string): Promise<Post[]> {
+        if (!bs_id) {
+            throw new Error('Business ID is required');
+        }
+        try {
+            return await this.postModel.find({ business_id: bs_id ,Pflag:0}).exec();
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async getPostById(bs_id: string, id: string): Promise<Post> {
         if (!bs_id || !id) {
             throw new Error('Business ID and ID are required');
         }
         try {
-            const post = await this.postModel.findById({ id, business_id: bs_id }).exec();
+            const post = await this.postModel.findById({ _id: id, business_id: bs_id }).exec();
             if (!post) {
                 throw new Error('Post not found');
             }
@@ -62,12 +73,46 @@ export class BspostService {
         
     }
 
+    async getPostByFlag(bs_id: string, id: string): Promise<Post> {
+        if (!bs_id || !id) {
+            throw new Error('Business ID and ID are required');
+        }
+        try {
+            const post = await this.postModel.findById({ _id: id, business_id: bs_id ,Pflag:0}).exec();
+            if (!post) {
+                throw new Error('Post not found');
+            }
+            return post;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async uncommentPost(bs_id: string, id: string, user: string): Promise<Post> {
+        if (!bs_id || !id || !user) {
+            throw new Error('Business ID, ID and User are required');
+        }
+        try {
+            const post = await this.postModel.findOneAndUpdate(
+                { _id: id, business_id: bs_id },
+                {$pull: { comments: { user } }},
+                { new: true }).exec();
+            if (!post) {
+                throw new Error('Post not found');
+            }
+            return post;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async deletePost(bs_id: string, id: string): Promise<void> {
         if (!bs_id || !id) {
             throw new Error('Business ID and ID are required');
         }
         try {
-            const post = await this.postModel.findByIdAndDelete({ id, business_id: bs_id }).exec();
+            const post = await this.postModel.findByIdAndDelete({ _id: id, business_id: bs_id }).exec();
             if (!post) {
                 throw new Error('Post not found');
             }

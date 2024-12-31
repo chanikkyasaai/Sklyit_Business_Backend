@@ -26,6 +26,9 @@ export class Post extends Document {
 
     @Prop()
     comments: Array<{ user: string; comment: string }>;
+
+    @Prop({ default: 0 })
+    Pflag: number;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
