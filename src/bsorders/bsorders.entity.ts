@@ -1,7 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { IsString } from 'class-validator';
 import { Customers } from './../business_customers/business_customers.entity';
-// Assuming Customers table exists
 import { BusinessClients } from './../business_clients/business_clients.entity'; // Assuming BusinessClients table exists
 
 @Entity('Orders')
@@ -17,7 +15,6 @@ export class Orders {
     Odate: Date;
 
     @Column('json', { nullable: true })
-
     Services: object[];
 
     @Column('json', { nullable: true })

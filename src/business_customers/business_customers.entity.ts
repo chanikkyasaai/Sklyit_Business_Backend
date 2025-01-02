@@ -42,4 +42,8 @@ export class Customers {
 
     @OneToMany(() => HasLoyalty, (hasLoyalty) => hasLoyalty.customer, { onDelete: 'CASCADE' })
     hasLoyalty: HasLoyalty[];
+
+    @Column('date', { default: () => 'CURRENT_DATE' })
+    created_at: Date;
+    
 }
