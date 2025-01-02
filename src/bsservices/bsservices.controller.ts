@@ -64,7 +64,7 @@ export class BsservicesController {
         return this.bsservicesService.updateServices(bs_id, service_id, updateServicesDto);
     }
 
-    @Put('service/:service:id')
+    @Put('service/:service_id')
     updateFlag(
         @Param('business_id') bs_id: string,
         @Param('service_id') service_id: string

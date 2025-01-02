@@ -50,4 +50,10 @@ export class BusinessCustomersController {
     async deleteBusinessCustomer(@Param('business_id') bs_id: string, @Param('cust_id') cust_id: string): Promise<void> {
         return await this.businessCustomersService.deleteBusinessCustomer(bs_id, cust_id);
     }
+
+    @Get('new_old_customers')
+    async getNewOldCustomers(@Param('business_id') bs_id: string):
+        Promise<{ newCustomers: number; oldCustomers: number; newPercentage: number; oldPercentage: number }>{
+        return await this.businessCustomersService.getNewOldCustomers(bs_id);
+    }
 }

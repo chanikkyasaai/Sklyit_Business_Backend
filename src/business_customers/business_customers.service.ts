@@ -4,11 +4,13 @@ import { Customers } from './business_customers.entity';
 import { Not, Repository } from 'typeorm';
 import { CreateBusinessCustomerDto } from './bscustomer.dto';
 
+
 @Injectable()
 export class BusinessCustomersService {
     constructor(
         @InjectRepository(Customers)
         private readonly CustomersRepository: Repository<Customers>,
+        
     ) { }
 
     async getAllBusinessCustomers(bs_id: string): Promise<Customers[]> {
@@ -152,4 +154,50 @@ export class BusinessCustomersService {
             throw error;
         }
     }
+
+    async getNewOldCustomers(bs_id: string): Promise<{ newCustomers: number; oldCustomers: number; newPercentage: number; oldPercentage: number }> {
+        if(!bs_id) {
+            throw new Error('Business ID is required');
+        }
+        try {
+            const [newCustomers, oldCustomers] = await Promise.all([
+                this.CustomersRepository
+                    .createQueryBuilder('customers')
+                    .where('customers.business_id = :bs_id', { bs_id })
+                    .andWhere('customers.created_at >= NOW() - INTERVAL \'30 days\'')
+                    .getCount(),
+                this.CustomersRepository
+                    .createQueryBuilder('customers')
+                    .where('customers.business_id = :bs_id', { bs_id })
+                    .andWhere('customers.created_at < NOW() - INTERVAL \'30 days\'')
+                    .getCount(),
+            ]);
+
+            const totalCustomers = newCustomers + oldCustomers;
+
+            if (totalCustomers === 0) {
+                return {
+                    newCustomers: 0,
+                    oldCustomers: 0,
+                    newPercentage: 0,
+                    oldPercentage: 0,
+                };
+            }
+
+            return {
+                newCustomers,
+                oldCustomers,
+                newPercentage: (newCustomers / totalCustomers) * 100,
+                oldPercentage: (oldCustomers / totalCustomers) * 100,
+            };
+        }catch(error) {
+            console.log(error);
+            throw error;
+        }
+    }
 }
+/*
+async calculateCustomerPercentagesByBusiness(businessId: string): Promise<{ newCustomers: number; oldCustomers: number; newPercentage: number; oldPercentage: number }> {
+        
+    }
+*/
