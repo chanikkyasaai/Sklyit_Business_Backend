@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { BsordersService } from './bsorders.service';
 import { Orders } from './bsorders.entity';
 import { CreateOrdersDto } from './bsorders.dto';
@@ -30,5 +30,24 @@ export class BsordersController {
     @Delete('orders/:Oid')
     async deleteOrder(@Param('business_id') business_id: string,@Param('Oid') Oid: string): Promise<void> {
       return this.bsordersService.deleteOrder(business_id, Oid);
-    }
+  }
+  // Endpoint to get top 3 services for a given period
+  @Get('top-services')
+  async getTopServices(
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+    @Param('business_id') businessId: number,
+  ) {
+    return this.bsordersService.getTop3Services(startDate, endDate, businessId);
+  }
+
+  @Get('new_old_customer_revenue')
+  async calculateRevenueByCustomerType(@Param('business_id') businessId: string): Promise<{
+    newCustomerRevenue: number;
+    oldCustomerRevenue: number;
+    newCustomerRevenuePercentage: number;
+    oldCustomerRevenuePercentage: number;
+  }> {
+    return await this.bsordersService.calculateRevenueByCustomerType(businessId);
+  }
 }
