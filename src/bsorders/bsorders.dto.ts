@@ -38,8 +38,8 @@ class ServiceDto {
 
 class ProductDto {
     @IsString()
-    pname:string
-
+    pname: string;
+  
     @IsNumber()
     cost: number;
 }

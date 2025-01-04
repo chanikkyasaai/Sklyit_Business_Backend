@@ -25,7 +25,7 @@ export class SklyitUsersController {
         @Body() createUserDto: CreateUserDto,
         @UploadedFile() file: Express.Multer.File,
     ): Promise<Users> {
-        if (!file) throw new Error('File is required');
+        
         return this.userService.registerUser(createUserDto, file);
         //return this.userService.registerUser(createUserDto, file);
     }
