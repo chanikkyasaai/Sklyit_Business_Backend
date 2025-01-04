@@ -2,8 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BusinessClients } from './business_clients.entity';
 import { Repository } from 'typeorm';
-import { CreateBusinessClientDto } from './business_clients.dto';
+import { CreateBusinessClientDto, UpdateBusinessClientDto } from './business_clients.dto';
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
+import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 
 @Injectable()
 export class BusinessClientsService {
@@ -13,6 +14,8 @@ export class BusinessClientsService {
 
         @InjectRepository(Users)
         private readonly usersRepository: Repository<Users>,
+
+        private readonly azureBlobService: AzureBlobService
     ) { }
 
     async getAllBusinessClients(): Promise<BusinessClients[]> {
@@ -27,7 +30,7 @@ export class BusinessClientsService {
                return user;
     }
 
-    async registerBusinessClient(createBusinessClientDto: CreateBusinessClientDto): Promise<BusinessClients> {
+    async registerBusinessClient(createBusinessClientDto: CreateBusinessClientDto,file?: Express.Multer.File): Promise<BusinessClients> {
         const { shopmobile, shopemail, userId } = createBusinessClientDto;
 
         // Check if the mobile number already exists
@@ -47,15 +50,41 @@ export class BusinessClientsService {
         if (!user) {
             throw new Error('User with this ID does not exist');
         }
-
+        if(file){
+            try {
+                const imageUrl = await this.azureBlobService.upload(file, 'upload-file');
+                createBusinessClientDto.imgurl = imageUrl; // Add image URL to DTO
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                throw new Error('Failed to upload file');
+            }
+        }
         // Map the DTO to the BusinessClients entity
         const businessClient = this.businessClientsRepository.create({
             ...createBusinessClientDto,  // Spread the DTO data
+
             userId: user,  // Assign the full user entity
         });
 
 
         // Save the business client to the database
         return await this.businessClientsRepository.save(businessClient);
+    }
+
+    async updateBusinessClient(id: string, updateUserDto: UpdateBusinessClientDto,file?: Express.Multer.File): Promise<BusinessClients> {
+        const user = await this.businessClientsRepository.findOne({ where: { BusinessId: id } });
+        if (!user) {
+            throw new NotFoundException('BusinessClient not found');
+        }
+        if(file){
+            try {
+                const imageUrl = await this.azureBlobService.upload(file, 'upload-file');
+                updateUserDto.imgurl = imageUrl; // Add image URL to DTO
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                throw new Error('Failed to upload file');
+            }
+        }
+        return await this.businessClientsRepository.save({ ...user, ...updateUserDto });
     }
 }

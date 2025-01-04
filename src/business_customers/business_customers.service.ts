@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Customers } from './business_customers.entity';
 import { Not, Repository } from 'typeorm';
 import { CreateBusinessCustomerDto } from './bscustomer.dto';
+import { Orders } from 'src/bsorders/bsorders.entity';
 
 
 @Injectable()
@@ -10,7 +11,9 @@ export class BusinessCustomersService {
     constructor(
         @InjectRepository(Customers)
         private readonly CustomersRepository: Repository<Customers>,
-        
+
+        // @InjectRepository(Orders)
+        // private readonly ordersRepository: Repository<Orders>,
     ) { }
 
     async getAllBusinessCustomers(bs_id: string): Promise<Customers[]> {
@@ -21,33 +24,33 @@ export class BusinessCustomersService {
     }
 
     async getBusinessCustomerByID(bs_id: string, cust_id: string): Promise<Customers> {
-        if(!bs_id || !cust_id) {
+        if (!bs_id || !cust_id) {
             throw new Error('Business ID and Customer ID are required');
         }
-        try{
+        try {
 
             return await this.CustomersRepository.findOne({
                 where: { businessClient: { BusinessId: bs_id }, CustId: cust_id },
                 relations: ['businessClient'], // Ensure the relation is loaded
             });
         }
-        catch(error) {
+        catch (error) {
             console.log(error);
             throw error;
         }
     }
 
     async getAllBusinessCustomersByFlag(bs_id: string): Promise<Customers[]> {
-        if(!bs_id) {
+        if (!bs_id) {
             throw new Error('Business ID is required');
         }
-        try{
+        try {
             return await this.CustomersRepository.find({
                 where: { businessClient: { BusinessId: bs_id }, Bflag: 0 },
                 relations: ['businessClient'], // Ensure the relation is loaded
             });
         }
-        catch(error) {
+        catch (error) {
             console.log(error);
             throw error;
         }
@@ -60,7 +63,7 @@ export class BusinessCustomersService {
         try {
 
             return await this.CustomersRepository.findOne({
-                where: { businessClient: { BusinessId: bs_id }, CustId: cust_id , Bflag: 0 },
+                where: { businessClient: { BusinessId: bs_id }, CustId: cust_id, Bflag: 0 },
                 relations: ['businessClient'], // Ensure the relation is loaded
             });
         }
@@ -75,7 +78,7 @@ export class BusinessCustomersService {
             where: [{ businessClient: { BusinessId: bs_id }, email: email }, { businessClient: { BusinessId: bs_id }, MobileNo: MobileNo }],
             relations: ['businessClient'],
         })
-        if(exists) {
+        if (exists) {
             throw new Error('Customer with this email or mobile number already exists');
         }
         const customer = this.CustomersRepository.create({
@@ -156,7 +159,7 @@ export class BusinessCustomersService {
     }
 
     async getNewOldCustomers(bs_id: string): Promise<{ newCustomers: number; oldCustomers: number; newPercentage: number; oldPercentage: number }> {
-        if(!bs_id) {
+        if (!bs_id) {
             throw new Error('Business ID is required');
         }
         try {
@@ -190,14 +193,48 @@ export class BusinessCustomersService {
                 newPercentage: (newCustomers / totalCustomers) * 100,
                 oldPercentage: (oldCustomers / totalCustomers) * 100,
             };
-        }catch(error) {
+        } catch (error) {
             console.log(error);
             throw error;
         }
     }
-}
-/*
-async calculateCustomerPercentagesByBusiness(businessId: string): Promise<{ newCustomers: number; oldCustomers: number; newPercentage: number; oldPercentage: number }> {
-        
+
+    async findHighestPurchasingCustomerDetailsByBusiness(businessId: string): Promise<any> {
+        if (!businessId) throw new Error('Business ID is required');
+        try {
+            return this.CustomersRepository
+                .createQueryBuilder('customers')
+                .select('customers.CustId', 'customer_id')
+                .addSelect('customers.Name', 'customer_name')
+                .addSelect('SUM(COALESCE(service_data.cost, 0) + COALESCE(product_data.cost, 0))', 'total_spent')
+                .innerJoin('Orders', 'orders', 'orders.CustId = customers.CustId')
+                .leftJoin(
+                    qb => qb
+                        .select('orders.Oid', 'order_id')
+                        .addSelect(`(jsonb_array_elements(orders.Services)->>'cost')::NUMERIC`, 'cost')
+                        .from('Orders', 'orders'),
+                    'service_data',
+                    'service_data.order_id = orders.Oid'
+                )
+                .leftJoin(
+                    qb => qb
+                        .select('orders.Oid', 'order_id')
+                        .addSelect(`(jsonb_array_elements(orders.Products)->>'cost')::NUMERIC`, 'cost')
+                        .from('Orders', 'orders'),
+                    'product_data',
+                    'product_data.order_id = orders.Oid'
+                )
+                .where('orders.business_id = :businessId', { businessId })
+                .groupBy('customers.CustId, customers.Name')
+                .orderBy('total_spent', 'DESC')
+                .limit(6)
+                .getRawMany();
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     }
-*/
+
+    
+
+}

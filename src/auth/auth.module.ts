@@ -14,7 +14,7 @@ import { SklyitUsersModule } from 'src/sklyit_users/sklyit_users.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('SECRET_KEY'),
-        signOptions: { expiresIn: configService.get('JWT_EXPIRATION') },
+        signOptions: {  },
       })
     }),
     SklyitUsersModule,

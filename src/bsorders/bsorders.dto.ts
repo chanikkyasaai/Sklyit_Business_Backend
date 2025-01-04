@@ -28,7 +28,6 @@ export class UpdateOrdersDto {
     products: ProductDto[];
 }
 
-
 class ServiceDto {
     @IsString()
     sname: string;

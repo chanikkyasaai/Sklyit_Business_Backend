@@ -2,7 +2,7 @@ import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, U
 import { BsproductsService } from './bsproducts.service';
 import { Products } from './bsproducts.entity';
 import { create } from 'domain';
-import { CreateProductDto } from './bsproducts.dto';
+import { CreateProductDto, UpdateProductDto } from './bsproducts.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('bs/:business_id')
@@ -54,10 +54,20 @@ export class BsproductsController {
     }
 
     @Put('products/:product_id')
+        @UseInterceptors(
+            FileInterceptor('image', {
+                fileFilter: (req, file, callback) => {
+                    const isAllowed = ['image/jpeg', 'image/png', 'image/jpg'].some(mime => mime === file.mimetype);
+                    callback(isAllowed ? null : new BadRequestException('Only jpeg, png, and jpg files are allowed'), isAllowed);
+                },
+            })
+        )
     updateProducts(@Param('business_id') bs_id: string,
         @Param('product_id') product_id: string,
-        @Body() updateProductDto: CreateProductDto): Promise<Products> {
-        return this.bsproductsService.updateProduct(bs_id, product_id, updateProductDto);
+        @Body() updateProductDto: UpdateProductDto,
+        @UploadedFile() file: Express.Multer.File
+    ): Promise<Products> {
+        return this.bsproductsService.updateProduct(bs_id, product_id, updateProductDto,file);
     }
 
     @Put('product/:product_id')

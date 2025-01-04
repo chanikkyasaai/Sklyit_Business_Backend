@@ -1,11 +1,11 @@
 import { Subscribers } from './../subscribers/subscribers.entity';
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {Repository } from 'typeorm';
 import { Users } from './sklyit_users.entity';
-import { CreateUserDto } from './sklyit_users.dto';
+import { CreateUserDto, UpdateUserDto } from './sklyit_users.dto';
 import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
-
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class SklyitUsersService {
@@ -73,11 +73,42 @@ export class SklyitUsersService {
         return user;
     }
 
-    async validateUser( mobileno: string): Promise<Users> {
-        const user = await this.userRepository.findOne({ where: [{ wtappNo:mobileno }] });
+    async updatePassword(id: string, newPassword: string): Promise<Users> {
+        const user = await this.userRepository.findOne({ where: { userId: id } });
         if (!user) {
             throw new NotFoundException('User not found');
         }
+        user.password = bcrypt.hashSync(newPassword, 10); // Hash the newPassword;
+        return await this.userRepository.save(user);
+    }
+    
+    async validateUser( userid: string,password: string): Promise<Users> {
+        const user = await this.userRepository.findOne({ where: [{ wtappNo:userid },{  mobileno:userid },{gmail:userid}] });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        if(user && bcrypt.compareSync(password,user.password)){
+            return user;
+        }
         return user;
+    }
+
+    async updateUser(id: string, updateUserDto: UpdateUserDto,file?: Express.Multer.File): Promise<Users> {
+        const user = await this.userRepository.findOne({ where: { userId: id } });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        
+        if (file) {
+            try {
+                const imageUrl = await this.azureBlobService.upload(file, 'upload-file');
+                updateUserDto.imgurl = imageUrl; // Add image URL to DTO
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                throw new Error('Failed to upload image');
+            }
+        }
+        //console.log(updateUserDto);
+        return await this.userRepository.save({ ...user, ...updateUserDto });
     }
 }

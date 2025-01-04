@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { Users } from 'src/sklyit_users/sklyit_users.entity';
 
 @Controller('bs/auth')
 export class AuthController {
@@ -8,8 +9,9 @@ export class AuthController {
     ) { }
 
     @Post('login')
-    async login(@Body() body:{mobileno:string}) {
-        const user = await this.authService.validateUser(body.mobileno);
+    async login(@Body() body:{userid:string,password:string}) {
+        const user = await this.authService.validateUser(body.userid,body.password);
         return this.authService.login(user);
     }
+    
 }

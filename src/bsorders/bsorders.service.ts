@@ -1,20 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Orders } from './bsorders.entity';
 import { CreateOrdersDto, UpdateOrdersDto } from './bsorders.dto';
+
 
 @Injectable()
 export class BsordersService {
     constructor(
         @InjectRepository(Orders)
         private readonly ordersRepository: Repository<Orders>,
+
     ) { }
 
     async getAllOrders(bs_id: string): Promise<Orders[]> {
         return await this.ordersRepository.find({
             where: { businessClient: { BusinessId: bs_id } },
-            relations: ['businessClient'],
+            relations: ['businessClient', 'customer'],
         }
         );
     }
@@ -23,7 +25,7 @@ export class BsordersService {
         try {
             return await this.ordersRepository.findOne({
                 where: { businessClient: { BusinessId: bs_id }, Oid: Oid },
-                relations: ['businessClient']
+                relations: ['businessClient', 'customer'],
             });
         } catch (error) {
             console.log(error);
@@ -65,7 +67,7 @@ export class BsordersService {
             }
             order.Services = services || order.Services;
             order.Products = products || order.Products;
-            
+
             return await this.ordersRepository.save(order);
         } catch (error) {
             console.log(error);

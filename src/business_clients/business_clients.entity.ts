@@ -38,7 +38,10 @@ export class BusinessClients {
     @IsEmail()
     shopemail: string;
 
-    
+    @Column({ nullable: true })
+    @IsString()
+    shopimage?: string;
+
     @Column()
     @IsString()
     @Matches(/^[0-9]{10}$/, { message: 'Mobile number must be 10 digits' })

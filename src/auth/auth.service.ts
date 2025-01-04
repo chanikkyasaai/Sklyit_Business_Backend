@@ -12,15 +12,15 @@ export class AuthService {
     ) { }
 
     async login(user:Users) {
-        const payload = { mobileno: user.wtappNo, sub: user.userId };
+        const payload = { mobileNumber: user.mobileno, email: user.gmail, sub: user.userId };
         return {
             access_token: this.jwtService.sign(payload),
         };
     }
     
 
-    async validateUser(mobileno:string): Promise<Users> {
-        const user = await this.userService.validateUser(mobileno);
+    async validateUser(userid:string, password:string): Promise<Users> {
+        const user = await this.userService.validateUser(userid, password);
         if (!user) {
             throw new NotFoundException('User not found');
         }

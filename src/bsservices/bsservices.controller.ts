@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { BsservicesService } from './bsservices.service';
 import { Services } from './services.entity';
-import { CreateServiceDto } from './dto/createServiceDto';
+import { CreateServiceDto, UpdateServiceDto } from './dto/createServiceDto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('bs/:business_id/')
@@ -56,12 +56,20 @@ export class BsservicesController {
     }
 
     @Put('services/:service_id')
+    @UseInterceptors(FileInterceptor('image', {
+        fileFilter: (req, file, callback) => {
+            const isAllowed = ['image/jpeg', 'image/png', 'image/jpg'].some(mime => mime === file.mimetype);
+            callback(isAllowed ? null : new BadRequestException('Only jpeg, png, and jpg files are allowed'), isAllowed);
+        },
+    }),
+    )
     updateServices(
         @Param('business_id') bs_id: string,
         @Param('service_id') service_id: string,
-        @Body() updateServicesDto: CreateServiceDto
+        @Body() updateServicesDto: UpdateServiceDto,
+        @UploadedFile() file: Express.Multer.File
     ): Promise<Services> {
-        return this.bsservicesService.updateServices(bs_id, service_id, updateServicesDto);
+        return this.bsservicesService.updateServices(bs_id, service_id, updateServicesDto, file);
     }
 
     @Put('service/:service_id')

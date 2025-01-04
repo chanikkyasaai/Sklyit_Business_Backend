@@ -15,6 +15,10 @@ export class Users {
   @IsEmail()
   gmail: string;
 
+  @Column()
+  @IsString()
+  password: string;
+
   @Column({ type: 'date', name: 'date_of_birth' })
   @IsDate()
   dob: Date;
