@@ -41,6 +41,14 @@ export class BsordersController {
     ) {
       return this.bsordersService.getTop3Services(parseInt(business_id));
     }
+    @Get('bottom-services-count')
+    async getBottomServicesCount(
+      @Param('business_id') business_id: string,
+      // @Query('startDate') startDate: string,
+      // @Query('endDate') endDate: string,
+    ) {
+      return this.bsordersService.getBottom3Services(parseInt(business_id));
+    }
     //BY REVENUE
     @Get('top-services-revenue')
     async getTopServicesRevenue(
@@ -62,9 +70,40 @@ export class BsordersController {
       return this.bsordersService.getTop3ServicesByRevenueYear(parseInt(business_id));
     }
 
-
-
   // Endpoint for weekly analytics (with business_id)
+  @Get('total-analytics')
+  async getTotalAnalytics(@Param('business_id') businessId: number) {
+    return this.bsordersService.getTotalCustomersAndRevenueInBusiness(businessId); 
+  }
+
+  @Get('top-customers-revenue')
+  async getTopCustomersBySpending(
+    @Param('business_id') business_id: string,
+  ) {
+    return this.bsordersService.getTop6CustomersBySpending(parseInt(business_id));
+  }
+
+  @Get('bottom-customers-revenue')
+  async getBottomCustomersBySpending(
+    @Param('business_id') business_id: string,
+  ) {
+    return this.bsordersService.getBottom3CustomersBySpending(parseInt(business_id));
+  }
+
+  @Get('top-customers-count')
+  async getTopCustomersByVisited(
+    @Param('business_id') business_id: string,
+  ) {
+    return this.bsordersService.getTop3VisitedCustomers(parseInt(business_id));
+  }
+  
+  @Get('bottom-customers-count')
+  async getBottomCustomersByVisited(
+    @Param('business_id') business_id: string,
+  ) {
+    return this.bsordersService.getBottom3VisitedCustomers(parseInt(business_id));
+  }
+
   @Get('weekly')
   async getWeeklyAnalytics(
     @Param('business_id') businessId: number, // Include business_id as a query parameter
@@ -79,4 +118,6 @@ export class BsordersController {
   ) {
     return this.bsordersService.getMonthlyAnalytics(businessId);
   }
+
+
 }
