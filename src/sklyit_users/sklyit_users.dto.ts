@@ -17,7 +17,6 @@ import {
     @IsEmail()
     gmail: string;
   
-   
     @Type(() => Date)
     @IsDate()
     dob?: Date;
@@ -44,11 +43,9 @@ import {
     @IsString()
     addressStreet?: string;
   
-    
     @IsString()
     addressCity?: string;
-  
-    
+
     @IsString()
     addressState?: string;
   
@@ -62,4 +59,7 @@ import {
     @IsOptional()
     @IsNumber()
     premiumId?: string; // Foreign key to Subscribers
+
+    @IsString()
+    password: string;
   }

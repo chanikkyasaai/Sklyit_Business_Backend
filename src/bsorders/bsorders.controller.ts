@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { BsordersService } from './bsorders.service';
 import { Orders } from './bsorders.entity';
 import { CreateOrdersDto } from './bsorders.dto';
@@ -31,4 +31,52 @@ export class BsordersController {
     async deleteOrder(@Param('business_id') business_id: string,@Param('Oid') Oid: string): Promise<void> {
       return this.bsordersService.deleteOrder(business_id, Oid);
     }
+
+      // Endpoints to get top 3 services for a given period
+    @Get('top-services-count')
+    async getTopServicesCount(
+      @Param('business_id') business_id: string,
+      // @Query('startDate') startDate: string,
+      // @Query('endDate') endDate: string,
+    ) {
+      return this.bsordersService.getTop3Services(parseInt(business_id));
+    }
+    //BY REVENUE
+    @Get('top-services-revenue')
+    async getTopServicesRevenue(
+      @Param('business_id') business_id: string,
+    ) {
+      return this.bsordersService.getTop3ServicesByRevenue(parseInt(business_id));
+    }
+    @Get('top-services-revenue-weekly')
+    async getTopServicesRevenueWeek(
+      @Param('business_id') business_id: string,
+    ) {
+      return this.bsordersService.getTop3ServicesByRevenueWeek(parseInt(business_id));
+    }
+
+    @Get('top-services-revenue-yearly')
+    async getTopServicesRevenueYear(
+      @Param('business_id') business_id: string,
+    ) {
+      return this.bsordersService.getTop3ServicesByRevenueYear(parseInt(business_id));
+    }
+
+
+
+  // Endpoint for weekly analytics (with business_id)
+  @Get('weekly')
+  async getWeeklyAnalytics(
+    @Param('business_id') businessId: number, // Include business_id as a query parameter
+  ) {
+    return this.bsordersService.getWeeklyAnalytics(businessId);
+  }
+
+  // Endpoint for monthly analytics (with business_id)
+  @Get('monthly')
+  async getMonthlyAnalytics(
+    @Param('business_id') businessId: number, // Include business_id as a query parameter
+  ) {
+    return this.bsordersService.getMonthlyAnalytics(businessId);
+  }
 }

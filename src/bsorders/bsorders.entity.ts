@@ -11,13 +11,13 @@ export class Orders {
     @JoinColumn({ name: 'CustId' })
     customer: Customers;
 
-    @Column('timestamp', { default: () => 'CURRENT_DATE' })
+    @Column('date', { default: () => 'CURRENT_DATE' })
     Odate: Date;
 
-    @Column('json', { nullable: true })
+    @Column('jsonb', { nullable: true })
     Services: object[];
 
-    @Column('json', { nullable: true })
+    @Column('jsonb', { nullable: true })
     Products: object[];
 
     @ManyToOne(() => BusinessClients, (businessClient) => businessClient.orders, { onDelete: 'CASCADE' })
