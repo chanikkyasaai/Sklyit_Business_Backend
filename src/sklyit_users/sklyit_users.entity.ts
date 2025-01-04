@@ -64,8 +64,5 @@ export class Users {
   @Column('date', { default: () => 'CURRENT_DATE' })
   dateofjoining: Date;
 
-  @Column()
-  @IsString()
-  password: string;
 
 }
