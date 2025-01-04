@@ -60,6 +60,10 @@ export class CreateUserDto {
 
   @IsString()
   password: string;
+
+  @IsOptional()
+  @IsNumber()
+  premiumId?: string;
 }
 
 
