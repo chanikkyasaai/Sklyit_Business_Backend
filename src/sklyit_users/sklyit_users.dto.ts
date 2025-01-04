@@ -27,7 +27,7 @@ export class CreateUserDto {
 
   @Matches(/^[0-9]{10}$/, { message: 'Mobile number must be 10 digits' })
   mobileno: string;
-
+   
   @Matches(/^[0-9]{10}$/, { message: 'WhatsApp number must be 10 digits' })
   wtappNo?: string;
 
@@ -58,9 +58,8 @@ export class CreateUserDto {
   @IsString()
   usertype: string;
 
-  @IsOptional()
-  @IsNumber()
-  premiumId?: string; // Foreign key to Subscribers
+  @IsString()
+  password: string;
 }
 
 

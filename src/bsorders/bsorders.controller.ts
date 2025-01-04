@@ -30,24 +30,53 @@ export class BsordersController {
     @Delete('orders/:Oid')
     async deleteOrder(@Param('business_id') business_id: string,@Param('Oid') Oid: string): Promise<void> {
       return this.bsordersService.deleteOrder(business_id, Oid);
-  }
-  // Endpoint to get top 3 services for a given period
-  @Get('top-services')
-  async getTopServices(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
-    @Param('business_id') businessId: number,
+    }
+
+      // Endpoints to get top 3 services for a given period
+    @Get('top-services-count')
+    async getTopServicesCount(
+      @Param('business_id') business_id: string,
+      // @Query('startDate') startDate: string,
+      // @Query('endDate') endDate: string,
+    ) {
+      return this.bsordersService.getTop3Services(parseInt(business_id));
+    }
+    //BY REVENUE
+    @Get('top-services-revenue')
+    async getTopServicesRevenue(
+      @Param('business_id') business_id: string,
+    ) {
+      return this.bsordersService.getTop3ServicesByRevenue(parseInt(business_id));
+    }
+    @Get('top-services-revenue-weekly')
+    async getTopServicesRevenueWeek(
+      @Param('business_id') business_id: string,
+    ) {
+      return this.bsordersService.getTop3ServicesByRevenueWeek(parseInt(business_id));
+    }
+
+    @Get('top-services-revenue-yearly')
+    async getTopServicesRevenueYear(
+      @Param('business_id') business_id: string,
+    ) {
+      return this.bsordersService.getTop3ServicesByRevenueYear(parseInt(business_id));
+    }
+
+
+
+  // Endpoint for weekly analytics (with business_id)
+  @Get('weekly')
+  async getWeeklyAnalytics(
+    @Param('business_id') businessId: number, // Include business_id as a query parameter
   ) {
-    return this.bsordersService.getTop3Services(startDate, endDate, businessId);
+    return this.bsordersService.getWeeklyAnalytics(businessId);
   }
 
-  @Get('new_old_customer_revenue')
-  async calculateRevenueByCustomerType(@Param('business_id') businessId: string): Promise<{
-    newCustomerRevenue: number;
-    oldCustomerRevenue: number;
-    newCustomerRevenuePercentage: number;
-    oldCustomerRevenuePercentage: number;
-  }> {
-    return await this.bsordersService.calculateRevenueByCustomerType(businessId);
+  // Endpoint for monthly analytics (with business_id)
+  @Get('monthly')
+  async getMonthlyAnalytics(
+    @Param('business_id') businessId: number, // Include business_id as a query parameter
+  ) {
+    return this.bsordersService.getMonthlyAnalytics(businessId);
   }
 }
