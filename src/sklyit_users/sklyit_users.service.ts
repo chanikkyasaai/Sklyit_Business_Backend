@@ -53,7 +53,7 @@ export class SklyitUsersService {
                 throw new Error('Failed to upload image');
             }
         }
-
+        createUserDto.password = bcrypt.hashSync(createUserDto.password, 10); // Hash the password
         // Save the new user
         const user = this.userRepository.create({
             ...createUserDto,
