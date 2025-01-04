@@ -30,7 +30,7 @@ export class UpdateOrdersDto {
 
 class ServiceDto {
     @IsString()
-    Sid: string;
+    sname: string;
 
     @IsNumber()
     cost: number;
@@ -38,7 +38,7 @@ class ServiceDto {
 
 class ProductDto {
     @IsString()
-    Pid: string
+    pname: string
 
     @IsNumber()
     cost: number;

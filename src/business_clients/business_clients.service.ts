@@ -14,8 +14,7 @@ export class BusinessClientsService {
 
         @InjectRepository(Users)
         private readonly usersRepository: Repository<Users>,
-
-        private readonly azureBlobService: AzureBlobService
+        private azureBlobService: AzureBlobService
     ) { }
 
     async getAllBusinessClients(): Promise<BusinessClients[]> {
