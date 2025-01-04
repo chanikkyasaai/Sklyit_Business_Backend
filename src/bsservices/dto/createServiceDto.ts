@@ -13,7 +13,29 @@ export class CreateServiceDto {
     @IsNotEmpty()
     price: number;
 
+    @IsString()
+    @IsOptional()
+    imageUrl?: string;
+
     // @IsNumber()
     // @IsNotEmpty()
     // business_id: number;
+}
+
+export class UpdateServiceDto {
+    @IsString()
+    @IsOptional()
+    name?: string;
+
+    @IsString()
+    @IsOptional()
+    description?: string;
+
+    @IsNumber()
+    @IsOptional()
+    price?: number;
+
+    @IsString()
+    @IsOptional()
+    imageUrl?: string;
 }

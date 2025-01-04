@@ -2,7 +2,7 @@ import { Injectable, Param } from '@nestjs/common';
 import { Products } from './bsproducts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateProductDto } from './bsproducts.dto';
+import { CreateProductDto, UpdateProductDto } from './bsproducts.dto';
 import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 
 @Injectable()
@@ -128,7 +128,7 @@ export class BsproductsService {
         }
     }
 
-    async updateProduct(bs_id: string, product_id: string, updateProductDto: CreateProductDto): Promise<Products> {
+    async updateProduct(bs_id: string, product_id: string, updateProductDto: UpdateProductDto,file?:Express.Multer.File): Promise<Products> {
         if (!bs_id || !product_id) {
             throw new Error('Business ID and Product ID are required');
         }
@@ -137,6 +137,10 @@ export class BsproductsService {
             where: { businessClient: { BusinessId: bs_id }, PId: product_id },
             relations: ['businessClient'], // Ensure the relation is loaded
         });
+        if(file){
+            const imageUrl = await this.azureBlobService.upload(file, this.containerName);
+            product.PimageUrl = imageUrl;
+        }
         if (!product) {
             throw new Error('Product not found');
         }

@@ -20,3 +20,25 @@ export class CreateProductDto {
     @IsNumber()
     quantity: number;
 }
+
+export class UpdateProductDto {
+    @IsString()
+    @IsOptional()
+    name?: string;
+
+    @IsString()
+    @IsOptional()
+    description?: string;
+
+    @IsUrl()
+    @IsOptional()    
+    imageUrl?: string;
+
+    @IsNumber()
+    @IsOptional()
+    price?: number;
+
+    @IsNumber()
+    @IsOptional()
+    quantity?: number;
+}

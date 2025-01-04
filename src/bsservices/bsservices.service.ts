@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Services } from './services.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateServiceDto } from './dto/createServiceDto';
+import { CreateServiceDto, UpdateServiceDto } from './dto/createServiceDto';
 import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 
 @Injectable()
@@ -109,17 +109,24 @@ export class BsservicesService {
         }
     }
 
-    async updateServices(bs_id: string, service_id: string, updateServicesDto: CreateServiceDto): Promise<Services> {
+    async updateServices(bs_id: string, service_id: string, updateServicesDto: UpdateServiceDto,file?: Express.Multer.File): Promise<Services> {
         if (!bs_id || !service_id) {
             throw new Error('Business ID and Service ID are required');
         }
-        const { name, description, price } = updateServicesDto;
+        const { name, description, price, imageUrl } = updateServicesDto;
         const service = await this.serviceRepository.findOne({
             where: { businessClient: { BusinessId: bs_id }, Sid: service_id },
             relations: ['businessClient'], // Ensure the relation is loaded
         });
         if (!service) {
             throw new Error('Service not found');
+        }
+        if(file){
+            const imageUrl = await this.azureBlobService.upload(file, this.containerName);
+            service.ImageUrl = imageUrl;
+        }
+        if(imageUrl){
+            service.ImageUrl = imageUrl;
         }
         service.ServiceName = name || service.ServiceName;
         service.ServiceDesc = description || service.ServiceDesc;

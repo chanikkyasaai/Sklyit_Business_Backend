@@ -108,7 +108,7 @@ export class SklyitUsersService {
                 throw new Error('Failed to upload image');
             }
         }
-        console.log(updateUserDto);
+        //console.log(updateUserDto);
         return await this.userRepository.save({ ...user, ...updateUserDto });
     }
 }
