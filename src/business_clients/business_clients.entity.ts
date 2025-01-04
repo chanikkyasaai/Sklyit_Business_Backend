@@ -84,5 +84,8 @@ export class BusinessClients {
 
     @OneToMany(() => Booking, (booking) => booking.businessClient, { onDelete: 'CASCADE' })
     bookings: Booking[];
+
+    @Column('date', { default: () => 'CURRENT_DATE' })
+    created_at: Date
 }
 
