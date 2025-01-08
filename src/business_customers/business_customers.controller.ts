@@ -57,10 +57,6 @@ export class BusinessCustomersController {
         return await this.businessCustomersService.getNewOldCustomers(bs_id);
     }
 
-    @Get('high_value_customers')
-    async findHighestPurchasingCustomerDetailsByBusiness(@Param('business_id') businessId: string): Promise<any> {
-        return await this.businessCustomersService.findHighestPurchasingCustomerDetailsByBusiness(businessId);
-    }
-
+   
     
 }
