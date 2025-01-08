@@ -24,7 +24,6 @@ export class BsbookingsController {
 
     @Post('bookings/:business_id')
     async createBooking(@Param('business_id') businessId: string, @Body() createBookingDto: CreateBookingDto): Promise<Booking> {
-        console.log(createBookingDto);
         return this.bookingService.createBooking(businessId, createBookingDto);
     }
 

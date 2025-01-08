@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { IsString } from 'class-validator';
-import { Customers } from './../business_customers/business_customers.entity'; // Assuming Customers table exists
+import { Users } from 'src/sklyit_users/sklyit_users.entity'; // Assuming Customers table exists
 import { Services } from './../bsservices/services.entity'; // Assuming Services table exists
 import { BusinessClients } from './../business_clients/business_clients.entity'; // Assuming BusinessClients table exists
 
@@ -9,8 +9,8 @@ export class Booking {
     @PrimaryGeneratedColumn()
     BookingID: string;
 
-    @ManyToOne(() => Customers, (customer) => customer.bookings, { onDelete: 'CASCADE' })
-    customer: Customers;
+    @ManyToOne(() => Users, (user) => user.bookings, { onDelete: 'CASCADE' })
+    customer: Users;
 
     @ManyToOne(() => Services, (service) => service.bookings, { onDelete: 'CASCADE' })
     service: Services;
