@@ -199,40 +199,5 @@ export class BusinessCustomersService {
         }
     }
 
-    async findHighestPurchasingCustomerDetailsByBusiness(businessId: string): Promise<any> {
-        if (!businessId) throw new Error('Business ID is required');
-        try {
-            return this.CustomersRepository
-                .createQueryBuilder('customers')
-                .select('customers.CustId', 'customer_id')
-                .addSelect('customers.Name', 'customer_name')
-                .addSelect('SUM(COALESCE(service_data.cost, 0) + COALESCE(product_data.cost, 0))', 'total_spent')
-                .innerJoin('Orders', 'orders', 'orders.CustId = customers.CustId')
-                .leftJoin(
-                    qb => qb
-                        .select('orders.Oid', 'order_id')
-                        .addSelect(`(jsonb_array_elements(orders.Services)->>'cost')::NUMERIC`, 'cost')
-                        .from('Orders', 'orders'),
-                    'service_data',
-                    'service_data.order_id = orders.Oid'
-                )
-                .leftJoin(
-                    qb => qb
-                        .select('orders.Oid', 'order_id')
-                        .addSelect(`(jsonb_array_elements(orders.Products)->>'cost')::NUMERIC`, 'cost')
-                        .from('Orders', 'orders'),
-                    'product_data',
-                    'product_data.order_id = orders.Oid'
-                )
-                .where('orders.business_id = :businessId', { businessId })
-                .groupBy('customers.CustId, customers.Name')
-                .orderBy('total_spent', 'DESC')
-                .limit(6)
-                .getRawMany();
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
-
+    
 }

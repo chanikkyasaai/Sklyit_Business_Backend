@@ -119,5 +119,27 @@ export class BsordersController {
     return this.bsordersService.getMonthlyAnalytics(businessId);
   }
 
+  @Get('new_old_revenue')
+  async getNewOldCustomersRevenue(
+    @Param('business_id') business_id: string,
+  ) {
+    return this.bsordersService.getNewOldCustomersRevenue(parseInt(business_id));
+  }
 
+  @Get('monthly_comparison')
+  async getMonthlyComparison(
+    @Param('business_id') business_id: string,
+    @Query('year') year: number,
+    @Query('month') month: number,
+  ) {
+    return this.bsordersService.getMonthlyComparison(parseInt(business_id), year, month);
+  }
+  
+  @Get('past_services')
+  async getPastServices(
+    @Param('business_id') business_id: string,
+    @Body('CustId') CustId: number,
+  ) {
+    return this.bsordersService.getPastServices(parseInt(business_id), CustId);
+  }
 }
