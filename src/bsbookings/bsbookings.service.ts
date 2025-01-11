@@ -1,14 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Booking } from './bsbookings.entity';
 import { CreateBookingDto, UpdateBookingDto } from './bsbookings.dto';
+import { Users } from 'src/sklyit_users/sklyit_users.entity';
 
 @Injectable()
 export class BsbookingsService {
     constructor(
         @InjectRepository(Booking)
         private readonly bookingRepository: Repository<Booking>,
+        @InjectRepository(Users)
+        private readonly usersRepository: Repository<Users>,
     ) {}
 
     async getAllBookings(businessId: string): Promise<Booking[]> {
@@ -30,10 +33,17 @@ export class BsbookingsService {
         }
     }
 
-    async getBookingByCustomerId(customerId: string): Promise<Booking[]> {
+    async getBookingByCustomerId(userId: string): Promise<Booking[]> {
         try {
+            const user = await this.usersRepository.findOne({
+                where: { userId: userId, usertype: 'Customer' },
+            });
+    
+            if (!user) {
+                throw new BadRequestException('Only users with usertype "Customer" can create bookings.');
+            }
             return this.bookingRepository.find({
-                where: { customer: { CustId: customerId } },
+                where: { customer: { userId: userId } },
                 relations: ['customer', 'service', 'businessClient'],
             });
         } catch (error) {
@@ -50,7 +60,7 @@ export class BsbookingsService {
             const booking = this.bookingRepository.create({
                 ...createBookingDto,
                 businessClient: { BusinessId: businessId },
-                customer: { CustId: createBookingDto.CustomerId },
+                customer: { userId: createBookingDto.userId },
                 service: { Sid: createBookingDto.ServiceId },
             });
             console.log(booking);

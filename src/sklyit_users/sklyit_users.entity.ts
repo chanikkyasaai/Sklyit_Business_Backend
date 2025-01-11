@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { IsString, IsEmail, IsDate } from 'class-validator';
 import { Subscribers } from './../subscribers/subscribers.entity'; // Assuming the Subscribers table exists
+import { Booking } from 'src/bsbookings/bsbookings.entity';
 
 @Entity('SKLYIT_users')
 export class Users {
@@ -63,4 +64,7 @@ export class Users {
 
   @Column('date', { default: () => 'CURRENT_DATE' })
   dateofjoining: Date;
+
+  @OneToMany(() => Booking, (booking) => booking.customer)
+  bookings: Booking[];
 }
