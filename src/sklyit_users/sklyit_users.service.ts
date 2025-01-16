@@ -57,7 +57,7 @@ export class SklyitUsersService {
         // Save the new user
         const user = this.userRepository.create({
             ...createUserDto,
-            premiumId: subscriber ? premiumId : null, // Associate valid premiumId or set as null
+            // Associate valid premiumId or set as null
         });
         return await this.userRepository.save(user);
     }

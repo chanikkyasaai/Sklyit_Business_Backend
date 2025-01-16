@@ -1,4 +1,5 @@
-import { IsString, IsEmail, IsArray, Matches, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsString, IsEmail, IsArray, Matches, IsOptional, ValidateNested } from 'class-validator';
 
 export class CreateBusinessClientDto {
     @IsString()
@@ -13,8 +14,6 @@ export class CreateBusinessClientDto {
     @IsString()
     shopdesc: string;
 
-    @IsString()
-    shopaddress: string;
 
     @IsEmail()
     shopemail: string;
@@ -24,8 +23,9 @@ export class CreateBusinessClientDto {
     shopmobile: string;
 
     @IsArray()
-    @IsString({ each: true })
-    shopLocations: string[];
+    @ValidateNested({ each: true })
+    @Type(() => AddressDto)
+    addresses: AddressDto[];
 
     // Time validation: matches format HH:mm (No seconds)
     @Matches(/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/, { message: 'Invalid time format. Expected HH:mm' })
@@ -56,3 +56,19 @@ export class UpdateBusinessClientDto {
     [key: string]: any;
 }
 
+class AddressDto {
+    @IsString()
+    street: string;
+
+    @IsString()
+    city: string;
+
+    @IsString()
+    district: string;
+
+    @IsString()
+    state: string;
+
+    @IsString()
+    pincode: string;
+}

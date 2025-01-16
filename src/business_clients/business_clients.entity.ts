@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import { IsEmail, IsNumber, IsString, Matches } from 'class-validator';
 import { Customers } from './../business_customers/business_customers.entity'; // Assuming the Customers table exists
 import { Services } from './../bsservices/services.entity'; // Assuming the Services table exists
@@ -7,6 +7,7 @@ import { HasLoyalty } from 'src/loyalty_system/loyalty_system.entity';
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
 import { Orders } from 'src/bsorders/bsorders.entity';
 import { Booking } from 'src/bsbookings/bsbookings.entity';
+import { Subscribers } from 'src/subscribers/subscribers.entity';
 
 @Entity('SKLYIT_business_clients')
 export class BusinessClients {
@@ -28,10 +29,6 @@ export class BusinessClients {
     @Column()
     @IsString()
     shopdesc: string;
-
-    @Column()
-    @IsString()
-    shopaddress: string;
 
     @Column()
     @IsString()
@@ -62,6 +59,15 @@ export class BusinessClients {
     @Column('text', { array: true, nullable: true })
     BusinessSubTags?: string[];
 
+    @Column({ type: 'jsonb', nullable: true })
+    addresses: Array<{
+        street: string;
+        city: string;
+        district: string;
+        state: string;
+        pincode: string;
+    }>;
+    
     @Column({ nullable: true })
     @IsNumber()
     loyaltypts?: number;
@@ -69,6 +75,9 @@ export class BusinessClients {
     @OneToOne(() => Users, { onDelete: 'CASCADE', cascade: true })
     @JoinColumn({ name: 'userId' })
     userId: Users;
+
+    @ManyToOne(() => Subscribers, (subscriber) => subscriber.premiumId)
+    premiumId: string; // Foreign key relation with Subscribers
 
     @OneToMany(() => Customers, (customer) => customer.businessClient, { onDelete: 'CASCADE' })
     customers: Customers[];

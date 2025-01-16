@@ -40,9 +40,6 @@ export class Users {
   @IsString()
   gender: string;
 
-  @ManyToOne(() => Subscribers, (subscriber) => subscriber.premiumId)
-  premiumId: string; // Foreign key relation with Subscribers
-
   @Column({ name: 'address_doorno', nullable: true })
   addressDoorno: string;
 

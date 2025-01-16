@@ -13,4 +13,3 @@ import { ImageBlobModule } from 'src/imageBlob/imageBlob.module';
   exports: [SklyitUsersService,TypeOrmModule.forFeature([Users])],
 })
 export class SklyitUsersModule {}
-
