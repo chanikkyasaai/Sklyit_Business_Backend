@@ -28,6 +28,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { BspostModule } from './bspost/bspost.module';
 import { SearchModule } from './search/search.module';
+import { UserPreferencesModule } from './user_preferences/user_preferences.module';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -88,7 +89,8 @@ import { SearchModule } from './search/search.module';
     BspostModule,
     AuthModule,
     ImageBlobModule,
-    SearchModule
+    SearchModule,
+    UserPreferencesModule
   ],
   controllers: [AppController],
   providers: [AppService],

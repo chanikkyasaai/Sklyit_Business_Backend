@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { BusinessClients } from '../business_clients/business_clients.entity';
 import { SearchBusinessClientsDto } from './search.dto';
 import { Cache } from 'cache-manager';
+import { UserPreferencesService } from 'src/user_preferences/user_preferences.service';
 
 @Injectable()
 export class SearchService {
@@ -11,9 +12,13 @@ export class SearchService {
         @InjectRepository(BusinessClients)
         private readonly businessClientsRepository: Repository<BusinessClients>,
         @Inject('CACHE_MANAGER') private readonly cacheManager: Cache,
+        private readonly userPreferencesService: UserPreferencesService
     ) { }
 
-    async searchBusinessClients(filters: SearchBusinessClientsDto) {
+    async searchBusinessClients(filters: SearchBusinessClientsDto, userId: string) {
+        const { queryString, location, page = 1, limit = 10 } = filters;
+        await this.userPreferencesService.addSearchHistory(userId, queryString, location);
+
         const cacheKey = this.getCacheKey(filters);
 
         // Check cache first
@@ -23,7 +28,6 @@ export class SearchService {
             return cachedData;
         }
 
-        const { queryString, location, page = 1, limit = 10 } = filters;
         const queryBuilder = this.businessClientsRepository.createQueryBuilder('businessClients');
 
         if (location) {
@@ -65,6 +69,7 @@ export class SearchService {
 
         const result = { data, total, page, limit };
         await this.cacheManager.set(cacheKey, result, 300000);
+
         return result;
     }
 
