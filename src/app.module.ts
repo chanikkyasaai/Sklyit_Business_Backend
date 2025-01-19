@@ -30,6 +30,8 @@ import { BspostModule } from './bspost/bspost.module';
 import { PaymentModule } from './payment/payment.module';
 import { NotificationModule } from './notification/notification.module';
 import Stripe from 'stripe';
+import { SearchModule } from './search/search.module';
+import { UserPreferencesModule } from './user_preferences/user_preferences.module';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -99,6 +101,8 @@ import Stripe from 'stripe';
     ImageBlobModule,
     PaymentModule,
     NotificationModule
+    SearchModule,
+    UserPreferencesModule
   ],
   controllers: [AppController],
   providers: [AppService],
