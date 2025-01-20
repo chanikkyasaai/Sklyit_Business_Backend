@@ -3,16 +3,16 @@ import { BsbookingsService } from './bsbookings.service';
 import { CreateBookingDto, UpdateBookingDto } from './bsbookings.dto';
 import { Booking } from './bsbookings.entity';
 
-@Controller('bs/bsbookings/')
+@Controller('bs')
 export class BsbookingsController {
     constructor(private readonly bookingService: BsbookingsService) {}
 
-    @Get('bookings/:business_id')
+    @Get('/:business_id/bookings')
     async getAllBookings(@Param('business_id') businessId: string): Promise<Booking[]> {
         return this.bookingService.getAllBookings(businessId);
     }
 
-    @Get('bookings/:business_id/:id')
+    @Get(':business_id/bookings/:id')
     async getBookingById(@Param('business_id') businessId: string, @Param('id') id: string): Promise<Booking> {
         return this.bookingService.getBookingById(businessId, id);
     }
@@ -22,17 +22,17 @@ export class BsbookingsController {
         return this.bookingService.getBookingByCustomerId(customerId);
     }
 
-    @Post('bookings/:business_id')
+    @Post('/:business_id/bookings')
     async createBooking(@Param('business_id') businessId: string, @Body() createBookingDto: CreateBookingDto): Promise<Booking> {
         return this.bookingService.createBooking(businessId, createBookingDto);
     }
 
-    @Put('bookings/:business_id/:id')
+    @Put('/:business_id/bookings/:id')
     async updateBooking(@Param('business_id') businessId: string, @Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto): Promise<Booking> {
         return this.bookingService.updateBooking(businessId, id, updateBookingDto);
     }
 
-    @Delete('bookings/:business_id/:id')
+    @Delete('/:business_id/bookings/:id')
     async deleteBooking(@Param('business_id') businessId: string, @Param('id') id: string): Promise<void> {
         return this.bookingService.deleteBooking(businessId, id);
     }

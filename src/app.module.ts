@@ -27,6 +27,9 @@ import { ImageBlobModule } from './imageBlob/imageBlob.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { BspostModule } from './bspost/bspost.module';
+import { PaymentModule } from './payment/payment.module';
+import { NotificationModule } from './notification/notification.module';
+import Stripe from 'stripe';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -75,6 +78,13 @@ import { BspostModule } from './bspost/bspost.module';
         inject: [ConfigService],
       }
     ),
+    PaymentModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        apiKey: configService.get<string>('STRIPE_SECRET_KEY'),
+        apiVersion: configService.get<string>('STRIPE_API_VERSION', '2022-11-15'),
+      }),
+      inject: [ConfigService],
+    }),
     BusinessClientsModule,
     BusinessCustomersModule,
     SubscribersModule,
@@ -86,7 +96,9 @@ import { BspostModule } from './bspost/bspost.module';
     ChatAppModule,
     BspostModule,
     AuthModule,
-    ImageBlobModule
+    ImageBlobModule,
+    PaymentModule,
+    NotificationModule
   ],
   controllers: [AppController],
   providers: [AppService],
