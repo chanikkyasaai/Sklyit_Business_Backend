@@ -27,6 +27,8 @@ import { ImageBlobModule } from './imageBlob/imageBlob.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { BspostModule } from './bspost/bspost.module';
+import { SearchModule } from './search/search.module';
+import { UserPreferencesModule } from './user_preferences/user_preferences.module';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -86,7 +88,9 @@ import { BspostModule } from './bspost/bspost.module';
     ChatAppModule,
     BspostModule,
     AuthModule,
-    ImageBlobModule
+    ImageBlobModule,
+    SearchModule,
+    UserPreferencesModule
   ],
   controllers: [AppController],
   providers: [AppService],
