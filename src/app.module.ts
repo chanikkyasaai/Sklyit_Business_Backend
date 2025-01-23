@@ -18,7 +18,7 @@ import { BusinessClients } from './business_clients/business_clients.entity';
 import { Customers } from './business_customers/business_customers.entity';
 import { Booking } from './bsbookings/bsbookings.entity';
 import { Orders } from './bsorders/bsorders.entity';
-import { Subscribers } from './subscribers/subscribers.entity';
+import { Subscription } from './subscribers/subscribers.entity';
 import { HasLoyalty } from './loyalty_system/loyalty_system.entity';
 import { Products } from './bsproducts/bsproducts.entity';
 import { Users } from './sklyit_users/sklyit_users.entity';
@@ -61,7 +61,7 @@ import { UserPreferencesModule } from './user_preferences/user_preferences.modul
           username,
           password,
           database,
-          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscribers,HasLoyalty,Products,Users],
+          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users],
           autoLoadEntities: true,
           synchronize: true,
           ssl: {

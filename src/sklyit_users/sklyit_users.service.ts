@@ -1,4 +1,4 @@
-import { Subscribers } from './../subscribers/subscribers.entity';
+
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {Repository } from 'typeorm';
@@ -15,8 +15,6 @@ export class SklyitUsersService {
         @InjectRepository(Users)
         private readonly userRepository: Repository<Users>,
 
-        @InjectRepository(Subscribers)
-        private readonly subscribersRepository: Repository<Subscribers>,
 
         private readonly azureBlobService: AzureBlobService, // Inject AzureBlobService
     ) { }
@@ -34,14 +32,7 @@ export class SklyitUsersService {
             );
         }
 
-        // Validate premiumId if provided
-        let subscriber = null;
-        if (premiumId) {
-            subscriber = await this.subscribersRepository.findOne({ where: { premiumId } });
-            if (!subscriber) {
-                throw new NotFoundException(`Subscriber with premiumId ${premiumId} not found`);
-            }
-        }
+        
 
         // If a file is provided, upload it to Azure Blob Storage
         if (file) {

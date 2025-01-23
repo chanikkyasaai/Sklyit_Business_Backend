@@ -7,7 +7,7 @@ import { HasLoyalty } from 'src/loyalty_system/loyalty_system.entity';
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
 import { Orders } from 'src/bsorders/bsorders.entity';
 import { Booking } from 'src/bsbookings/bsbookings.entity';
-import { Subscribers } from 'src/subscribers/subscribers.entity';
+import { Subscription } from 'src/subscribers/subscribers.entity';
 
 @Entity('SKLYIT_business_clients')
 export class BusinessClients {
@@ -67,7 +67,7 @@ export class BusinessClients {
         state: string;
         pincode: string;
     }>;
-    
+
     @Column({ nullable: true })
     @IsNumber()
     loyaltypts?: number;
@@ -79,7 +79,11 @@ export class BusinessClients {
     @JoinColumn({ name: 'userId' })
     user: Users;
 
-    @ManyToOne(() => Subscribers, (subscriber) => subscriber.premiumId)
+    @ManyToOne(() => Subscription, (subscription) => subscription.premiumId,{nullable:true})
+    @JoinColumn({ name: 'premiumId' })
+    subscriptions: Subscription;
+
+    @Column({nullable:true})
     premiumId: string; // Foreign key relation with Subscribers
 
     @OneToMany(() => Customers, (customer) => customer.businessClient, { onDelete: 'CASCADE' })
@@ -93,7 +97,7 @@ export class BusinessClients {
 
     @OneToMany(() => HasLoyalty, (hasLoyalty) => hasLoyalty.businessClient, { onDelete: 'CASCADE' })
     hasLoyalty: HasLoyalty[];
-    
+
     @OneToMany(() => Orders, (order) => order.businessClient, { onDelete: 'CASCADE' })
     orders: Orders[];
 

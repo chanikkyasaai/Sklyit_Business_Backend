@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { IsString, IsEmail, IsDate } from 'class-validator';
-import { Subscribers } from './../subscribers/subscribers.entity'; // Assuming the Subscribers table exists
 import { Booking } from 'src/bsbookings/bsbookings.entity';
 
 @Entity('SKLYIT_users')
