@@ -100,7 +100,7 @@ import { UserPreferencesModule } from './user_preferences/user_preferences.modul
     AuthModule,
     ImageBlobModule,
     PaymentModule,
-    NotificationModule
+    NotificationModule,
     SearchModule,
     UserPreferencesModule
   ],

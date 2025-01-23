@@ -72,9 +72,12 @@ export class BusinessClients {
     @IsNumber()
     loyaltypts?: number;
 
+    @Column()
+    userId: string;
+
     @OneToOne(() => Users, { onDelete: 'CASCADE', cascade: true })
     @JoinColumn({ name: 'userId' })
-    userId: Users;
+    user: Users;
 
     @ManyToOne(() => Subscribers, (subscriber) => subscriber.premiumId)
     premiumId: string; // Foreign key relation with Subscribers

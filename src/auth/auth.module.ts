@@ -6,6 +6,9 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { SklyitUsersModule } from 'src/sklyit_users/sklyit_users.module';
+import { BusinessClients } from 'src/business_clients/business_clients.entity';
+import { BusinessClientsModule } from 'src/business_clients/business_clients.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -17,7 +20,7 @@ import { SklyitUsersModule } from 'src/sklyit_users/sklyit_users.module';
         signOptions: {  },
       })
     }),
-    SklyitUsersModule,
+    SklyitUsersModule,BusinessClientsModule,TypeOrmModule.forFeature([BusinessClients])
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController]

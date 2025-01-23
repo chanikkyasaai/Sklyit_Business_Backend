@@ -1,10 +1,11 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BsservicesService } from './bsservices.service';
 import { Services } from './services.entity';
 import { CreateServiceDto, UpdateServiceDto } from './dto/createServiceDto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
-@Controller('bs/:business_id/')
+@Controller('bs')
 export class BsservicesController {
     constructor(private readonly bsservicesService: BsservicesService) { }
 
@@ -24,10 +25,13 @@ export class BsservicesController {
     }
 
     @Get('service')
+    @UseGuards(JwtAuthGuard)
     getServicesByFlag(
-        @Param('business_id') bs_id: string,
+        @Req() req,
+        
     ): Promise<Services[]> {
-        return this.bsservicesService.getServicesByFlag(bs_id);
+        console.log(req.user.bs_id);
+        return this.bsservicesService.getServicesByFlag(req.user.bs_id);
     }
 
     @Get('service/:service_id')

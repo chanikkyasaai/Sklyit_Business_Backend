@@ -4,7 +4,7 @@ import { CreateBusinessClientDto } from './business_clients.dto';
 import { BusinessClients } from './business_clients.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('Sklyit/bs')
+@Controller('bs')
 export class BusinessClientsController {
   constructor(private readonly userService: BusinessClientsService) { }
 

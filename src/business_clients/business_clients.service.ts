@@ -61,8 +61,8 @@ export class BusinessClientsService {
         // Map the DTO to the BusinessClients entity
         const businessClient = this.businessClientsRepository.create({
             ...createBusinessClientDto,  // Spread the DTO data
-
-            userId: user,  // Assign the full user entity
+            userId:user.userId,
+            user: user,  // Assign the full user entity
         });
 
 
