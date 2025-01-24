@@ -1,62 +1,60 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common';
 import { BusinessCustomersService } from './business_customers.service';
 import { Customers } from './business_customers.entity';
 import { CreateBusinessCustomerDto } from './bscustomer.dto';
 
-@Controller('bs/:business_id/')
+@Controller('bs/')
 export class BusinessCustomersController {
     constructor(private readonly businessCustomersService: BusinessCustomersService) { }
     
     @Get('bs_customers')
-    async getAllBusinessCustomers(@Param('business_id') bs_id: string): Promise<Customers[]> {
-        return await this.businessCustomersService.getAllBusinessCustomers(bs_id);
+    async getAllBusinessCustomers(@Req() req): Promise<Customers[]> {
+        return await this.businessCustomersService.getAllBusinessCustomers(req.user.bs_id);
     }
 
     @Get('bs_customers/:cust_id')
-    async getBusinessCustomerByID(@Param('business_id') bs_id: string, @Param('cust_id') cust_id: string): Promise<Customers> {
-        return await this.businessCustomersService.getBusinessCustomerByID(bs_id, cust_id);
+    async getBusinessCustomerByID(@Req() req, @Param('cust_id') cust_id: string): Promise<Customers> {
+        return await this.businessCustomersService.getBusinessCustomerByID(req.user.bs_id, cust_id);
     }
 
     @Get('bs_customer')
-    async getAllBusinessCustomersByFlag(@Param('business_id') bs_id: string): Promise<Customers[]> {
-        return await this.businessCustomersService.getAllBusinessCustomersByFlag(bs_id);
+    async getAllBusinessCustomersByFlag(@Req() req): Promise<Customers[]> {
+        return await this.businessCustomersService.getAllBusinessCustomersByFlag(req.user.bs_id);
     }
 
     @Get('bs_customer/:cust_id')
-    async getBusinessCustomerByFlag(@Param('business_id') bs_id: string, @Param('cust_id') cust_id: string): Promise<Customers> {
-        return await this.businessCustomersService.getBusinessCustomerByFlag(bs_id, cust_id);
+    async getBusinessCustomerByFlag(@Req() req, @Param('cust_id') cust_id: string): Promise<Customers> {
+        return await this.businessCustomersService.getBusinessCustomerByFlag(req.user.bs_id, cust_id);
     }
     @Post('bs_customers')
     async createBusinessCustomer(
-        @Param('business_id') bs_id: string,
+        @Req() req,
         @Body() createCustomerDto: CreateBusinessCustomerDto
     ): Promise<Customers> {
-        return await this.businessCustomersService.createBusinessCustomer(bs_id, createCustomerDto);
+        return await this.businessCustomersService.createBusinessCustomer(req.user.bs_id, createCustomerDto);
     }
 
     @Put('bs_customers/:cust_id')
-    async updateBusinessCustomer(@Param('business_id') bs_id: string, @Param('cust_id') cust_id: string, @Body() updateCustomerDto: CreateBusinessCustomerDto): Promise<Customers> {
-        return await this.businessCustomersService.updateBusinessCustomer(bs_id, cust_id, updateCustomerDto);
+    async updateBusinessCustomer(@Req() req, @Param('cust_id') cust_id: string, @Body() updateCustomerDto: CreateBusinessCustomerDto): Promise<Customers> {
+        return await this.businessCustomersService.updateBusinessCustomer(req.user.bs_id, cust_id, updateCustomerDto);
     }
 
     @Put('bs_customer/:cust_id')
     async updateBusinessCustomerFlag(
-        @Param('business_id') bs_id: string,
+        @Req() req,
         @Param('cust_id') cust_id: string
     ): Promise<Customers> {
-        return await this.businessCustomersService.updateBusinessCustomerFlag(bs_id, cust_id);
+        return await this.businessCustomersService.updateBusinessCustomerFlag(req.user.bs_id, cust_id);
     }
     @Delete('bs_customers/:cust_id')
-    async deleteBusinessCustomer(@Param('business_id') bs_id: string, @Param('cust_id') cust_id: string): Promise<void> {
-        return await this.businessCustomersService.deleteBusinessCustomer(bs_id, cust_id);
+    async deleteBusinessCustomer(@Req() req, @Param('cust_id') cust_id: string): Promise<void> {
+        return await this.businessCustomersService.deleteBusinessCustomer(req.user.bs_id, cust_id);
     }
 
     @Get('new_old_customers')
-    async getNewOldCustomers(@Param('business_id') bs_id: string):
+    async getNewOldCustomers(@Req() req):
         Promise<{ newCustomers: number; oldCustomers: number; newPercentage: number; oldPercentage: number }>{
-        return await this.businessCustomersService.getNewOldCustomers(bs_id);
+        return await this.businessCustomersService.getNewOldCustomers(req.user.bs_id);
     }
 
-   
-    
 }

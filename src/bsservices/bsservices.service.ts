@@ -81,13 +81,17 @@ export class BsservicesService {
             throw error;
         }
     }
-    async createServices(bs_id: string, createServicesDto: CreateServiceDto, file: Express.Multer.File): Promise<Services> {
+    async createServices(bs_id: string, createServicesDto: CreateServiceDto, file?: Express.Multer.File): Promise<Services> {
         if (!bs_id) {
             throw new Error('Business ID is required');
         }
 
         const { name, description, price } = createServicesDto;
-        const imageUrl = await this.azureBlobService.upload(file,this.containerName)
+        let imageUrl = '';
+        if(file){
+            imageUrl = await this.azureBlobService.upload(file, this.containerName)
+
+        }
         if (!name || !price) {
             throw new Error('Name and Price are required fields');
         }
@@ -96,7 +100,7 @@ export class BsservicesService {
             ServiceName: name,
             ServiceDesc: description || '',
             ServiceCost: price,
-            ImageUrl:imageUrl,
+            ImageUrl:imageUrl||'',
             businessClient: { BusinessId: bs_id }
         });
 

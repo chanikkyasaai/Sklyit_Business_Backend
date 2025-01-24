@@ -17,6 +17,9 @@ export class CreateServiceDto {
     @IsOptional()
     imageUrl?: string;
 
+    @IsString()
+    @IsOptional()
+    service_id?: string;
     // @IsNumber()
     // @IsNotEmpty()
     // business_id: number;

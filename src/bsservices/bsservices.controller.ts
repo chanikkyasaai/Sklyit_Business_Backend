@@ -6,6 +6,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
 @Controller('bs')
+@UseGuards(JwtAuthGuard)
 export class BsservicesController {
     constructor(private readonly bsservicesService: BsservicesService) { }
 
@@ -15,31 +16,31 @@ export class BsservicesController {
     }
 
     @Get('services')
-    getServices(@Param('business_id') bs_id: string): Promise<Services[]> {
-        return this.bsservicesService.getServices(bs_id);
+    getServices(
+        @Req() req): Promise<Services[]> {
+        return this.bsservicesService.getServices(req.user.bs_id);
     }
 
     @Get('services/:service_id')
-    getServiceById(@Param('business_id') bs_id: string, @Param('service_id') service_id: string): Promise<Services> {
-        return this.bsservicesService.getServiceById(bs_id, service_id);
+    getServiceById(@Req() req, @Param('service_id') service_id: string): Promise<Services> {
+        return this.bsservicesService.getServiceById(req.user.bs_id, service_id);
     }
 
     @Get('service')
     @UseGuards(JwtAuthGuard)
     getServicesByFlag(
         @Req() req,
-        
     ): Promise<Services[]> {
-        console.log(req.user.bs_id);
+        //console.log(req.user.bs_id);
         return this.bsservicesService.getServicesByFlag(req.user.bs_id);
     }
 
     @Get('service/:service_id')
     getServiceByFlag(
-        @Param('business_id') bs_id: string,
+        @Req() req,
         @Param('service_id') service_id:string,
     ): Promise<Services>{
-        return this.bsservicesService.getServiceByFlag(bs_id, service_id);
+        return this.bsservicesService.getServiceByFlag(req.user.bs_id, service_id);
     }
     
     @Post('services')
@@ -51,12 +52,11 @@ export class BsservicesController {
             },
         }),
     )
-    createServices(
-        @Param('business_id') bs_id: string,
+    createServices(@Req() req,
         @Body() createServicesDto: CreateServiceDto,
         @UploadedFile() file: Express.Multer.File
     ): Promise<Services> {
-        return this.bsservicesService.createServices(bs_id, createServicesDto, file);
+        return this.bsservicesService.createServices(req.user.bs_id, createServicesDto, file);
     }
 
     @Put('services/:service_id')
@@ -68,25 +68,25 @@ export class BsservicesController {
     }),
     )
     updateServices(
-        @Param('business_id') bs_id: string,
+        @Req() req,
         @Param('service_id') service_id: string,
         @Body() updateServicesDto: UpdateServiceDto,
         @UploadedFile() file: Express.Multer.File
     ): Promise<Services> {
-        return this.bsservicesService.updateServices(bs_id, service_id, updateServicesDto, file);
+        return this.bsservicesService.updateServices(req.user.bs_id, service_id, updateServicesDto, file);
     }
 
     @Put('service/:service_id')
     updateFlag(
-        @Param('business_id') bs_id: string,
+        @Req() req,
         @Param('service_id') service_id: string
     ): Promise<Services> {
-        return this.bsservicesService.updateServiceFlag(bs_id, service_id);
+        return this.bsservicesService.updateServiceFlag(req.user.bs_id, service_id);
     }    
         
     @Delete('services/:service_id')
-    deleteServices(@Param('business_id') bs_id: string, @Param('service_id') service_id: string): Promise<void> {
-        return this.bsservicesService.deleteServices(bs_id, service_id);
+    deleteServices(@Req() req, @Param('service_id') service_id: string): Promise<void> {
+        return this.bsservicesService.deleteServices(req.user.bs_id, service_id);
     }
 }
 
