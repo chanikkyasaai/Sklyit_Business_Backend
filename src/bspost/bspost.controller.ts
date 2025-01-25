@@ -1,10 +1,12 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BspostService } from './bspost.service';
 import { CreatePostDto } from './createpost.dto';
 import { Post as PostDocument } from './bspost.schema';
 import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 @Controller('bs/')
+@UseGuards(JwtAuthGuard)
 export class BspostController {
     constructor(
         private readonly postsService: BspostService,

@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BusinessClients } from 'src/business_clients/business_clients.entity';
-import { BusinessClientsService } from 'src/business_clients/business_clients.service';
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
 import { SklyitUsersService } from 'src/sklyit_users/sklyit_users.service';
 import { Equal, Repository } from 'typeorm';

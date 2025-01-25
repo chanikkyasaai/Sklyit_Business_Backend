@@ -1,11 +1,13 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BsproductsService } from './bsproducts.service';
 import { Products } from './bsproducts.entity';
 import { create } from 'domain';
 import { CreateProductDto, UpdateProductDto } from './bsproducts.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
 @Controller('bs/')
+@UseGuards(JwtAuthGuard)
 export class BsproductsController {
     constructor(private readonly bsproductsService: BsproductsService) { }
 

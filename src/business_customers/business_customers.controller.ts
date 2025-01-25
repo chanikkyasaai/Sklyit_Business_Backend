@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { BusinessCustomersService } from './business_customers.service';
 import { Customers } from './business_customers.entity';
 import { CreateBusinessCustomerDto } from './bscustomer.dto';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
 @Controller('bs/')
+@UseGuards(JwtAuthGuard)
 export class BusinessCustomersController {
     constructor(private readonly businessCustomersService: BusinessCustomersService) { }
-    
+
     @Get('bs_customers')
     async getAllBusinessCustomers(@Req() req): Promise<Customers[]> {
         return await this.businessCustomersService.getAllBusinessCustomers(req.user.bs_id);
@@ -53,7 +55,7 @@ export class BusinessCustomersController {
 
     @Get('new_old_customers')
     async getNewOldCustomers(@Req() req):
-        Promise<{ newCustomers: number; oldCustomers: number; newPercentage: number; oldPercentage: number }>{
+        Promise<{ newCustomers: number; oldCustomers: number; newPercentage: number; oldPercentage: number }> {
         return await this.businessCustomersService.getNewOldCustomers(req.user.bs_id);
     }
 

@@ -3,7 +3,6 @@ import { CreateUserDto, UpdateUserDto } from './sklyit_users.dto';
 import { Users } from './sklyit_users.entity';
 import { SklyitUsersService } from './sklyit_users.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { In } from 'typeorm';
 
 
 @Controller('users')
@@ -52,5 +51,10 @@ export class SklyitUsersController {
         @Body() updateUserDto: UpdateUserDto ,
         @UploadedFile() file: Express.Multer.File): Promise<Users> {
         return this.userService.updateUser(id, updateUserDto, file);
+    }
+
+    @Put('update_fcm_token/:userid')
+    async update_fcm_token(@Param('userid') id: string, @Body() body: { fcm_token: string }): Promise<Users> {
+        return this.userService.update_fcm_token(id, body.fcm_token);
     }
 }

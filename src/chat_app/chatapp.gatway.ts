@@ -58,15 +58,11 @@ export class ChatGateway {
                 if (recipientToken) {
                     console.log(`Sending push notification to receiver (${receiver})`);
 
+                
                     const title = 'New Message';
-                    const body = `${sender} sent you a message: ${content}`;
-
-                    await this.notificationService.sendNotification(
-                        [recipientToken],
-                        title,
-                        body,
-                        { sender, content } // Optional: Add any additional data
-                    );
+                    const body = '${ sender } sent you a message: ${ content }';
+                    const payload = { notification: { title, body }, token: recipientToken }; // { title, body, token: recipientToken };
+                    await this.notificationService.sendNotification(payload);
                 } else {
                     console.log(`No FCM token found for receiver (${receiver}).`);
                 }
@@ -75,6 +71,4 @@ export class ChatGateway {
             console.error('Error in handleSendMessage:', error);
         }
     }
-
-
 }

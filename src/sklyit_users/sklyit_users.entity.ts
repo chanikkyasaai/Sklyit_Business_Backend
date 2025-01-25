@@ -64,4 +64,7 @@ export class Users {
   @OneToMany(() => Booking, (booking) => booking.customer)
   bookings: Booking[];
 
+  @Column({ nullable: true })
+  @IsString()
+  fcm_token: string;
 }

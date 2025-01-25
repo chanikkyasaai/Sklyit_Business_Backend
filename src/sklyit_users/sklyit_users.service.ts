@@ -102,4 +102,13 @@ export class SklyitUsersService {
         //console.log(updateUserDto);
         return await this.userRepository.save({ ...user, ...updateUserDto });
     }
+
+    async update_fcm_token(userId: string, fcm_token: string) {
+        const user = await this.userRepository.findOne({ where: { userId: userId } });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        user.fcm_token = fcm_token;
+        return this.userRepository.save(user);
+    }
 }

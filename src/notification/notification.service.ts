@@ -14,23 +14,12 @@ export class NotificationService implements OnModuleInit{
             console.log('Firebase Admin Initialized');
         }
     }
-    async sendNotification(
-        tokens: string[],
-        title: string,
-        body: string,
-        data?: Record<string, any>,
-    ): Promise<void> {
+    async sendNotification(payload: admin.messaging.Message): Promise<void> {
         try {
-            const message = {
-                notification: { title, body },
-                data: data || {},
-                tokens,
-            };
-
-            const response = await admin.messaging().sendEachForMulticast(message); 
-            console.log('Notifications sent:', response.successCount);
+            await admin.messaging().send(payload);
+            console.log('Notification sent successfully');
         } catch (error) {
-            console.error('Error sending notifications:', error);
+            console.error('Error sending notification:', error);
         }
     }
 }

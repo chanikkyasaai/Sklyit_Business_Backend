@@ -6,7 +6,24 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {
         super({
-            jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.jwt]),
+            jwtFromRequest: ExtractJwt.fromExtractors([
+                (req) => {
+                    // Check for JWT in cookies
+                    const tokenFromCookies = req?.cookies?.jwt;
+                    if (tokenFromCookies) {
+                        return tokenFromCookies;
+                    }
+
+                    // Check for JWT in Authorization header
+                    const authHeader = req?.headers?.authorization;
+                    if (authHeader && authHeader.startsWith('Bearer ')) {
+                        return authHeader.split(' ')[1];
+                    }
+
+                    // Return null if no token is found
+                    return null;
+                },
+            ]),
             secretOrKey: process.env.SECRET_KEY || 'secretKey', // Use the environment variable if available
         });
     }

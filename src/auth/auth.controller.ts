@@ -20,6 +20,12 @@ export class AuthController {
             sameSite: 'none', // Prevent CSRF
             maxAge: 3600000, // 1 hour
         });
+        return access_token;
+    }
+
+    async logout(@Res({ passthrough: true }) res: Response) {
+        res.clearCookie('jwt');
+        return { message: 'Logout successful' };
     }
 
 }
