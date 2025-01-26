@@ -5,12 +5,12 @@ import { Post as PostDocument } from './bspost.schema';
 import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { JwtCustomerAuthGuard } from 'src/auth_customer/jwt.auth_customer.guard';
 @Controller('bs/')
 @UseGuards(JwtAuthGuard)
 export class BspostController {
     constructor(
-        private readonly postsService: BspostService,
-        private readonly azureBlobService: AzureBlobService) { }
+        private readonly postsService: BspostService,) { }
 
     @Post('posts')
     @UseInterceptors(
@@ -42,7 +42,7 @@ export class BspostController {
     ): Promise<PostDocument[]> {
         return this.postsService.getAllPostsByFlag(req.user.bs_id);
     }
-    
+
     @Get('posts/:id')
     async getPostById(
         @Req() req,
@@ -73,38 +73,39 @@ export class BspostController {
     }
 
     @Put('posts/:id/like')
+    @UseGuards(JwtCustomerAuthGuard)
     async likePost(
         @Req() req,
-        @Param('id') id: string,
-        @Body() likedBy: string
+        @Param('id') id: string
     ): Promise<PostDocument> {
-        return this.postsService.likePost(req.user.bs_id, id, likedBy);
+        return this.postsService.likePost(req.user.sub, id);
     }
 
     @Put('posts/:id/unlike')
+    @UseGuards(JwtCustomerAuthGuard)
     async unlikePost(
         @Req() req,
-        @Param('id') id: string,
-        @Body() likedBy: string
+        @Param('id') id: string
     ): Promise<PostDocument> {
-        return this.postsService.unlikePost(req.user.bs_id, id, likedBy);
+        return this.postsService.unlikePost(req.user.sub, id);
     }
 
     @Put('posts/:id/comment')
+    @UseGuards(JwtCustomerAuthGuard)
     async commentPost(
         @Req() req,
         @Param('id') id: string,
         @Body() updateComment: any
     ): Promise<PostDocument> {
-        return this.postsService.commentPost(req.user.bs_id, id, updateComment);
+        return this.postsService.commentPost(req.user.sub, id, updateComment);
     }
 
     @Put('posts/:id/uncomment')
+    @UseGuards(JwtCustomerAuthGuard)
     async uncommentPost(
         @Req() req,
-        @Param('id') id: string,
-        @Body() user: string
+        @Param('id') id: string
     ): Promise<PostDocument> {
-        return this.postsService.uncommentPost(req.user.bs_id, id,user);
+        return this.postsService.uncommentPost(req.user.sub, id);
     }
 }

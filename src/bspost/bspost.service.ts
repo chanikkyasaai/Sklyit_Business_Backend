@@ -89,14 +89,14 @@ export class BspostService {
         }
     }
 
-    async uncommentPost(bs_id: string, id: string, user: string): Promise<Post> {
-        if (!bs_id || !id || !user) {
+    async uncommentPost(cust_id: string, id: string): Promise<Post> {
+        if (!cust_id || !id ) {
             throw new Error('Business ID, ID and User are required');
         }
         try {
             const post = await this.postModel.findOneAndUpdate(
-                { _id: id, business_id: bs_id },
-                {$pull: { comments: { user } }},
+                { _id: id},
+                {$pull: { comments: { cust_id } }},
                 { new: true }).exec();
             if (!post) {
                 throw new Error('Post not found');
@@ -140,20 +140,20 @@ export class BspostService {
         
     }
 
-    async likePost(bs_id: string, id: string, likedBy: string): Promise<Post> {
-        if (!bs_id || !id) {
+    async likePost(cust_id: string, id: string): Promise<Post> {
+        if (!cust_id || !id) {
             throw new Error('Business ID and ID are required');
         }
         try {
             const post = await this.postModel.findOneAndUpdate(
-                { _id: id, business_id: bs_id },
+                { _id: id },
                 { $inc: { likes: 1 } },
             
                 { new: true }).exec();
             if (!post) {
                 throw new Error('Post not found');
             }
-            post.likedBy.push(likedBy);
+            post.likedBy.push(cust_id);
             return post;
         } catch (error) {
             console.log(error);
@@ -161,19 +161,19 @@ export class BspostService {
         }
     }
 
-    async unlikePost(bs_id: string, id: string, likedBy: string): Promise<Post> {
-        if (!bs_id || !id) {
+    async unlikePost(cust_id: string, id: string): Promise<Post> {
+        if (!cust_id || !id) {
             throw new Error('Business ID and ID are required');
         }
         try {
             const post = await this.postModel.findOneAndUpdate(
-                { _id: id, business_id: bs_id },
+                { _id: id},
                 { $inc: { likes: -1 } },
                 { new: true }).exec();
             if (!post) {
                 throw new Error('Post not found');
             }
-            post.likedBy = post.likedBy.filter(user => user !== likedBy);
+            post.likedBy = post.likedBy.filter(user => user !== cust_id);
             return post;
         } catch (error) {
             console.log(error);
@@ -181,14 +181,14 @@ export class BspostService {
         }
     }
 
-    async commentPost(bs_id: string, id: string,updateComment:any): Promise<Post> {
-        if (!bs_id || !id) {
+    async commentPost(cust_id: string, id: string,updateComment:any): Promise<Post> {
+        if (!cust_id || !id) {
             throw new Error('Business ID and ID are required');
         }
         try {
             const post = await this.postModel.findOneAndUpdate(
-                { _id: id, business_id: bs_id },
-                { $push: { comments: { user: updateComment.user, comment: updateComment.comment } } },
+                { _id: id},
+                { $push: { comments: { user: cust_id, comment: updateComment.comment } } },
                 { new: true }).exec();
             if (!post) {
                 throw new Error('Post not found');

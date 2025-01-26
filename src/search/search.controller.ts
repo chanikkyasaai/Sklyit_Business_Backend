@@ -1,10 +1,10 @@
 import { Controller, Get, Param, Query, Req, UseGuards } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { SearchBusinessClientsDto } from './search.dto';
-import { JwtAuthGuard } from 'src/auth_customer/jwt.auth_customer.guard';
+import { JwtCustomerAuthGuard } from 'src/auth_customer/jwt.auth_customer.guard';
 
 @Controller('search/')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtCustomerAuthGuard)
 export class SearchController {
     constructor(private readonly searchService: SearchService) {}
 
