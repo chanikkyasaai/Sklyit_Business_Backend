@@ -4,10 +4,20 @@ import { SearchBusinessClientsDto } from './search.dto';
 
 @Controller('search/:userId')
 export class SearchController {
-    constructor(private readonly businessClientsService: SearchService) {}
+    constructor(private readonly searchService: SearchService) {}
 
     @Get()
     async searchBusinessClients(@Param ('userId') userId: string, @Query() filters: SearchBusinessClientsDto) {
-        return await this.businessClientsService.searchBusinessClients(filters, userId);
+        return await this.searchService.searchBusinessClients(filters, userId);
+    }
+
+    @Get('trending/:limit')
+    async getTrendingBusinesses(@Param('limit') limit: number) {
+      return this.searchService.getTopBusinessesByOrdersYesterday(limit);
+    }
+  
+    @Get('top-businesses/:limit')
+    async getTopBusinesses(@Param('limit') limit: number) {
+      return this.searchService.getTopBusinessesByOrders(limit);
     }
 }

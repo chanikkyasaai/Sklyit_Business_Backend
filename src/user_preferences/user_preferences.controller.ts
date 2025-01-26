@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Patch, Get } from '@nestjs/common';
+import { Controller, Post, Body, Param, Patch, Get, Delete } from '@nestjs/common';
 import { UserPreferencesService } from './user_preferences.service';
 
 @Controller('user-history')
@@ -18,5 +18,10 @@ export class UserPreferencesController {
   @Get(':userId')
   async getAllData(@Param('userId') userId: string) {
     return this.userPreferencesService.getAllData(userId);
+  }
+
+  @Delete(':userId/bookings/:bookingId')
+  async removeSavedBooking(@Param('userId') userId: string, @Param('bookingId') bookingId: string) {
+    await this.userPreferencesService.removeSavedBooking(userId, bookingId);
   }
 }
