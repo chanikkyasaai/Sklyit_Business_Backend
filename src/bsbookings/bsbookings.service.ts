@@ -21,10 +21,10 @@ export class BsbookingsService {
         });
     }
 
-    async getBookingById(businessId: string, id: string): Promise<Booking> {
+    async getBookingById(id: string): Promise<Booking> {
         try {
             return this.bookingRepository.findOne({
-                where: { businessClient: { BusinessId: businessId }, BookingID: id },
+                where: { BookingID: id },
                 relations: ['customer', 'service', 'businessClient'],
             });
         } catch (error) {
@@ -71,8 +71,8 @@ export class BsbookingsService {
         }
     }
 
-    async updateBooking(businessId: string, id: string, updateBookingDto: UpdateBookingDto): Promise<Booking> {
-        const booking = await this.getBookingById(businessId, id);
+    async updateBooking(id: string, updateBookingDto: UpdateBookingDto): Promise<Booking> {
+        const booking = await this.getBookingById(id);
         if (!booking) {
             throw new Error('Booking not found');
         }
@@ -86,8 +86,8 @@ export class BsbookingsService {
         }
     }
 
-    async deleteBooking(businessId: string, id: string): Promise<void> {
-        const booking = await this.getBookingById(businessId, id);
+    async deleteBooking(id: string): Promise<void> {
+        const booking = await this.getBookingById(id);
         if (!booking) {
             throw new Error('Booking not found');
         }

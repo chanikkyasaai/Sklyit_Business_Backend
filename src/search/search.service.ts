@@ -73,6 +73,41 @@ export class SearchService {
         return result;
     }
 
+     async getTopBusinessesByOrders(limit: number): Promise<any[]> {
+        return await this.businessClientsRepository
+          .createQueryBuilder('businessClients')
+          .leftJoin('businessClients.orders', 'orders')
+          .select('businessClients.BusinessId', 'BusinessId')
+          .addSelect('businessClients.Clientname', 'Clientname')
+          .addSelect('COUNT(orders.Oid) as totalOrderCount') // Count total orders
+          .groupBy('businessClients.BusinessId')
+          .addGroupBy('businessClients.Clientname')
+          .orderBy('totalOrderCount', 'DESC') // Order by total order count
+          .limit(limit)
+          .getRawMany();
+      }
+    
+      async getTopBusinessesByOrdersYesterday(limit: number): Promise<any[]> {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+    
+        const startOfDay = new Date(yesterday.setHours(0, 0, 0, 0));
+        const endOfDay = new Date(yesterday.setHours(23, 59, 59, 999));
+    
+        return await this.businessClientsRepository
+          .createQueryBuilder('businessClients')
+          .leftJoin('businessClients.orders', 'orders')
+          .select('businessClients.BusinessId', 'BusinessId')
+          .addSelect('businessClients.Clientname', 'Clientname')
+          .addSelect('COUNT(orders.Oid) as yesterdayOrderCount') // Count orders for yesterday
+          .where('orders.Odate BETWEEN :startOfDay AND :endOfDay', { startOfDay, endOfDay })
+          .groupBy('businessClients.BusinessId')
+          .addGroupBy('businessClients.Clientname')
+          .orderBy('yesterdayOrderCount', 'DESC') // Order by yesterday's order count
+          .limit(limit)
+          .getRawMany();
+      }
+
     private getCacheKey(filters: SearchBusinessClientsDto): string {
         return `searchBusinesses:${JSON.stringify(filters)}`;
     }
