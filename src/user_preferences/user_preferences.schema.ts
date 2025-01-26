@@ -10,6 +10,9 @@ export class UserPreferences extends Document {
   @Prop({ type: [String], default: [] })
   savedBookings: string[];
 
+  @Prop({ type: [String], default: [] })
+  followedBusinesses: string[];
+
   @Prop({ type: Object, default: {} })
   preferences: Record<string, any>;
 

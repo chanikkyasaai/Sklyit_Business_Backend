@@ -10,7 +10,17 @@ export class SearchController {
 
     @Get()
     async searchBusinessClients(@Req() req, @Query() filters: SearchBusinessClientsDto) {
-        return await this.searchService.searchBusinessClients(filters, req.user.sub);
+        return await this.searchService.searchBusinessClients(filters, req.user.userid);
+    }
+
+    @Get('business/:id')
+    async getBusinessById(@Param('id') id: string) {
+        return this.searchService.getBusinessById(id);
+    }
+
+    @Get('tag/:tag')
+    async searchBusinessByTag(@Req() req, @Param('tag') tag: string) {
+        return this.searchService.searchBusinessByTag(req.user.userid, tag);
     }
 
     @Get('trending/:limit')
