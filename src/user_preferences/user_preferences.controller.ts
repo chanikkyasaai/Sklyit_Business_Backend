@@ -1,27 +1,28 @@
-import { Controller, Post, Body, Param, Patch, Get, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Param, Patch, Get, Delete, UseGuards, Req } from '@nestjs/common';
 import { UserPreferencesService } from './user_preferences.service';
-
-@Controller('user-history')
+import { JwtAuthGuard } from 'src/auth_customer/jwt.auth_customer.guard';
+@Controller('user-data')
+@UseGuards(JwtAuthGuard)
 export class UserPreferencesController {
   constructor(private readonly userPreferencesService: UserPreferencesService) {}
 
-  @Patch(':userId/bookings')
-  async addSavedBooking(@Param('userId') userId: string, @Body('bookingId') bookingId: string) {
-    await this.userPreferencesService.addSavedBooking(userId, bookingId);
+  @Patch('bookings')
+  async addSavedBooking(@Req() req, @Body('bookingId') bookingId: string) {
+    await this.userPreferencesService.addSavedBooking(req.user.sub, bookingId);
   }
   
-  @Patch(':userId/preferences')
-  async updatePreferences(@Param('userId') userId: string, @Body() preferences: Record<string, any>) {
-    await this.userPreferencesService.updatePreferences(userId, preferences);
+  @Patch('preferences')
+  async updatePreferences(@Req() req, @Body() preferences: Record<string, any>) {
+    await this.userPreferencesService.updatePreferences(req.user.sub, preferences);
   }
 
-  @Get(':userId')
-  async getAllData(@Param('userId') userId: string) {
-    return this.userPreferencesService.getAllData(userId);
+  @Get()
+  async getAllData(@Req() req) {
+    return this.userPreferencesService.getAllData(req.user.sub);
   }
 
-  @Delete(':userId/bookings/:bookingId')
-  async removeSavedBooking(@Param('userId') userId: string, @Param('bookingId') bookingId: string) {
-    await this.userPreferencesService.removeSavedBooking(userId, bookingId);
+  @Delete('/bookings/:bookingId')
+  async removeSavedBooking(@Req() req,@Param('bookingId') bookingId: string) {
+    await this.userPreferencesService.removeSavedBooking(req.user.sub, bookingId);
   }
 }
