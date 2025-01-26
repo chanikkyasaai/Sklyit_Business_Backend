@@ -23,7 +23,7 @@ export class BusinessClientsController {
     return this.userService.getAllBusinessClients();
   }
 
-  @Get(':id')
+  @Get('clients/:id')
   async getUserById(@Param('id') id: string): Promise<BusinessClients> {
     return this.userService.getBusinessClientByID(id);
   }

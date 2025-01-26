@@ -23,7 +23,6 @@ export class AuthService {
         const payload = { mobileNumber: user.mobileno, email: user.gmail, sub: user.userId,bs_id:bs_id };
         return this.jwtService.sign(payload);
     }
-    
 
     async validateUser(userid:string, password:string): Promise<Users> {
         const user = await this.userService.validateUser(userid, password);

@@ -27,11 +27,10 @@ export class BsservicesController {
     }
 
     @Get('service')
-    @UseGuards(JwtAuthGuard)
     getServicesByFlag(
         @Req() req,
     ): Promise<Services[]> {
-        //console.log(req.user.bs_id);
+        console.log(req.user.bs_id);
         return this.bsservicesService.getServicesByFlag(req.user.bs_id);
     }
 

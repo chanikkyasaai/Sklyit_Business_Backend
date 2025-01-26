@@ -1,22 +1,27 @@
 import { Module, DynamicModule } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { PaymentController } from './payment.controller';
+import { PaymentService } from './payment.service';
 
-@Module({})
+@Module({
+  controllers: [PaymentController],
+  providers: [PaymentService],
+  exports: [PaymentService],
+})
 export class PaymentModule {
-  static forRootAsync(options: {
-    useFactory: (...args: any[]) => Promise<any> | any;
-    inject: any[];
-  }): DynamicModule {
-    return {
-      module: PaymentModule,
-      providers: [
-        {
-          provide: 'PAYMENT_CONFIG',
-          useFactory: options.useFactory,
-          inject: options.inject,
-        },
-      ],
-      exports: ['PAYMENT_CONFIG'],
-    };
-  }
+  // static forRootAsync(options: {
+  //   useFactory: (...args: any[]) => Promise<any> | any;
+  //   inject: any[];
+  // }): DynamicModule {
+  //   return {
+  //     module: PaymentModule,
+  //     providers: [
+  //       {
+  //         provide: 'PAYMENT_CONFIG',
+  //         useFactory: options.useFactory,
+  //         inject: options.inject,
+  //       },
+  //     ],
+  //     exports: ['PAYMENT_CONFIG'],
+  //   };
+  // }
 }

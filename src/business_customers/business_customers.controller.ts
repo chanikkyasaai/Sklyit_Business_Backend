@@ -11,6 +11,7 @@ export class BusinessCustomersController {
 
     @Get('bs_customers')
     async getAllBusinessCustomers(@Req() req): Promise<Customers[]> {
+        console.log(req.user.bs_id);
         return await this.businessCustomersService.getAllBusinessCustomers(req.user.bs_id);
     }
 

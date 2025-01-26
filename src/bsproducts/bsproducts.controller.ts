@@ -6,12 +6,12 @@ import { CreateProductDto, UpdateProductDto } from './bsproducts.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
-@Controller('bs/')
+@Controller('bs')
 @UseGuards(JwtAuthGuard)
 export class BsproductsController {
     constructor(private readonly bsproductsService: BsproductsService) { }
 
-    @Get('products')
+    @Get('/products')
     getProducts(@Req() req): Promise<Products[]> {
         return this.bsproductsService.getProducts(req.user.bs_id);
     }
@@ -24,7 +24,7 @@ export class BsproductsController {
         return this.bsproductsService.getProductById(req.user.bs_id, product_id);
     }
     
-    @Get('product')
+    @Get('/product')
     getProductsByFlag(
         @Req() req,
     ): Promise<Products[]> {

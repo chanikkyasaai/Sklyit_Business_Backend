@@ -80,13 +80,7 @@ import { UserPreferencesModule } from './user_preferences/user_preferences.modul
         inject: [ConfigService],
       }
     ),
-    PaymentModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
-        apiKey: configService.get<string>('STRIPE_SECRET_KEY'),
-        apiVersion: configService.get<string>('STRIPE_API_VERSION', '2022-11-15'),
-      }),
-      inject: [ConfigService],
-    }),
+    
     BusinessClientsModule,
     BusinessCustomersModule,
     SubscribersModule,
