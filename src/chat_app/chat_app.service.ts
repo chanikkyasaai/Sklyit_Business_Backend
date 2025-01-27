@@ -18,8 +18,8 @@ export class ChatService {
         return this.messageModel.find({ $or: [{ sender: userId }, { receiver: userId }] }).exec();
     }
 
-    async createMessage(sender: string, receiver: string, content: string): Promise<Message> {
-        const newMessage = new this.messageModel({ sender, receiver, content });
+    async createMessage(senderId: string, receiverId: string,senderName:string,receiverName:string, content: string): Promise<Message> {
+        const newMessage = new this.messageModel({ senderId, receiverId,senderName,receiverName, content });
         return newMessage.save();
     }
 

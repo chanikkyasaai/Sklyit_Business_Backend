@@ -4,16 +4,21 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class Message extends Document {
     @Prop({ required: true })
-    sender: string;
+    senderId: string;
 
     @Prop({ required: true })
-    receiver: string;
+    receiverId: string;
 
+    @Prop({ required: true })
+    senderName: string;
+
+    @Prop({ required: true })
+    receiverName: string;
+    
     @Prop({ required: true })
     content: string;
 
     @Prop({ default: Date.now })
     timestamp: Date;
 }
-
 export const MessageSchema = SchemaFactory.createForClass(Message);

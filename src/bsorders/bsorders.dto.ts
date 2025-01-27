@@ -1,9 +1,12 @@
 
-import { IsArray, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsDate, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 export class CreateOrdersDto {
     @IsString()
     custid: string;
+    
+    @IsDate()
+    ODate: Date;
     
     @IsArray()
     @ValidateNested({ each: true })
