@@ -105,7 +105,7 @@ export class BsordersController {
     return this.bsordersService.getBottom3VisitedCustomers(parseInt(req.user.bs_id));
   }
 
-  @Get('weekly')
+  @Get('weekly_analytics')
   async getWeeklyAnalytics(
     @Req() req)  // Include req.user.bs_id as a query parameter
    {
@@ -113,7 +113,7 @@ export class BsordersController {
   }
 
   // Endpoint for monthly analytics (with req.user.bs_id)
-  @Get('monthly')
+  @Get('monthly_analytics')
   async getMonthlyAnalytics(
     @Req() req // Include req.user.bs_id as a query parameter
   ) {
@@ -142,5 +142,14 @@ export class BsordersController {
     @Body('CustId') CustId: number,
   ) {
     return this.bsordersService.getPastServices(parseInt(req.user.bs_id), CustId);
+  }
+  
+  @Get('retention_churn_rate')
+  async getRetentionChurnRate(
+    @Req() req,
+    @Query('year') year: number,
+    @Query('month') month: number
+  ) {
+    return this.bsordersService.getRetentionAndChurnRate(parseInt(req.user.bs_id), year, month);
   }
 }

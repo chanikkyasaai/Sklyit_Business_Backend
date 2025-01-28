@@ -40,9 +40,10 @@ export class BsordersService {
         if (!bs_id) {
             throw new Error('Business ID is required');
         }
-        const { custid, services, products } = createOrderDto;
+        const { custid, services, products,ODate } = createOrderDto;
         try {
             const order = this.ordersRepository.create({
+                Odate: ODate,
                 Services: services,
                 Products: products,
                 customer: { CustId: custid },
@@ -316,8 +317,8 @@ FROM (
 ) subquery
 JOIN "Customers" c ON subquery."CustId" = c."CustId"
 GROUP BY subquery."CustId", c."Name"
-ORDER BY total DESC
-LIMIT 6;
+ORDER BY total ASC
+LIMIT 3;
     `;
         try {
             console.log("Business ID:", businessId);
@@ -534,74 +535,95 @@ GROUP BY
         return result;
     }
 
-    async getMonthlyComparison(businessId: number, year: number, month: number)
-        : Promise<{
-            totalCustomers: number;
-            newCustomers: number;
-            totalRevenue: number;
-        }> {
+    async getMonthlyComparison(
+        businessId: number,
+        year: number,
+        month: number
+    ): Promise<{
+        totalCustomers: number;
+        newCustomers: number;
+        totalRevenue: number;
+    }> {
         const startDate = new Date(year, month - 1, 1); // Start of the month
-        const endDate = new Date(year, month, 0); // End of the month
+        const endDate = new Date(year, month, 0, 23, 59, 59); // End of the month
 
         console.log("startDate", startDate);
         console.log("endDate", endDate);
-        // Query to fetch metrics
-        const totalCustomersQuery = `
-  SELECT COUNT(DISTINCT "CustId") AS "totalCustomers"
-  FROM "Orders"
-  WHERE "business_id" = $1
-    AND "Odate" BETWEEN $2 AND $3;
-`;
+
         let totalCustomers = 0;
-        try {
-            totalCustomers = await this.ordersRepository.query(totalCustomersQuery, [businessId, startDate, endDate]);
-        } catch (error) {
-            console.log("Total customers from orders", error);
-        }
-        const newCustomersQuery = `
-  SELECT COUNT(DISTINCT c."CustId")
-FROM "Customers" c
-JOIN "Orders" o ON c."CustId" = o."CustId"
-WHERE c."business_id" = $1
-  AND c."created_at">= NOW() - INTERVAL '1 month'
-  AND o."business_id" = $1
-  AND o."Odate" BETWEEN $2 AND $3;
-`;
         let newCustomers = 0;
-        try {
-            newCustomers = await this.customersRepository.query(newCustomersQuery, [businessId, startDate, endDate]);
-        }
-        catch (error) {
-            console.log("new customer ", error);
-        }
-        const totalRevenueQuery = `
-  SELECT COALESCE(
-            (SELECT SUM((s->>'cost')::numeric) FROM jsonb_array_elements("Services") s),
-            0
-        ) +
-        COALESCE(
-            (SELECT SUM((p->>'cost')::numeric) FROM jsonb_array_elements("Products") p),
-            0
-        )  AS "totalRevenue"
-  FROM "Orders"
-  WHERE "business_id" = $1
-    AND "Odate" BETWEEN $2 AND $3;
-`;
         let totalRevenue = 0;
+
+        // Query to fetch total customers
+        const totalCustomersQuery = `
+        SELECT COUNT(DISTINCT "CustId") AS "totalCustomers"
+        FROM "Orders"
+        WHERE "business_id" = $1
+          AND "Odate" BETWEEN $2 AND $3;
+    `;
         try {
-            totalRevenue = await this.ordersRepository.query(totalRevenueQuery, [businessId, startDate, endDate]);
+            const result = await this.ordersRepository.query(totalCustomersQuery, [businessId, startDate, endDate]);
+            totalCustomers = result[0]?.totalCustomers || 0;
+        } catch (error) {
+            console.error("Error fetching total customers:", error);
         }
-        catch (error) {
-            console.log("total revenue ", error);
+
+        // Query to fetch new customers
+        const newCustomersQuery = `
+        SELECT COUNT(DISTINCT c."CustId") AS "newCustomers"
+        FROM "Customers" c
+        JOIN "Orders" o ON c."CustId" = o."CustId"
+        WHERE c."business_id" = $1
+          AND c."created_at" BETWEEN $2 AND $3
+          AND o."Odate" BETWEEN $2 AND $3;
+    `;
+        try {
+            const result = await this.customersRepository.query(newCustomersQuery, [businessId, startDate, endDate]);
+            newCustomers = result[0]?.newCustomers || 0;
+        } catch (error) {
+            console.error("Error fetching new customers:", error);
         }
-        const results = {
-            totalCustomers: totalCustomers[0]?.totalCustomers || 0,
-            newCustomers: newCustomers[0]?.newCustomers || 0,
-            totalRevenue: totalRevenue[0]?.totalRevenue || 0,
+
+        // Query to fetch total revenue
+        const totalRevenueQuery = `
+        SELECT 
+            COALESCE(
+                SUM(
+                    COALESCE((s->>'cost')::numeric, 0)
+                ), 0
+            ) AS "totalRevenue"
+        FROM (
+            SELECT jsonb_array_elements("Services") AS s
+            FROM "Orders"
+            WHERE "business_id" = $1
+              AND "Odate" BETWEEN $2 AND $3
+        ) services
+        UNION ALL
+        SELECT 
+            COALESCE(
+                SUM(
+                    COALESCE((p->>'cost')::numeric, 0)
+                ), 0
+            ) AS "totalRevenue"
+        FROM (
+            SELECT jsonb_array_elements("Products") AS p
+            FROM "Orders"
+            WHERE "business_id" = $1
+              AND "Odate" BETWEEN $2 AND $3
+        ) products;
+    `;
+        try {
+            const result = await this.ordersRepository.query(totalRevenueQuery, [businessId, startDate, endDate]);
+            totalRevenue = result.reduce((sum, row) => sum + parseFloat(row.totalRevenue || 0), 0);
+        } catch (error) {
+            console.error("Error fetching total revenue:", error);
+        }
+
+        return {
+            totalCustomers,
+            newCustomers,
+            totalRevenue,
         };
-
-        return results;
-
     }
 
     async getPastServices(businessId: number, CustId: number) {
@@ -620,5 +642,78 @@ WHERE c."business_id" = $1
         }));
 
     }
+    async getRetentionAndChurnRate(
+        businessId: number,
+        year: number,
+        month: number
+    ): Promise<{
+        retentionRate: number;
+        churnRate: number;
+    }> {
+        // Calculate date ranges
+        const currentStartDate = new Date(year, month - 1, 1); // Start of the current month
+        const currentEndDate = new Date(year, month, 0, 23, 59, 59); // End of the current month
+        const previousStartDate = new Date(year, month - 2, 1); // Start of the previous month
+        const previousEndDate = new Date(year, month - 1, 0, 23, 59, 59); // End of the previous month
+
+        console.log("Previous Period:", previousStartDate, previousEndDate);
+        console.log("Current Period:", currentStartDate, currentEndDate);
+
+        let activePrevious = 0;
+        let retainedCustomers = 0;
+
+        // Query for customers active in the previous period
+        const activePreviousQuery = `
+        SELECT COUNT(DISTINCT "CustId") AS "activePrevious"
+        FROM "Orders"
+        WHERE "business_id" = $1
+          AND "Odate" BETWEEN $2 AND $3;
+    `;
+        try {
+            const result = await this.ordersRepository.query(activePreviousQuery, [
+                businessId,
+                previousStartDate,
+                previousEndDate,
+            ]);
+            activePrevious = result[0]?.activePrevious || 0;
+        } catch (error) {
+            console.error("Error fetching active previous customers:", error);
+        }
+
+        // Query for customers active in both periods
+        const retainedCustomersQuery = `
+        SELECT COUNT(DISTINCT o1."CustId") AS "retainedCustomers"
+        FROM "Orders" o1
+        JOIN "Orders" o2 ON o1."CustId" = o2."CustId"
+        WHERE o1."business_id" = $1
+          AND o2."business_id" = $1
+          AND o1."Odate" BETWEEN $2 AND $3
+          AND o2."Odate" BETWEEN $4 AND $5;
+    `;
+        try {
+            const result = await this.ordersRepository.query(retainedCustomersQuery, [
+                businessId,
+                previousStartDate,
+                previousEndDate,
+                currentStartDate,
+                currentEndDate,
+            ]);
+            retainedCustomers = result[0]?.retainedCustomers || 0;
+        } catch (error) {
+            console.error("Error fetching retained customers:", error);
+        }
+        console.log(`Active Previous Customers: ${activePrevious}`);
+        console.log(`Retained Customers: ${retainedCustomers}`);
+
+        // Calculate retention and churn rates
+        const retentionRate = activePrevious > 0 ? (retainedCustomers / activePrevious) * 100 : 0;
+        const churnRate = 100 - retentionRate;
+
+        return {
+            retentionRate: parseFloat(retentionRate.toFixed(2)),
+            churnRate: parseFloat(churnRate.toFixed(2)),
+        };
+    }
+
 }
 

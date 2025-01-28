@@ -42,21 +42,21 @@ export class ChatGateway {
         try {
             console.log('Client ID:', client.id);
 
-            const { sender, receiver, content } = data;
-            console.log('Message Data:', sender, receiver, content);
+            const { senderId, receiverId,senderName,receiverName, content } = data;
+            console.log('Message Data:', senderId, receiverId, content);
 
-            const message = await this.chatService.createMessage(sender, receiver, content);
-            const recieverSocketId = this.userSocketMap.get(receiver);
+            const message = await this.chatService.createMessage(senderId, receiverId,senderName,receiverName, content);
+            const recieverSocketId = this.userSocketMap.get(receiverId);
 
             if (recieverSocketId) {
-                console.log(`Sending message to receiver (${receiver}) with socket ID: ${recieverSocketId}`);
+                console.log(`Sending message to receiver (${receiverId}-${receiverName}) with socket ID: ${recieverSocketId}`);
                 client.to(recieverSocketId).emit('recieveMessage', message);
             } else {
-                console.log(`Receiver (${receiver}) is not connected.`);
+                console.log(`Receiver (${receiverId}) is not connected.`);
                 // If the receiver is not connected, send a push notification
-                const recipientToken = await this.chatService.getUserFcmToken(receiver); // Implement this in your service
+                const recipientToken = await this.chatService.getUserFcmToken(receiverId); // Implement this in your service
                 if (recipientToken) {
-                    console.log(`Sending push notification to receiver (${receiver})`);
+                    console.log(`Sending push notification to receiver (${receiverId})`);
 
                 
                     const title = 'New Message';
@@ -64,7 +64,7 @@ export class ChatGateway {
                     const payload = { notification: { title, body }, token: recipientToken }; // { title, body, token: recipientToken };
                     await this.notificationService.sendNotification(payload);
                 } else {
-                    console.log(`No FCM token found for receiver (${receiver}).`);
+                    console.log(`No FCM token found for receiver (${receiverId}).`);
                 }
             }
         } catch (error) {

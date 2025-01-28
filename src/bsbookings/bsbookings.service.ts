@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Booking } from './bsbookings.entity';
 import { CreateBookingDto, UpdateBookingDto } from './bsbookings.dto';
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
@@ -36,7 +36,7 @@ export class BsbookingsService {
     async getBookingByCustomerId(userId: string): Promise<Booking[]> {
         try {
             const user = await this.usersRepository.findOne({
-                where: { userId: userId, usertype: 'Customer' },
+                where: { userId: userId, usertype: In(['Customer', 'customer']) },
             });
     
             if (!user) {
