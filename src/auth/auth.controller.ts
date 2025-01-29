@@ -30,6 +30,26 @@ export class AuthController {
         )
         return {accessToken,refreshToken};
     }
+    @Post('refresh')
+    async refresh(@Body('refreshToken') refreshToken: string,
+        @Res({ passthrough: true }) res: Response) {
+        const { accessToken, refresh_Token } = await this.authService.refreshAccessToken(refreshToken);
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: false, // Use secure cookies in production
+            sameSite: 'none', // Prevent CSRF
+            maxAge: 3600000, // 1 hour
+        });
+        res.cookie(
+            'refreshTooken', refresh_Token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none',
+            maxAge: 90 * 24 * 60 * 60 * 1000
+        }
+        )
+        return { accessToken, refresh_Token };
+    }
     @Get('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
         res.clearCookie('accessToken');

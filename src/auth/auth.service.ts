@@ -20,7 +20,7 @@ export class AuthService {
     ) { }
 
     async login(user: Users) {
-        console.log(user);
+        //console.log(user);
         const bs_id = await this.getBusinessId(user.userId);
         const payload = { mobileNumber: user.mobileno, email: user.gmail, sub: user.userId, bs_id };
 
@@ -56,6 +56,8 @@ export class AuthService {
         // Hash refresh token before storing
         const hashedToken = await bcrypt.hash(refreshToken, 10);
 
+        // Delete any existing refresh token for the user
+        await this.refreshTokenRepository.delete({ userId });
         // Save token in DB
         await this.refreshTokenRepository.save({ userId, token: hashedToken });
 
@@ -64,12 +66,13 @@ export class AuthService {
 
     // Refresh Access Token
     async refreshAccessToken(refreshToken: string) {
+        //console.log("Received Refresh Token:", refreshToken);
         const payload = this.jwtService.verify(refreshToken);
         const userId = payload.sub;
 
         // Fetch refresh token from DB
         const storedToken = await this.refreshTokenRepository.findOne({ where: { userId } });
-
+        //console.log(storedToken);
         if (!storedToken || !(await bcrypt.compare(refreshToken, storedToken.token))) {
             throw new UnauthorizedException('Invalid refresh token');
         }
@@ -78,7 +81,7 @@ export class AuthService {
         const newAccessToken = this.jwtService.sign({ sub: userId }, { expiresIn: '15m' });
         const newRefreshToken = await this.generateRefreshToken(userId);
 
-        return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+        return { accessToken: newAccessToken, refresh_Token: newRefreshToken };
     }
 
     // Logout (Delete Refresh Token)
