@@ -9,7 +9,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             jwtFromRequest: ExtractJwt.fromExtractors([
                 (req) => {
                     // Check for JWT in cookies
-                    const tokenFromCookies = req?.cookies?.jwt;
+                    const tokenFromCookies = req?.cookies?.accessToken;
                     if (tokenFromCookies) {
                         return tokenFromCookies;
                     }

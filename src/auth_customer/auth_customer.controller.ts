@@ -1,6 +1,6 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { AuthCustomerService } from './auth_customer.service';
-import {Response} from 'express';
+import { Response } from 'express';
 @Controller('bs/auth_customer')
 export class AuthCustomerController {
     constructor(
@@ -12,20 +12,50 @@ export class AuthCustomerController {
         @Body() body: { userid: string, password: string },
         @Res({ passthrough: true }) res: Response) {
         const user = await this.authService.validateUser(body.userid, body.password);
-        const access_token =await this.authService.login(user);
+        const { access_token, refresh_token } = await this.authService.login(user);
         console.log(access_token);
-        res.cookie('jwt', access_token, {
+        res.cookie('accessToken', access_token, {
             httpOnly: true,
             secure: false, // Use secure cookies in production
             sameSite: 'none', // Prevent CSRF
             maxAge: 3600000, // 1 hour
         });
-        return access_token;
+        res.cookie(
+            'refreshTooken', refresh_token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none',
+            maxAge: 90 * 24 * 60 * 60 * 1000
+        }
+        )
+        return { access_token, refresh_token };
     }
 
+    
+    @Post('refresh')
+    async refresh(@Body('refreshToken') refreshToken: string,
+        @Res({ passthrough: true }) res: Response) {
+        const { accessToken, refresh_Token } = await this.authService.refreshAccessToken(refreshToken);
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: false, // Use secure cookies in production
+            sameSite: 'none', // Prevent CSRF
+            maxAge: 3600000, // 1 hour
+        });
+        res.cookie(
+            'refreshTooken', refresh_Token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none',
+            maxAge: 90 * 24 * 60 * 60 * 1000
+        }
+        )
+        return { accessToken, refresh_Token };
+    }
+    @Get('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
-        res.clearCookie('jwt');
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshTooken');
         return { message: 'Logout successful' };
     }
-
 }

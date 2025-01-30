@@ -32,6 +32,7 @@ import { NotificationModule } from './notification/notification.module';
 import Stripe from 'stripe';
 import { SearchModule } from './search/search.module';
 import { UserPreferencesModule } from './user_preferences/user_preferences.module';
+import { AuthCustomerModule } from './auth_customer/auth_customer.module';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -94,6 +95,7 @@ import { UserPreferencesModule } from './user_preferences/user_preferences.modul
     AuthModule,
     ImageBlobModule,
     PaymentModule,
+    AuthCustomerModule,
     NotificationModule,
     SearchModule,
     UserPreferencesModule

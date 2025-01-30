@@ -6,9 +6,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { SklyitUsersModule } from 'src/sklyit_users/sklyit_users.module';
-import { BusinessClients } from 'src/business_clients/business_clients.entity';
-import { BusinessClientsModule } from 'src/business_clients/business_clients.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { RefreshToken } from 'src/auth/refreshtoken.entity';
 
 @Module({
   imports: [
@@ -20,9 +19,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         signOptions: {  },
       })
     }),
-    SklyitUsersModule,BusinessClientsModule,TypeOrmModule.forFeature([BusinessClients])
+    SklyitUsersModule,TypeOrmModule.forFeature([RefreshToken])
   ],
   providers: [AuthCustomerService, JwtStrategy],
-  controllers: [AuthCustomerController]
+  controllers: [AuthCustomerController],
+  exports: [AuthCustomerService]
 })
 export class AuthCustomerModule {}
