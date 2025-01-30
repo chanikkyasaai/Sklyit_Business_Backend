@@ -7,6 +7,12 @@ dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser())
+  app.enableCors({
+    origin: '*', // Allow all origins (change to specific origin in production)
+    credentials: true, // Allow cookies and authentication headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  });
   await app.listen(3000);
 }
 bootstrap();

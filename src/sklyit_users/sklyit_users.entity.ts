@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { IsString, IsEmail, IsDate } from 'class-validator';
 import { Booking } from 'src/bsbookings/bsbookings.entity';
 
@@ -63,6 +63,9 @@ export class Users {
 
   @OneToMany(() => Booking, (booking) => booking.customer)
   bookings: Booking[];
+
+  @OneToOne(() => Users, (user) => user.refreshToken)
+  refreshToken: Users;
 
   @Column({ nullable: true })
   @IsString()

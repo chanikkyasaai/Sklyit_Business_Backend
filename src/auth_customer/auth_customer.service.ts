@@ -35,7 +35,7 @@ export class AuthCustomerService {
         return user;
     }
     async generateRefreshToken(userId: string): Promise<string> {
-        const refreshToken = this.jwtService.sign({ sub: userId }, { expiresIn: '7d' });
+        const refreshToken = this.jwtService.sign({ sub: userId }, { expiresIn: '30d' });
 
         // Hash refresh token before storing
         const hashedToken = await bcrypt.hash(refreshToken, 10);
@@ -50,22 +50,22 @@ export class AuthCustomerService {
 
     // Refresh Access Token
     async refreshAccessToken(refreshToken: string) {
-        console.log("Received Refresh Token:", refreshToken);
+        // console.log("Received Refresh Token:", refreshToken);
         const payload = this.jwtService.verify(refreshToken);
         const userId = payload.sub;
 
         // Fetch refresh token from DB
         const storedToken = await this.refreshTokenRepository.findOne({ where: { userId } });
-        console.log(storedToken);
+        // console.log(storedToken);
         if (!storedToken || !(await bcrypt.compare(refreshToken, storedToken.token))) {
             throw new UnauthorizedException('Invalid refresh token');
         }
 
         // Generate new tokens
         const newAccessToken = this.jwtService.sign({ sub: userId }, { expiresIn: '15m' });
-        const newRefreshToken = await this.generateRefreshToken(userId);
+        // const newRefreshToken = await this.generateRefreshToken(userId);
 
-        return { accessToken: newAccessToken, refresh_Token: newRefreshToken };
+        return { accessToken: newAccessToken };
     }
     async logout(userId: string) {
         await this.refreshTokenRepository.delete({ userId });

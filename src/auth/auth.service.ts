@@ -51,7 +51,7 @@ export class AuthService {
 
     // Generate Refresh Token and store it in the DB
     async generateRefreshToken(userId: string): Promise<string> {
-        const refreshToken = this.jwtService.sign({ sub: userId }, { expiresIn: '7d' });
+        const refreshToken = this.jwtService.sign({ sub: userId }, { expiresIn: '30d' });
 
         // Hash refresh token before storing
         const hashedToken = await bcrypt.hash(refreshToken, 10);
@@ -79,9 +79,9 @@ export class AuthService {
 
         // Generate new tokens
         const newAccessToken = this.jwtService.sign({ sub: userId }, { expiresIn: '15m' });
-        const newRefreshToken = await this.generateRefreshToken(userId);
+        // const newRefreshToken = await this.generateRefreshToken(userId);
 
-        return { accessToken: newAccessToken, refresh_Token: newRefreshToken };
+        return { accessToken: newAccessToken };
     }
 
     // Logout (Delete Refresh Token)
