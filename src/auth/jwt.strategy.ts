@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtBusStrategy extends PassportStrategy(Strategy, 'business-jwt') {
     constructor() {
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([
@@ -29,6 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: any) {
-        return { bs_id: payload.bs_id };
+        console.log('Decoded Payload:', payload); // Debugging
+        return { bs_id: payload.bs_id, sub: payload.sub, email: payload.email };
     }
 }

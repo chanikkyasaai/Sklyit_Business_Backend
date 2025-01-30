@@ -22,8 +22,8 @@ export class AuthService {
     async login(user: Users) {
         //console.log(user);
         const bs_id = await this.getBusinessId(user.userId);
-        const payload = { mobileNumber: user.mobileno, email: user.gmail, sub: user.userId, bs_id };
-
+        const payload = { mobileNumber: user.mobileno, email: user.gmail, sub: user.userId, bs_id:bs_id };
+        console.log('Payload before signing:', payload); // Debugging
         // Generate tokens
         const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
         const refreshToken = await this.generateRefreshToken(user.userId);

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtBusStrategy } from './jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -23,7 +23,8 @@ import { RefreshToken } from './refreshtoken.entity';
     }),
     SklyitUsersModule,BusinessClientsModule,TypeOrmModule.forFeature([BusinessClients,RefreshToken])
   ],
-  providers: [AuthService, JwtStrategy],
-  controllers: [AuthController]
+  providers: [AuthService, JwtBusStrategy],
+  controllers: [AuthController],
+  exports:[AuthService]
 })
 export class AuthModule {}
