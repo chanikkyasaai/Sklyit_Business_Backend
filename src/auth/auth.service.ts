@@ -22,8 +22,8 @@ export class AuthService {
     async login(user: Users) {
         //console.log(user);
         const bs_id = await this.getBusinessId(user.userId);
-        const payload = { mobileNumber: user.mobileno, email: user.gmail, sub: user.userId, bs_id };
-
+        const payload = { mobileNumber: user.mobileno, email: user.gmail, sub: user.userId, bs_id:bs_id };
+        console.log('Payload before signing:', payload); // Debugging
         // Generate tokens
         const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
         const refreshToken = await this.generateRefreshToken(user.userId);
@@ -51,7 +51,7 @@ export class AuthService {
 
     // Generate Refresh Token and store it in the DB
     async generateRefreshToken(userId: string): Promise<string> {
-        const refreshToken = this.jwtService.sign({ sub: userId }, { expiresIn: '7d' });
+        const refreshToken = this.jwtService.sign({ sub: userId }, { expiresIn: '30d' });
 
         // Hash refresh token before storing
         const hashedToken = await bcrypt.hash(refreshToken, 10);
@@ -79,9 +79,9 @@ export class AuthService {
 
         // Generate new tokens
         const newAccessToken = this.jwtService.sign({ sub: userId }, { expiresIn: '15m' });
-        const newRefreshToken = await this.generateRefreshToken(userId);
+        // const newRefreshToken = await this.generateRefreshToken(userId);
 
-        return { accessToken: newAccessToken, refresh_Token: newRefreshToken };
+        return { accessToken: newAccessToken };
     }
 
     // Logout (Delete Refresh Token)

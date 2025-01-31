@@ -2,16 +2,15 @@ import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, R
 import { BspostService } from './bspost.service';
 import { CreatePostDto } from './createpost.dto';
 import { Post as PostDocument } from './bspost.schema';
-import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { JwtCustomerAuthGuard } from 'src/auth_customer/jwt.auth_customer.guard';
 @Controller('bs/')
-@UseGuards(JwtAuthGuard)
 export class BspostController {
     constructor(
         private readonly postsService: BspostService,) { }
 
+    @UseGuards(JwtAuthGuard)
     @Post('posts')
     @UseInterceptors(
         FileInterceptor('image', {
@@ -30,19 +29,23 @@ export class BspostController {
     }
 
     @Get('posts')
+    @UseGuards(JwtAuthGuard)
     async getAllPosts(
         @Req() req
     ): Promise<PostDocument[]> {
-        return this.postsService.getAllPosts(req.user.bs_id);
+        return await this.postsService.getAllPosts(req.user.bs_id);
     }
 
+    @UseGuards(JwtCustomerAuthGuard, JwtAuthGuard)
     @Get('post')
     async getAllPostsByFlag(
         @Req() req
     ): Promise<PostDocument[]> {
-        return this.postsService.getAllPostsByFlag(req.user.bs_id);
+        console.log(req.user);
+        return await this.postsService.getAllPostsByFlag(req.user.bs_id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('posts/:id')
     async getPostById(
         @Req() req,
@@ -50,6 +53,7 @@ export class BspostController {
         return this.postsService.getPostById(req.user.bs_id, id);
     }
 
+    @UseGuards(JwtAuthGuard,JwtCustomerAuthGuard)
     @Get('post/:id')
     async getPostByFlag(
         @Req() req,
@@ -57,6 +61,7 @@ export class BspostController {
         return this.postsService.getPostByFlag(req.user.bs_id, id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Put('posts/:id')
     async updatePost(
         @Req() req,
@@ -65,6 +70,7 @@ export class BspostController {
         return this.postsService.updatePost(req.user.bs_id, id, updatePostDto);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete('posts/:id')
     async deletePost(
         @Req() req,

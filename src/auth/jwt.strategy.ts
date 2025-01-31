@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor() {
+export class JwtBusStrategy extends PassportStrategy(Strategy, 'business-jwt') {
+    constructor(configService: ConfigService) {
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([
                 (req) => {
@@ -24,11 +25,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
                     return null;
                 },
             ]),
-            secretOrKey: process.env.SECRET_KEY || 'secretKey', // Use the environment variable if available
+            secretOrKey: configService.get<string>('SECRET_KEY', 'secretKey'),
         });
     }
 
     async validate(payload: any) {
-        return { bs_id: payload.bs_id };
+        console.log('Decoded Payload:', payload); // Debugging
+        return { bs_id: payload.bs_id, sub: payload.sub, email: payload.email };
     }
 }

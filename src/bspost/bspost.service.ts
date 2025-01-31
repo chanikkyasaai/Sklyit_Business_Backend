@@ -15,11 +15,14 @@ export class BspostService {
         private azureBlobService: AzureBlobService
     ) { }
 
-    async createPost(bs_id: string, createPostDto: CreatePostDto, file: Express.Multer.File): Promise<Post> {
+    async createPost(bs_id: string, createPostDto: CreatePostDto, file?: Express.Multer.File): Promise<Post> {
         if (!bs_id) {
             throw new Error('Business ID is required'); // Throw a clear error if `bs_id` is missing
         }
-        const imageUrl = await this.azureBlobService.upload(file, this.containerName);
+        let imageUrl = '';
+        if (file) {
+            imageUrl = await this.azureBlobService.upload(file, this.containerName);
+        }
         
         const newPost = new this.postModel({
             ...createPostDto,
@@ -50,7 +53,7 @@ export class BspostService {
             throw new Error('Business ID is required');
         }
         try {
-            return await this.postModel.find({ business_id: bs_id ,Pflag:0}).exec();
+            return await this.postModel.find({ business_id: bs_id, Pflag: Number(0) }).exec();
         } catch (error) {
             console.log(error);
             throw error;
