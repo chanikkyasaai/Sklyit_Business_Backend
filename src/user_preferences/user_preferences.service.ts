@@ -79,8 +79,12 @@ export class UserPreferencesService {
     if (!userHistory) {
       throw new Error('No search history found for the specified user.');
     }
-    userHistory.followedBusinesses = userHistory.followedBusinesses.filter(
-      (followedBusiness) => followedBusiness !== businessId,
+    await this.UserPreferencesModel.updateOne(
+      { userId },
+      {
+        $addToSet: { followedBusinesses: businessId },
+      },
+      { upsert: true },
     );
 
     await userHistory.save();
