@@ -33,7 +33,12 @@ import Stripe from 'stripe';
 import { SearchModule } from './search/search.module';
 import { UserPreferencesModule } from './user_preferences/user_preferences.module';
 import { AuthCustomerModule } from './auth_customer/auth_customer.module';
-import { SphereModule } from './sphere/sphere.module';
+import { SphereModule } from './sphere/sphere.module'; 
+import { BookingModule } from './booking/booking.module';
+import { ProfessionalModule } from './professional-entities/entities/professional.module';
+import { PrBooking } from './booking/entity/booking.entity';
+import { Professional } from './professional-entities/entities/professional.entity';
+import { Service } from './professional-entities/entities/service.entity';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -63,9 +68,9 @@ import { SphereModule } from './sphere/sphere.module';
           username,
           password,
           database,
-          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users],
+          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users,Professional, PrBooking, Service,PrBooking],
           autoLoadEntities: true,
-          synchronize: true,
+          synchronize: false,
           ssl: {
             rejectUnauthorized: false, // Set this to false if you're using self-signed certificates
           },
@@ -88,6 +93,7 @@ import { SphereModule } from './sphere/sphere.module';
     SubscribersModule,
     SklyitUsersModule,
     BsbookingsModule,
+    BookingModule,
     BsordersModule,
     BsproductsModule,
     LoyaltySystemModule,
@@ -99,6 +105,7 @@ import { SphereModule } from './sphere/sphere.module';
     PaymentModule,
     AuthCustomerModule,
     NotificationModule,
+    ProfessionalModule,
     SearchModule,
     SphereModule,
     UserPreferencesModule

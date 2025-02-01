@@ -1,7 +1,7 @@
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 
-@Entity()
+@Entity('refreshtoken')
 export class RefreshToken {
     @PrimaryGeneratedColumn()
     id: number;

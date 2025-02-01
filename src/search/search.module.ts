@@ -5,10 +5,11 @@ import { SearchService } from './search.service';
 import { SearchController } from './search.controller';
 import { CacheModule } from '@nestjs/cache-manager';
 import { UserPreferencesModule } from 'src/user_preferences/user_preferences.module';
+import { Professional } from 'src/professional-entities/entities/professional.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([BusinessClients]),
+        TypeOrmModule.forFeature([BusinessClients, Professional]),
         CacheModule.register({
             ttl: 300, // Cache time-to-live in seconds (5 minutes)
             max: 100, // Maximum number of items in cache

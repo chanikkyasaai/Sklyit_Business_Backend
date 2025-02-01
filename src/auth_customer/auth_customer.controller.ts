@@ -11,6 +11,7 @@ export class AuthCustomerController {
     async login(
         @Body() body: { userid: string, password: string },
         @Res({ passthrough: true }) res: Response) {
+            console.log(body);
         const user = await this.authService.validateUser(body.userid, body.password);
         const { access_token, refresh_token } = await this.authService.login(user);
         console.log(access_token);
