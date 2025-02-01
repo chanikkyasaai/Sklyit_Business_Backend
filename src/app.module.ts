@@ -33,6 +33,7 @@ import { NotificationModule } from './notification/notification.module';
 import { SearchModule } from './search/search.module';
 import { UserPreferencesModule } from './user_preferences/user_preferences.module';
 import { AuthCustomerModule } from './auth_customer/auth_customer.module';
+import { SphereModule } from './sphere/sphere.module';
 import { RefreshToken } from './auth/refreshtoken.entity';
 
 // import * as dotenv from 'dotenv';
@@ -94,11 +95,13 @@ import { RefreshToken } from './auth/refreshtoken.entity';
     ChatAppModule,
     BspostModule,
     AuthModule,
+    AuthCustomerModule,
     ImageBlobModule,
     PaymentModule,
     AuthCustomerModule,
     NotificationModule,
     SearchModule,
+    SphereModule,
     UserPreferencesModule
   ],
   controllers: [AppController],

@@ -74,6 +74,32 @@ export class UserPreferencesService {
     return await userHistory.save();
   }
 
+  async followBusiness(userId: string, businessId: string): Promise<void> {
+    const userHistory = await this.UserPreferencesModel.findOne({ userId });
+    if (!userHistory) {
+      throw new Error('No search history found for the specified user.');
+    }
+    await this.UserPreferencesModel.updateOne(
+      { userId },
+      {
+        $addToSet: { followedBusinesses: businessId },
+      },
+      { upsert: true },
+    );
+
+    await userHistory.save();
+
+  }
+
+  async unfollowBusiness(userId: string, businessId: string): Promise<void> {
+    await this.UserPreferencesModel.updateOne(
+      { userId },
+      {
+        $pull: { followedBusinesses: businessId },
+      },
+    );
+  }
+
   async updatePreferences(userId: string, preferences: Record<string, any>): Promise<void> {
     await this.UserPreferencesModel.updateOne(
       { userId },
