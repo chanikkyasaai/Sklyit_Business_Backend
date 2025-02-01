@@ -69,7 +69,7 @@ export class AuthService {
         //console.log("Received Refresh Token:", refreshToken);
         const payload = this.jwtService.verify(refreshToken);
         const userId = payload.sub;
-
+        const bs_id=await this.getBusinessId(userId);
         // Fetch refresh token from DB
         const storedToken = await this.refreshTokenRepository.findOne({ where: { userId } });
         //console.log(storedToken);
@@ -78,7 +78,7 @@ export class AuthService {
         }
 
         // Generate new tokens
-        const newAccessToken = this.jwtService.sign({ sub: userId }, { expiresIn: '15m' });
+        const newAccessToken = this.jwtService.sign({ sub: userId ,bs_id:bs_id}, { expiresIn: '15m' });
         // const newRefreshToken = await this.generateRefreshToken(userId);
 
         return { accessToken: newAccessToken };

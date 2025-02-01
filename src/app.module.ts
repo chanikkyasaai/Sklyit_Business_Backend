@@ -29,11 +29,13 @@ import { AuthModule } from './auth/auth.module';
 import { BspostModule } from './bspost/bspost.module';
 import { PaymentModule } from './payment/payment.module';
 import { NotificationModule } from './notification/notification.module';
-import Stripe from 'stripe';
+// import Stripe from 'stripe';
 import { SearchModule } from './search/search.module';
 import { UserPreferencesModule } from './user_preferences/user_preferences.module';
 import { AuthCustomerModule } from './auth_customer/auth_customer.module';
 import { SphereModule } from './sphere/sphere.module'; 
+import { RefreshToken } from './auth/refreshtoken.entity';
+import { ReviewsModule } from './reviews/reviews.module';
 import { BookingModule } from './booking/booking.module';
 import { ProfessionalModule } from './professional-entities/entities/professional.module';
 import { PrBooking } from './booking/entity/booking.entity';
@@ -68,9 +70,9 @@ import { Service } from './professional-entities/entities/service.entity';
           username,
           password,
           database,
-          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users,Professional, PrBooking, Service,PrBooking],
+          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users,RefreshToken,Professional, PrBooking, Service,PrBooking],
           autoLoadEntities: true,
-          synchronize: false,
+          // synchronize: true,
           ssl: {
             rejectUnauthorized: false, // Set this to false if you're using self-signed certificates
           },
@@ -108,7 +110,8 @@ import { Service } from './professional-entities/entities/service.entity';
     ProfessionalModule,
     SearchModule,
     SphereModule,
-    UserPreferencesModule
+    UserPreferencesModule,
+    ReviewsModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne } from 'typeorm';
 import { BusinessClients } from 'src/business_clients/business_clients.entity';
 
 @Entity('Subscription')
@@ -6,7 +6,7 @@ export class Subscription {
     @PrimaryGeneratedColumn()
     premiumId: number;
 
-    @ManyToOne(() => BusinessClients, (business) => business.subscriptions, { onDelete: 'CASCADE' })
+    @OneToOne(() => BusinessClients, (business) => business.subscriptions, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'BusinessID' })
     BusinessID: string;
 

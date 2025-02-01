@@ -72,6 +72,9 @@ export class Users {
   @OneToOne(() => Users, (user) => user.refreshToken)
   refreshToken: Users;
 
+  // @OneToOne(() => Professional, (professional) => professional.user)
+  // professional: Professional;
+
   @Column({ nullable: true })
   @IsString()
   fcm_token: string;

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customers } from './business_customers.entity';
 import { Not, Repository } from 'typeorm';
-import { CreateBusinessCustomerDto } from './bscustomer.dto';
+import { CreateBusinessCustomerDto, UpdateBusinessCustomerDto } from './bscustomer.dto';
 import { Orders } from 'src/bsorders/bsorders.entity';
 
 
@@ -93,31 +93,44 @@ export class BusinessCustomersService {
         }
     }
 
-    async updateBusinessCustomer(bs_id: string, cust_id: string, updateCustomerDto: CreateBusinessCustomerDto): Promise<Customers> {
+    async updateBusinessCustomer(bs_id: string, cust_id: string, updateCustomerDto: UpdateBusinessCustomerDto): Promise<Customers> {
         const { Name, email, MobileNo, address } = updateCustomerDto;
-        // // Check if the new email or mobile number already exists for another customer
-        const existingCustomer = await this.CustomersRepository.findOne({
-            where: [
-                { businessClient: { BusinessId: bs_id }, email: email, CustId: Not(cust_id) },
-                { businessClient: { BusinessId: bs_id }, MobileNo: MobileNo, CustId: Not(cust_id) }
-            ],
-            relations: ['businessClient'],
-        });
-        if (existingCustomer) {
-            throw new Error('Another customer with this email or mobile number already exists');
+
+        // Only check for duplicate if email or MobileNo is provided
+        if (email || MobileNo) {
+            const conditions: any[] = [];
+            if (email) {
+                conditions.push({ businessClient: { BusinessId: bs_id }, email: email, CustId: Not(cust_id) });
+            }
+            if (MobileNo) {
+                conditions.push({ businessClient: { BusinessId: bs_id }, MobileNo: MobileNo, CustId: Not(cust_id) });
+            }
+
+            if (conditions.length > 0) {
+                const existingCustomer = await this.CustomersRepository.findOne({
+                    where: conditions,
+                    relations: ['businessClient'],
+                });
+                if (existingCustomer) {
+                    throw new Error('Another customer with this email or mobile number already exists');
+                }
+            }
         }
 
         const customer = await this.CustomersRepository.findOne({
             where: { businessClient: { BusinessId: bs_id }, CustId: cust_id },
             relations: ['businessClient'],
         });
+
         if (!customer) {
             throw new Error('Customer not found');
         }
+
         customer.Name = Name || customer.Name;
         customer.email = email || customer.email;
         customer.MobileNo = MobileNo || customer.MobileNo;
         customer.address = address || customer.address;
+
         try {
             return await this.CustomersRepository.save(customer);
         } catch (error) {

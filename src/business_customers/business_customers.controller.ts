@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { BusinessCustomersService } from './business_customers.service';
 import { Customers } from './business_customers.entity';
-import { CreateBusinessCustomerDto } from './bscustomer.dto';
+import { CreateBusinessCustomerDto, UpdateBusinessCustomerDto } from './bscustomer.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
 @Controller('bs/')
@@ -38,7 +38,7 @@ export class BusinessCustomersController {
     }
 
     @Put('bs_customers/:cust_id')
-    async updateBusinessCustomer(@Req() req, @Param('cust_id') cust_id: string, @Body() updateCustomerDto: CreateBusinessCustomerDto): Promise<Customers> {
+    async updateBusinessCustomer(@Req() req, @Param('cust_id') cust_id: string, @Body() updateCustomerDto: UpdateBusinessCustomerDto): Promise<Customers> {
         return await this.businessCustomersService.updateBusinessCustomer(req.user.bs_id, cust_id, updateCustomerDto);
     }
 

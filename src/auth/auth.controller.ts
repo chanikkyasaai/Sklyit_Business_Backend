@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {Response} from 'express';
 @Controller('bs/auth')
@@ -25,7 +25,7 @@ export class AuthController {
                 httpOnly: true,
                 secure: false,
                 sameSite: 'none',
-                maxAge: 90 * 24 * 60 * 60 * 1000
+                maxAge: 30 * 24 * 60 * 60 * 1000
             }
         )
         return {accessToken,refreshToken};
@@ -51,7 +51,9 @@ export class AuthController {
         return { accessToken };
     }
     @Get('logout')
-    async logout(@Res({ passthrough: true }) res: Response) {
+    async logout(@Res({ passthrough: true }) res: Response,
+        @Req() req) {
+        await this.authService.logout(req.sub);
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
         return { message: 'Logout successful' };
