@@ -33,6 +33,7 @@ import Stripe from 'stripe';
 import { SearchModule } from './search/search.module';
 import { UserPreferencesModule } from './user_preferences/user_preferences.module';
 import { AuthCustomerModule } from './auth_customer/auth_customer.module';
+import { SphereModule } from './sphere/sphere.module';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -93,11 +94,13 @@ import { AuthCustomerModule } from './auth_customer/auth_customer.module';
     ChatAppModule,
     BspostModule,
     AuthModule,
+    AuthCustomerModule,
     ImageBlobModule,
     PaymentModule,
     AuthCustomerModule,
     NotificationModule,
     SearchModule,
+    SphereModule,
     UserPreferencesModule
   ],
   controllers: [AppController],
