@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { BusinessClients } from '../business_clients/business_clients.entity';
 import { SearchBusinessClientsDto } from './search.dto';
 import { Cache } from 'cache-manager';
@@ -73,12 +73,41 @@ export class SearchService {
         return result;
     }
 
+    async getBusinessById(businessId: string) {
+        return await this.businessClientsRepository.findOne({ where: { BusinessId: businessId } }); 
+    }
+
+    async searchBusinessByTag(userid: string, tag: string) {
+        const queryBuilder = this.businessClientsRepository.createQueryBuilder('businessClients');
+        queryBuilder.andWhere(
+            `(
+                (SELECT COALESCE(string_agg(s, ', ' ORDER BY 1), '') 
+                    FROM unnest(businessClients.BusinessMainTags) s
+                ) ILIKE :tag OR
+                (SELECT COALESCE(string_agg(s, ', ' ORDER BY 1), '') 
+                FROM unnest(businessClients.BusinessSubTags) s
+                ) ILIKE :tag
+        )`,
+            { tag: `%${tag}%` },
+        );
+
+        return await queryBuilder.getMany();
+    }
+
      async getTopBusinessesByOrders(limit: number): Promise<any[]> {
         return await this.businessClientsRepository
           .createQueryBuilder('businessClients')
           .leftJoin('businessClients.orders', 'orders')
           .select('businessClients.BusinessId', 'BusinessId')
           .addSelect('businessClients.Clientname', 'Clientname')
+            .addSelect('businessClients.shopdesc', 'shopdesc')
+            .addSelect('businessClients.shopname', 'shopname')
+            .addSelect('businessClients.shopemail', 'shopemail')
+            .addSelect('businessClients.shopimage', 'shopimage')
+            .addSelect('businessClients.shopmobile', 'shopmobile')
+            .addSelect('businessClients.BusinessMainTags', 'BusinessMainTags')
+            .addSelect('businessClients.BusinessSubTags', 'BusinessSubTags')
+            .addSelect('businessClients.addresses', 'address')
           .addSelect('COUNT(orders.Oid) as totalOrderCount') // Count total orders
           .groupBy('businessClients.BusinessId')
           .addGroupBy('businessClients.Clientname')
@@ -99,6 +128,14 @@ export class SearchService {
           .leftJoin('businessClients.orders', 'orders')
           .select('businessClients.BusinessId', 'BusinessId')
           .addSelect('businessClients.Clientname', 'Clientname')
+          .addSelect('businessClients.shopdesc', 'shopdesc')
+          .addSelect('businessClients.shopemail', 'shopemail')
+          .addSelect('businessClients.shopname', 'shopname')
+          .addSelect('businessClients.shopimage', 'shopimage')
+          .addSelect('businessClients.shopmobile', 'shopmobile')
+          .addSelect('businessClients.BusinessMainTags', 'BusinessMainTags')
+          .addSelect('businessClients.BusinessSubTags', 'BusinessSubTags')
+          .addSelect('businessClients.addresses', 'address')
           .addSelect('COUNT(orders.Oid) as yesterdayOrderCount') // Count orders for yesterday
           .where('orders.Odate BETWEEN :startOfDay AND :endOfDay', { startOfDay, endOfDay })
           .groupBy('businessClients.BusinessId')

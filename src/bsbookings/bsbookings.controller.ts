@@ -7,7 +7,7 @@ import { Booking } from './bsbookings.entity';
 export class BsbookingsController {
     constructor(private readonly bookingService: BsbookingsService) {}
 
-    @Get('bookings/:business_id')
+    @Get('bookings/business/:business_id')
     async getAllBookings(@Param('business_id') businessId: string): Promise<Booking[]> {
         return this.bookingService.getAllBookings(businessId);
     }
@@ -17,7 +17,7 @@ export class BsbookingsController {
         return this.bookingService.getBookingById(id);
     }
 
-    @Get('bookings/:customer_id')
+    @Get('bookings/customer/:customer_id')
     async getBookingByCustomerId(@Param('customer_id') customerId: string): Promise<Booking[]> {
         return this.bookingService.getBookingByCustomerId(customerId);
     }
