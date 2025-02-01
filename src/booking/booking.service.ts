@@ -54,54 +54,15 @@ export class BookingService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
 
-  async findBookingsByProfessionalId(status: string, profession_id: string, date: string): Promise<any[]> {
-    var queryBuilder;
-
-    if(status === 'New'){
-      queryBuilder = this.bookingRepository.createQueryBuilder('booking')
+  async getBookingsByProfessionalId(profession_id: string): Promise<any[]> {
+    
+       var queryBuilder = this.bookingRepository.createQueryBuilder('booking')
       .leftJoinAndSelect('booking.user', 'user')
       .leftJoinAndSelect('booking.service', 'service')
       .where('booking.profession_id = :profession_id', { profession_id });
-
-      if (status) {
-        queryBuilder.andWhere('booking.status = :status', { status });
-      }
   
       const results = await queryBuilder.getRawMany();
       return results;
-
-    }
-    else{
-      const version = await this.getCacheVersion('services');
-      const cacheKey = (date) ? `v${version}:bookings:${profession_id}:status:${status}:date:${date}` : `v${version}:bookings:${profession_id}:status:${status}`;
-      const cachedResult = await this.cacheManager.get<any[]>(cacheKey);
-
-      if (cachedResult) {
-        console.log('Returning cached result');
-        return cachedResult;
-      }
-      queryBuilder = this.bookingRepository.createQueryBuilder('booking')
-      .leftJoinAndSelect('booking.user', 'user')
-      .leftJoinAndSelect('booking.service', 'service')
-      .where('booking.profession_id = :profession_id', { profession_id });
-
-      if (status) {
-        queryBuilder.andWhere('booking.status = :status', { status });
-      }
-      if (date) {
-        const [day, month, year] = date.split('/');
-        const formattedDate = `${year}-${month}-${day}`; // Convert to yyyy-mm-dd format
-        
-        queryBuilder.andWhere('DATE(booking.service_date_time) = :date', { date: formattedDate });
-      }
-      
-  
-      const results = await queryBuilder.getRawMany();
-      await this.cacheManager.set(cacheKey, results, 10  * 1000); 
-
-      console.log('Returning fresh result');
-      return results;
-    }
   }
 
   async createBooking(createPrBookingDto: CreatePrBookingDto): Promise<PrBooking> {
@@ -147,7 +108,7 @@ export class BookingService {
     const queryBuilder = this.bookingRepository.createQueryBuilder('booking')
       .leftJoinAndSelect('booking.user', 'user')
       .leftJoinAndSelect('booking.service', 'service')
-      .where('booking.user_id = :userId', { userId });
+      .where('booking.userId = :userId', { userId });
 
     const results = await queryBuilder.getRawMany();
     return results;

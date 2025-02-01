@@ -68,4 +68,14 @@ export class BookingController {
     }
   }
 
+  @Get('professional/:professional_id')
+  async getBookingsByProfessionalId(@Param('professional_id') professional_id : string, @Req() req) {
+    try {
+      const bookings = await this.bookingService.getBookingsByProfessionalId(professional_id);
+      return bookings;
+    } catch (error) {
+      return { message: 'Error fetching bookings by professional', error: error.message };
+    }
+  }
+
 }

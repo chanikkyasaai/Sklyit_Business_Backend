@@ -8,5 +8,6 @@ import { ServiceAvailability } from "./service_availability.entity";
     imports: [
       TypeOrmModule.forFeature([Professional, Service, ServiceAvailability]),
     ],
+    exports: [TypeOrmModule.forFeature([Professional, Service, ServiceAvailability])],
   })
   export class ProfessionalModule {}
