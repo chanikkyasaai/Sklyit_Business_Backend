@@ -29,10 +29,11 @@ import { AuthModule } from './auth/auth.module';
 import { BspostModule } from './bspost/bspost.module';
 import { PaymentModule } from './payment/payment.module';
 import { NotificationModule } from './notification/notification.module';
-import Stripe from 'stripe';
+// import Stripe from 'stripe';
 import { SearchModule } from './search/search.module';
 import { UserPreferencesModule } from './user_preferences/user_preferences.module';
 import { AuthCustomerModule } from './auth_customer/auth_customer.module';
+import { RefreshToken } from './auth/refreshtoken.entity';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -62,9 +63,9 @@ import { AuthCustomerModule } from './auth_customer/auth_customer.module';
           username,
           password,
           database,
-          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users],
+          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users,RefreshToken],
           autoLoadEntities: true,
-          synchronize: true,
+          // synchronize: true,
           ssl: {
             rejectUnauthorized: false, // Set this to false if you're using self-signed certificates
           },

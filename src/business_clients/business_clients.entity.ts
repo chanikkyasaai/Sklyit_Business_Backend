@@ -79,12 +79,11 @@ export class BusinessClients {
     @JoinColumn({ name: 'userId' })
     user: Users;
 
-    @ManyToOne(() => Subscription, (subscription) => subscription.premiumId,{nullable:true})
-    @JoinColumn({ name: 'premiumId' })
+    @OneToOne(() => Subscription, (subscription) => subscription.premiumId,{nullable:true})
     subscriptions: Subscription;
 
-    @Column({nullable:true})
-    premiumId: string; // Foreign key relation with Subscribers
+    // @Column({nullable:true})
+    // premiumId: string; // Foreign key relation with Subscribers
 
     @OneToMany(() => Customers, (customer) => customer.businessClient, { onDelete: 'CASCADE' })
     customers: Customers[];

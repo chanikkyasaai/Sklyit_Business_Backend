@@ -113,28 +113,43 @@ export class BsservicesService {
         }
     }
 
-    async updateServices(bs_id: string, service_id: string, updateServicesDto: UpdateServiceDto,file?: Express.Multer.File): Promise<Services> {
+    async updateServices(bs_id: string, service_id: string, updateServicesDto: UpdateServiceDto, file?: Express.Multer.File): Promise<Services> {
         if (!bs_id || !service_id) {
             throw new Error('Business ID and Service ID are required');
         }
+
         const { name, description, price, imageUrl } = updateServicesDto;
+
+        // ✅ Ensure that businessClient relation is loaded
         const service = await this.serviceRepository.findOne({
-            where: { businessClient: { BusinessId: bs_id }, Sid: service_id },
-            relations: ['businessClient'], // Ensure the relation is loaded
+            where: { Sid: service_id, businessClient: { BusinessId: bs_id } },
+            relations: ['businessClient'], // Load the related BusinessClients entity
         });
+
+        // ✅ Check if service exists
         if (!service) {
             throw new Error('Service not found');
         }
-        if(file){
-            const imageUrl = await this.azureBlobService.upload(file, this.containerName);
+
+        // ✅ Check if the service actually belongs to the provided bs_id
+        if (!service.businessClient || service.businessClient.BusinessId !== bs_id) {
+            console.log(service.businessClient);
+            throw new Error('BusinessClient not found hi');
+        }
+
+        // ✅ Handle image upload
+        if (file) {
+            const uploadedImageUrl = await this.azureBlobService.upload(file, this.containerName);
+            service.ImageUrl = uploadedImageUrl;
+        } else if (imageUrl) {
             service.ImageUrl = imageUrl;
         }
-        if(imageUrl){
-            service.ImageUrl = imageUrl;
-        }
+
+        // ✅ Update other fields
         service.ServiceName = name || service.ServiceName;
         service.ServiceDesc = description || service.ServiceDesc;
         service.ServiceCost = price || service.ServiceCost;
+
         try {
             return await this.serviceRepository.save(service);
         } catch (error) {

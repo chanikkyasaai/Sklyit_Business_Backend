@@ -30,7 +30,7 @@ export class JwtBusStrategy extends PassportStrategy(Strategy, 'business-jwt') {
     }
 
     async validate(payload: any) {
-        console.log('Decoded Payload:', payload); // Debugging
+        // console.log('Decoded Payload:', payload); // Debugging
         return { bs_id: payload.bs_id, sub: payload.sub, email: payload.email };
     }
 }

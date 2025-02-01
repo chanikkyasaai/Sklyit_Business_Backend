@@ -16,12 +16,15 @@ export class BsproductsService {
         private azureBlobService: AzureBlobService
     ) { }
     
-    async createProduct(bs_id:string,createProductDto: CreateProductDto,file:Express.Multer.File): Promise<Products> {
+    async createProduct(bs_id:string,createProductDto: CreateProductDto,file?:Express.Multer.File): Promise<Products> {
         if (!bs_id) {
             throw new Error('Business ID is required');
         }
         const { name, description, price, quantity } = createProductDto;
-        const imageUrl = await this.azureBlobService.upload(file, this.containerName);
+        let imageUrl = '';
+        if (file) {
+            imageUrl = await this.azureBlobService.upload(file, this.containerName);
+        }
         const product = this.productRepository.create({
             Pname: name,
             Pdesc: description || '',

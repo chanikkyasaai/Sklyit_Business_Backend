@@ -36,12 +36,12 @@ export class BspostController {
         return await this.postsService.getAllPosts(req.user.bs_id);
     }
 
-    @UseGuards(JwtCustomerAuthGuard, JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @Get('post')
     async getAllPostsByFlag(
         @Req() req
     ): Promise<PostDocument[]> {
-        console.log(req.user);
+        // console.log(req.user);
         return await this.postsService.getAllPostsByFlag(req.user.bs_id);
     }
 
@@ -53,7 +53,7 @@ export class BspostController {
         return this.postsService.getPostById(req.user.bs_id, id);
     }
 
-    @UseGuards(JwtAuthGuard,JwtCustomerAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @Get('post/:id')
     async getPostByFlag(
         @Req() req,
