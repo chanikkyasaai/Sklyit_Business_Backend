@@ -1,7 +1,6 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BsproductsService } from './bsproducts.service';
 import { Products } from './bsproducts.entity';
-import { create } from 'domain';
 import { CreateProductDto, UpdateProductDto } from './bsproducts.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';

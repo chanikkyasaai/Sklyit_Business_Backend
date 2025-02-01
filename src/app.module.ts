@@ -35,6 +35,7 @@ import { UserPreferencesModule } from './user_preferences/user_preferences.modul
 import { AuthCustomerModule } from './auth_customer/auth_customer.module';
 import { SphereModule } from './sphere/sphere.module';
 import { RefreshToken } from './auth/refreshtoken.entity';
+import { ReviewsModule } from './reviews/reviews.module';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -102,7 +103,8 @@ import { RefreshToken } from './auth/refreshtoken.entity';
     NotificationModule,
     SearchModule,
     SphereModule,
-    UserPreferencesModule
+    UserPreferencesModule,
+    ReviewsModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -13,7 +13,7 @@ export class AuthCustomerController {
         @Res({ passthrough: true }) res: Response) {
         const user = await this.authService.validateUser(body.userid, body.password);
         const { access_token, refresh_token } = await this.authService.login(user);
-        console.log(access_token);
+            console.log(access_token);
         res.cookie('accessToken', access_token, {
             httpOnly: true,
             secure: false, // Use secure cookies in production

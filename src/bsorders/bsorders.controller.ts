@@ -41,34 +41,34 @@ export class BsordersController {
       // @Query('startDate') startDate: string,
       // @Query('endDate') endDate: string,
     ) {
-      return this.bsordersService.getTop3Services(parseInt(req.user.bs_id));
+      return this.bsordersService.getTop3Services((req.user.bs_id));
     }
     @Get('bottom-services-count')
     async getBottomServicesCount(@Req() req,
       // @Query('startDate') startDate: string,
       // @Query('endDate') endDate: string,
     ) {
-      return this.bsordersService.getBottom3Services(parseInt(req.user.bs_id));
+      return this.bsordersService.getBottom3Services((req.user.bs_id));
     }
     //BY REVENUE
     @Get('top-services-revenue')
     async getTopServicesRevenue(
       @Req() req,
     ) {
-      return this.bsordersService.getTop3ServicesByRevenue(parseInt(req.user.bs_id));
+      return this.bsordersService.getTop3ServicesByRevenue((req.user.bs_id));
     }
     @Get('top-services-revenue-weekly')
     async getTopServicesRevenueWeek(
       @Req() req,
     ) {
-      return this.bsordersService.getTop3ServicesByRevenueWeek(parseInt(req.user.bs_id));
+      return this.bsordersService.getTop3ServicesByRevenueWeek((req.user.bs_id));
     }
 
     @Get('top-services-revenue-yearly')
     async getTopServicesRevenueYear(
       @Req() req,
     ) {
-      return this.bsordersService.getTop3ServicesByRevenueYear(parseInt(req.user.bs_id));
+      return this.bsordersService.getTop3ServicesByRevenueYear((req.user.bs_id));
     }
 
   // Endpoint for weekly analytics (with req.user.bs_id)
@@ -81,28 +81,28 @@ export class BsordersController {
   async getTopCustomersBySpending(
     @Req() req,
   ) {
-    return this.bsordersService.getTop6CustomersBySpending(parseInt(req.user.bs_id));
+    return this.bsordersService.getTop6CustomersBySpending((req.user.bs_id));
   }
 
   @Get('bottom-customers-revenue')
   async getBottomCustomersBySpending(
     @Req() req,
   ) {
-    return this.bsordersService.getBottom3CustomersBySpending(parseInt(req.user.bs_id));
+    return this.bsordersService.getBottom3CustomersBySpending((req.user.bs_id));
   }
 
   @Get('top-customers-count')
   async getTopCustomersByVisited(
     @Req() req,
   ) {
-    return this.bsordersService.getTop3VisitedCustomers(parseInt(req.user.bs_id));
+    return this.bsordersService.getTop3VisitedCustomers((req.user.bs_id));
   }
   
   @Get('bottom-customers-count')
   async getBottomCustomersByVisited(
     @Req() req,
   ) {
-    return this.bsordersService.getBottom3VisitedCustomers(parseInt(req.user.bs_id));
+    return this.bsordersService.getBottom3VisitedCustomers((req.user.bs_id));
   }
 
   @Get('weekly_analytics')
@@ -124,7 +124,7 @@ export class BsordersController {
   async getNewOldCustomersRevenue(
     @Req() req,
   ) {
-    return this.bsordersService.getNewOldCustomersRevenue(parseInt(req.user.bs_id));
+    return this.bsordersService.getNewOldCustomersRevenue((req.user.bs_id));
   }
 
   @Get('monthly_comparison')
@@ -133,15 +133,15 @@ export class BsordersController {
     @Query('year') year: number,
     @Query('month') month: number,
   ) {
-    return this.bsordersService.getMonthlyComparison(parseInt(req.user.bs_id), year, month);
+    return this.bsordersService.getMonthlyComparison((req.user.bs_id), year, month);
   }
   
   @Get('past_services')
   async getPastServices(
     @Req() req,
-    @Body('CustId') CustId: number,
+    @Body('CustId') CustId: string,
   ) {
-    return this.bsordersService.getPastServices(parseInt(req.user.bs_id), CustId);
+    return this.bsordersService.getPastServices((req.user.bs_id), CustId);
   }
   
   @Get('retention_churn_rate')
@@ -150,6 +150,6 @@ export class BsordersController {
     @Query('year') year: number,
     @Query('month') month: number
   ) {
-    return this.bsordersService.getRetentionAndChurnRate(parseInt(req.user.bs_id), year, month);
+    return this.bsordersService.getRetentionAndChurnRate((req.user.bs_id), year, month);
   }
 }
