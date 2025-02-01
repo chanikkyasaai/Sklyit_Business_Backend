@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PrBooking } from 'src/booking/entity/booking.entity';
 import { Repository } from 'typeorm';
 import { Cache } from 'cache-manager';
+import { CreatePrBookingDto } from './booking.dto';
 
 var forpending = [
   'booking.status AS status',
@@ -101,6 +102,11 @@ export class BookingService {
       console.log('Returning fresh result');
       return results;
     }
+  }
+
+  async createBooking(createPrBookingDto: CreatePrBookingDto): Promise<PrBooking> {
+    const booking = this.bookingRepository.create(createPrBookingDto);
+    return await this.bookingRepository.save(booking);
   }
 
   async findBookingById(

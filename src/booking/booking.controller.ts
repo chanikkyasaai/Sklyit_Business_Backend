@@ -1,6 +1,8 @@
-import { Controller, Get, Query, UseGuards, Param, Put, Body, Req } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards, Param, Put, Body, Req, Post } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { JwtCustomerAuthGuard } from '../auth_customer/jwt.auth_customer.guard';
+import { CreateBookingDto } from 'src/bsbookings/bsbookings.dto';
+import { CreatePrBookingDto } from './booking.dto';
 
 enum payment_method_enum {
   Cash = 'Cash',
@@ -43,6 +45,16 @@ export class BookingController {
       return { message: 'Payment Details Updated'};
     } catch(error){
       return { message : 'Error Updating Payment Details'};
+    }
+  }
+
+  @Post()
+  async createBooking(@Req() req, @Body() body: CreatePrBookingDto) {
+    try {
+      const booking = await this.bookingService.createBooking(body);
+      return booking;
+    } catch (error) {
+      return { message: 'Error creating booking', error: error.message };
     }
   }
 

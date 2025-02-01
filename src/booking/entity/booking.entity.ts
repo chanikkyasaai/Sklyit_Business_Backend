@@ -3,7 +3,7 @@ import { Service } from '../../professional-entities/entities/service.entity';
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-enum payment_method_enum {
+export enum payment_method_enum {
   Cash = 'Cash',
   Online = 'Online'
 };
