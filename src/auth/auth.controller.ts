@@ -40,14 +40,7 @@ export class AuthController {
             sameSite: 'none', // Prevent CSRF
             maxAge: 3600000, // 1 hour
         });
-        // res.cookie(
-        //     'refreshTooken', refresh_Token, {
-        //     httpOnly: true,
-        //     secure: false,
-        //     sameSite: 'none',
-        //     maxAge: 90 * 24 * 60 * 60 * 1000
-        // }
-        // )
+        
         return { accessToken };
     }
     @Get('logout')
