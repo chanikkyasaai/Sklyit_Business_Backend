@@ -1,7 +1,10 @@
-import { Controller, Get, Param, Req } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat_app.service';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { JwtCustomerAuthGuard } from 'src/auth_customer/jwt.auth_customer.guard';
 
 @Controller('messages')
+@UseGuards(JwtAuthGuard, JwtCustomerAuthGuard)
 export class MessagesController {
     constructor(private readonly messagesService: ChatService) { }
 

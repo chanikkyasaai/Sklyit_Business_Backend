@@ -45,4 +45,7 @@ class ProductDto {
   
     @IsNumber()
     cost: number;
+
+    @IsNumber()
+    quantity: number;
 }
