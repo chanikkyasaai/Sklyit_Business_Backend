@@ -101,6 +101,18 @@ async  fetchProductsOrderedByOrderCount(
         .getRawAndEntities();
 }
 
+async getAllPosts(bs_id: string): Promise<Post[]> {
+    if (!bs_id) {
+        throw new Error('Business ID is required');
+    }
+    try {
+        return await this.postModel.find({ business_id: bs_id }).exec();
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+    
+}
 
 
 }

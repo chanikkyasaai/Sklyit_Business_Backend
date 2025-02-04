@@ -41,4 +41,10 @@ export class SphereController {
     async getProductsByBusinessId(@Param('businessId') businessId: string) {
         return this.postsService.fetchProductsByBusinessId(businessId);
     }
+
+    @Get('business/posts/id/:businessId')
+    async getPostsByBusinessId(@Param('businessId') businessId: string) {
+        return this.postsService.getAllPosts(businessId);
+    }
+
 }
