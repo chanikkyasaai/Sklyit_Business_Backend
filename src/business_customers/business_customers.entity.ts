@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString, Matches } from 'class-validator';
 import { BusinessClients } from './../business_clients/business_clients.entity'; // Assuming BusinessClients table exists
 import { Booking } from './../bsbookings/bsbookings.entity'; // Assuming Booking table exists
 import { Orders } from './../bsorders/bsorders.entity'; // Assuming Orders table exists
@@ -14,15 +14,16 @@ export class Customers {
     @IsString()
     Name: string;
 
-    @Column()
+    @Column({ nullable: true })
     @IsString()
+    @Matches(/^[0-9]{10}$/, { message: 'Mobile number must be 10 digits' })
     MobileNo: string;
 
-    @Column()
+    @Column({ nullable: true })
     @IsString()
     address: string;
 
-    @Column()
+    @Column({ nullable: true })
     @IsString()
     email: string;
 
@@ -45,5 +46,5 @@ export class Customers {
 
     @Column('date', { default: () => 'CURRENT_DATE' })
     created_at: Date;
-    
+
 }
