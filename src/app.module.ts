@@ -71,6 +71,7 @@ import { ReviewsModule } from './reviews/reviews.module';
           ssl: {
             rejectUnauthorized: false, // Set this to false if you're using self-signed certificates
           },
+          logging: true
         }
       },
       inject: [ConfigService]

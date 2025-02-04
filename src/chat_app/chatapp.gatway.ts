@@ -1,13 +1,13 @@
 import {
-    WebSocketGateway,
-    SubscribeMessage,
-    MessageBody,
-    WebSocketServer,
     ConnectedSocket,
+    MessageBody,
+    SubscribeMessage,
+    WebSocketGateway,
+    WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { ChatService } from './chat_app.service';
 import { NotificationService } from 'src/notification/notification.service';
+import { ChatService } from './chat_app.service';
 
 @WebSocketGateway(3001,{cors:{origin:'*'}})
 export class ChatGateway {
@@ -50,7 +50,7 @@ export class ChatGateway {
 
             if (recieverSocketId) {
                 console.log(`Sending message to receiver (${receiverId}-${receiverName}) with socket ID: ${recieverSocketId}`);
-                client.to(recieverSocketId).emit('recieveMessage', message);
+                client.to(recieverSocketId).emit('receiveMessage', message);
             } else {
                 console.log(`Receiver (${receiverId}) is not connected.`);
                 // If the receiver is not connected, send a push notification

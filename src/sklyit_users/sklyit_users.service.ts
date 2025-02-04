@@ -108,4 +108,12 @@ export class SklyitUsersService {
         user.fcm_token = fcm_token;
         return this.userRepository.save(user);
     }
+
+    async getNameById(userid: string): Promise<{name: string}> {
+        const user = await this.userRepository.findOne({ where: { userId: userid } });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        return {name: user.name};
+    }
 }

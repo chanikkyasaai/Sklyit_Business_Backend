@@ -28,7 +28,7 @@ export class AuthController {
                 maxAge: 30 * 24 * 60 * 60 * 1000
             }
         )
-        return {accessToken,refreshToken};
+        return {token: accessToken,rtoken : refreshToken, message: 'Login successful'};
     }
     @Post('refresh')
     async refresh(@Body('refreshToken') refreshToken: string,
@@ -40,8 +40,7 @@ export class AuthController {
             sameSite: 'none', // Prevent CSRF
             maxAge: 3600000, // 1 hour
         });
-        
-        return { accessToken };
+        return { token: accessToken };
     }
     @Get('logout')
     async logout(@Res({ passthrough: true }) res: Response,
