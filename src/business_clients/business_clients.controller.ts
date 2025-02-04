@@ -31,13 +31,14 @@ export class BusinessClientsController {
   }
 
 
-  @Put(':id')
+  @Put('clients')
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async updateUser(
-    @Param('id') id: string,
+    @Req() req,
     @Body() updateUserDto: CreateBusinessClientDto,
     @UploadedFile() file: Express.Multer.File
   ): Promise<BusinessClients> {
-    return this.userService.updateBusinessClient(id, updateUserDto, file);
+    return this.userService.updateBusinessClient(req.user.bs_id, updateUserDto, file);
   }
 }

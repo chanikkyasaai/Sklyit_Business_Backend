@@ -36,6 +36,7 @@ import { AuthCustomerModule } from './auth_customer/auth_customer.module';
 import { SphereModule } from './sphere/sphere.module';
 import { RefreshToken } from './auth/refreshtoken.entity';
 import { ReviewsModule } from './reviews/reviews.module';
+import { BusinessFollower } from './business_clients/business_followers.entity';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -65,13 +66,13 @@ import { ReviewsModule } from './reviews/reviews.module';
           username,
           password,
           database,
-          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users,RefreshToken],
+          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users,RefreshToken,BusinessFollower],
           autoLoadEntities: true,
-          // synchronize: true,
+          synchronize: true,
           ssl: {
             rejectUnauthorized: false, // Set this to false if you're using self-signed certificates
           },
-          logging: true
+          // logging: true
         }
       },
       inject: [ConfigService]
