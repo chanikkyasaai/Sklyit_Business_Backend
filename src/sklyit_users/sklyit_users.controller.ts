@@ -57,4 +57,9 @@ export class SklyitUsersController {
     async update_fcm_token(@Param('userid') id: string, @Body() body: { fcm_token: string }): Promise<Users> {
         return this.userService.update_fcm_token(id, body.fcm_token);
     }
+
+    @Get('e/:userId')
+    async validateUser(@Param('userId') userid: string): Promise<{name: string}> {
+        return this.userService.getNameById(userid);
+    }
 }
