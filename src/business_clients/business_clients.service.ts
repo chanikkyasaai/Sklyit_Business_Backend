@@ -86,4 +86,25 @@ export class BusinessClientsService {
         }
         return await this.businessClientsRepository.save({ ...user, ...updateUserDto });
     }
+    
+    async addAddresses(id: string, updateUserDto: UpdateBusinessClientDto) {
+        const user = await this.businessClientsRepository.findOne({ where: { BusinessId: id } });
+        if (!user) {
+            throw new NotFoundException('BusinessClient not found');
+        }
+        
+        if (!updateUserDto.addresses || updateUserDto.addresses.length === 0) {
+            throw new Error('No addresses provided');
+        }
+
+        user.addresses = [...user.addresses, ...updateUserDto.addresses];
+
+        try {
+            await this.businessClientsRepository.save(user);
+        } catch (error) {
+            console.error('Error updating addresses:', error);
+            throw new Error('Failed to update addresses');
+        }
+
+    }
 }

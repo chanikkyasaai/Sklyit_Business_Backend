@@ -71,6 +71,14 @@ export class BspostController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Put('post/:id/')  
+    async updatePostFlag(
+        @Req() req,
+        @Param('id') id: string) {
+        return this.postsService.updatePostFlag(req.user.bs_id, id);
+    }
+    
+    @UseGuards(JwtAuthGuard)
     @Delete('posts/:id')
     async deletePost(
         @Req() req,

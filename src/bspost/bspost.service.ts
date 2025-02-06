@@ -92,6 +92,21 @@ export class BspostService {
         }
     }
 
+    async updatePostFlag(bs_id: string, id: string) {
+        if (!bs_id || !id) {
+            throw new Error('Business ID and ID are required');
+        }
+        try {
+            const post = await this.postModel.findOneAndUpdate({ _id: id, business_id: bs_id }, { $inc: { Pflag: 1 } }, { new: true }).exec();
+            if (!post) {
+                throw new Error('Post not found');
+            }
+            
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async uncommentPost(cust_id: string, id: string): Promise<Post> {
         if (!cust_id || !id ) {
             throw new Error('Business ID, ID and User are required');

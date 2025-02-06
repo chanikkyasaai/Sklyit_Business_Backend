@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BusinessClientsService } from './business_clients.service';
-import { CreateBusinessClientDto } from './business_clients.dto';
+import { CreateBusinessClientDto, UpdateBusinessClientDto } from './business_clients.dto';
 import { BusinessClients } from './business_clients.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
@@ -36,9 +36,18 @@ export class BusinessClientsController {
   @UseInterceptors(FileInterceptor('file'))
   async updateUser(
     @Req() req,
-    @Body() updateUserDto: CreateBusinessClientDto,
+    @Body() updateUserDto: UpdateBusinessClientDto,
     @UploadedFile() file: Express.Multer.File
   ): Promise<BusinessClients> {
     return this.userService.updateBusinessClient(req.user.bs_id, updateUserDto, file);
+  }
+
+  @Put('clients/address')
+  @UseGuards(JwtAuthGuard)
+  async addAdresses(
+    @Req() req,
+    @Body() updateUserDto:UpdateBusinessClientDto
+  ) {
+    return await this.userService.addAddresses(req.user.bs_id, updateUserDto);
   }
 }
