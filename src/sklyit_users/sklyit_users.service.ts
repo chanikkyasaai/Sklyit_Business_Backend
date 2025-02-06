@@ -19,22 +19,19 @@ export class SklyitUsersService {
         private readonly azureBlobService: AzureBlobService, // Inject AzureBlobService
     ) { }
 
-    async registerUser(createUserDto: CreateUserDto, file: Express.Multer.File): Promise<Users> {
-        const { gmail, mobileno, premiumId } = createUserDto;
+    async registerUser(createUserDto: CreateUserDto, file?: Express.Multer.File): Promise<Users> {
+        const { gmail, mobileno, usertype } = createUserDto;
         
         // Check if user already exists
         const existingUser = await this.userRepository.findOne({
-            where: [{ gmail }, { mobileno }],
+            where: [{ gmail,usertype:usertype }, { mobileno,usertype:usertype }],
         });
         if (existingUser) {
             throw new ConflictException(
                 'User with this email or mobile number already exists',
             );
         }
-
-        
-
-        // If a file is provided, upload it to Azure Blob Storage
+// If a file is provided, upload it to Azure Blob Storage
         if (file) {
             try {
                 const imageUrl = await this.azureBlobService.upload(file, 'upload-file');
@@ -110,5 +107,13 @@ export class SklyitUsersService {
         }
         user.fcm_token = fcm_token;
         return this.userRepository.save(user);
+    }
+
+    async getNameById(userid: string): Promise<{name: string}> {
+        const user = await this.userRepository.findOne({ where: { userId: userid } });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        return {name: user.name};
     }
 }

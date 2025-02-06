@@ -36,11 +36,7 @@ import { AuthCustomerModule } from './auth_customer/auth_customer.module';
 import { SphereModule } from './sphere/sphere.module'; 
 import { RefreshToken } from './auth/refreshtoken.entity';
 import { ReviewsModule } from './reviews/reviews.module';
-import { BookingModule } from './booking/booking.module';
-import { ProfessionalModule } from './professional-entities/entities/professional.module';
-import { PrBooking } from './booking/entity/booking.entity';
-import { Professional } from './professional-entities/entities/professional.entity';
-import { Service } from './professional-entities/entities/service.entity';
+import { BusinessFollower } from './business_clients/business_followers.entity';
 
 // import * as dotenv from 'dotenv';
 @Module({
@@ -70,12 +66,13 @@ import { Service } from './professional-entities/entities/service.entity';
           username,
           password,
           database,
-          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users,RefreshToken,Professional, PrBooking, Service,PrBooking],
+          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users,RefreshToken,BusinessFollower],
           autoLoadEntities: true,
-          // synchronize: true,
+          synchronize: true,
           ssl: {
             rejectUnauthorized: false, // Set this to false if you're using self-signed certificates
           },
+          // logging: true
         }
       },
       inject: [ConfigService]
@@ -95,7 +92,6 @@ import { Service } from './professional-entities/entities/service.entity';
     SubscribersModule,
     SklyitUsersModule,
     BsbookingsModule,
-    BookingModule,
     BsordersModule,
     BsproductsModule,
     LoyaltySystemModule,
@@ -107,7 +103,6 @@ import { Service } from './professional-entities/entities/service.entity';
     PaymentModule,
     AuthCustomerModule,
     NotificationModule,
-    ProfessionalModule,
     SearchModule,
     SphereModule,
     UserPreferencesModule,

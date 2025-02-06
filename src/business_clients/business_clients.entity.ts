@@ -8,6 +8,7 @@ import { Users } from 'src/sklyit_users/sklyit_users.entity';
 import { Orders } from 'src/bsorders/bsorders.entity';
 import { Booking } from 'src/bsbookings/bsbookings.entity';
 import { Subscription } from 'src/subscribers/subscribers.entity';
+import { BusinessFollower } from './business_followers.entity';
 
 @Entity('SKLYIT_business_clients')
 export class BusinessClients {
@@ -104,6 +105,9 @@ export class BusinessClients {
     bookings: Booking[];
 
     @Column('date', { default: () => 'CURRENT_DATE' })
-    created_at: Date
+    created_at: Date;
+
+    @OneToMany(() => BusinessFollower, (follower) => follower.business, { cascade: true })
+    followers: BusinessFollower[];
 }
 

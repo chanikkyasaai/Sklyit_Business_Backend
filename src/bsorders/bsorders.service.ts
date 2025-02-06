@@ -473,7 +473,7 @@ FROM (
       SUM(
          COALESCE((products_costs->>'cost')::NUMERIC, 0) + 
          COALESCE((services_costs->>'cost')::NUMERIC, 0)
-     ) AS total
+     ) AS total_revenue
 FROM (
  SELECT
       "Odate" AS Odate,

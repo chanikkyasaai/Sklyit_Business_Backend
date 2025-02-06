@@ -13,7 +13,7 @@ export class BusinessClientsService {
         private readonly businessClientsRepository: Repository<BusinessClients>,
 
         @InjectRepository(Users)
-        private readonly usersRepository: Repository<Users>,
+        private readonly usersRepository: Repository<Users>,    
         private azureBlobService: AzureBlobService
     ) { }
 
@@ -22,7 +22,7 @@ export class BusinessClientsService {
     }
 
     async getBusinessClientByID(id: string): Promise<BusinessClients> {
-         const user = await this.businessClientsRepository.findOne({ where: { BusinessId: id } });
+        const user = await this.businessClientsRepository.findOne({ where: { BusinessId: id }, relations: ['followers'], });
                if (!user) {
                    throw new NotFoundException('BusinessClient not found');
                }

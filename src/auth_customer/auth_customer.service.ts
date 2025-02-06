@@ -19,9 +19,9 @@ export class AuthCustomerService {
     ) { }
 
     async login(user: Users) {
-        console.log(user);
+        // console.log(user);
         const payload = { mobileNumber: user.mobileno, email: user.gmail, sub: user.userId };
-        const access_token= this.jwtService.sign(payload, { expiresIn: '15m' });
+        const access_token= this.jwtService.sign(payload, { expiresIn: '1h' });
         const refresh_token=await this.generateRefreshToken(user.userId);
         return {access_token,refresh_token};
     }

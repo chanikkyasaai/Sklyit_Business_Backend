@@ -14,7 +14,7 @@ export class AuthCustomerController {
             console.log(body);
         const user = await this.authService.validateUser(body.userid, body.password);
         const { access_token, refresh_token } = await this.authService.login(user);
-            console.log(access_token);
+            // console.log(access_token);
         res.cookie('accessToken', access_token, {
             httpOnly: true,
             secure: false, // Use secure cookies in production
@@ -43,14 +43,7 @@ export class AuthCustomerController {
             sameSite: 'none', // Prevent CSRF
             maxAge: 3600000, // 1 hour
         });
-        // res.cookie(
-        //     'refreshToken', refresh_Token, {
-        //     httpOnly: true,
-        //     secure: false,
-        //     sameSite: 'none',
-        //     maxAge: 90 * 24 * 60 * 60 * 1000
-        // }
-        // )
+        
         return { accessToken };
     }
     @Get('logout')
