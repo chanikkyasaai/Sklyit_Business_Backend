@@ -33,7 +33,7 @@ import { NotificationModule } from './notification/notification.module';
 import { SearchModule } from './search/search.module';
 import { UserPreferencesModule } from './user_preferences/user_preferences.module';
 import { AuthCustomerModule } from './auth_customer/auth_customer.module';
-import { SphereModule } from './sphere/sphere.module';
+import { SphereModule } from './sphere/sphere.module'; 
 import { RefreshToken } from './auth/refreshtoken.entity';
 import { ReviewsModule } from './reviews/reviews.module';
 import { BusinessFollower } from './business_clients/business_followers.entity';

@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { IsString, IsEmail, IsDate } from 'class-validator';
 import { Booking } from 'src/bsbookings/bsbookings.entity';
+import { PrBooking } from 'src/booking/entity/booking.entity';
+
 
 @Entity('SKLYIT_users')
 export class Users {
@@ -63,6 +65,9 @@ export class Users {
 
   @OneToMany(() => Booking, (booking) => booking.customer)
   bookings: Booking[];
+
+  @OneToMany(() => PrBooking, (prbookings) => prbookings.user)
+  prbookings: PrBooking[];
 
   @OneToOne(() => Users, (user) => user.refreshToken)
   refreshToken: Users;
