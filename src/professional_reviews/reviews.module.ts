@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { ReviewsController } from './reviews.controller';
-import { Review_Business, Review_Business_Schema } from './entities/review.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Review, ReviewSchema } from './schema/reviewschema';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Review_Business.name, schema: Review_Business_Schema }])],
+  imports: [
+    MongooseModule.forFeature([{ name: Review.name, schema: ReviewSchema }]),
+  ],
   controllers: [ReviewsController],
   providers: [ReviewsService],
 })

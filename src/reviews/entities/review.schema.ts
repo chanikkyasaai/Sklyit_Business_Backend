@@ -1,6 +1,8 @@
-import { Prop } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
+
+@Schema({ timestamps: true })
 export class Review_Business extends Document{
 
     @Prop()
@@ -18,3 +20,5 @@ export class Review_Business extends Document{
     @Prop()
     CustId:string
 }
+
+export const Review_Business_Schema = SchemaFactory.createForClass(Review_Business);
