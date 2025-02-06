@@ -22,8 +22,8 @@ export class SphereController {
         return this.postsService.fetchServicesByBusinessId(businessId);
     }
 
-    @Get('business/services/top')
-    async getServicesOrderedByMostBookings(@Query('limit') limit: number) {
+    @Get('business/services/top/:limit')
+    async getServicesOrderedByMostBookings(@Param('limit') limit: number) {
         return this.postsService.fetchServicesOrderedByMostBookings(limit);
     }
 

@@ -45,7 +45,6 @@ export class SphereService {
       async fetchServicesByBusinessId(businessId: string): Promise<Services[]> {
         const services = await this.businessServiceRepository.find({
             where: { businessClient: { BusinessId: businessId } },
-            relations: ['businessClient'], // Include related entities if needed
         });
         return services;
     }
