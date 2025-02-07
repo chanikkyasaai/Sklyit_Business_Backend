@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { IsString } from 'class-validator';
-import { Users } from 'src/sklyit_users/sklyit_users.entity'; // Assuming Customers table exists
+import { Users } from '../sklyit_users/sklyit_users.entity'; // Assuming Customers table exists
 import { Services } from './../bsservices/services.entity'; // Assuming Services table exists
 import { BusinessClients } from './../business_clients/business_clients.entity'; // Assuming BusinessClients table exists
 

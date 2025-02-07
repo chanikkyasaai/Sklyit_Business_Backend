@@ -50,6 +50,7 @@ export class BusinessClientsController {
   ) {
     return await this.userService.addAddresses(req.user.bs_id, addresses);
   }
+
   @Put('clients/address/')
   @UseGuards(JwtAuthGuard)
   async editAddress(
@@ -58,5 +59,15 @@ export class BusinessClientsController {
     @Body('oldAddress') oldAddressDto: AddressDto
   ): Promise<BusinessClients> {
     return await this.userService.editAddress(oldAddressDto, newAddressDto, req.user.bs_id);
+  }
+
+  
+  @Put('clients/address/delete')
+  @UseGuards(JwtAuthGuard)
+  async deleteAddress(
+    @Req() req,
+    @Body('address') addressDto: AddressDto
+  ): Promise<BusinessClients> {
+    return await this.userService.deleteAddress(req.user.bs_id, addressDto);
   }
 }

@@ -3,10 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { BusinessClients } from 'src/business_clients/business_clients.entity';
-import { Users } from 'src/sklyit_users/sklyit_users.entity';
-import { SklyitUsersService } from 'src/sklyit_users/sklyit_users.service';
-import { RefreshToken } from 'src/auth/refreshtoken.entity';
+import { BusinessClients } from '../business_clients/business_clients.entity';
+import { Users } from '../sklyit_users/sklyit_users.entity';
+import { SklyitUsersService } from '../sklyit_users/sklyit_users.service';
+import { RefreshToken } from '../auth/refreshtoken.entity';
 
 @Injectable()
 export class AuthService {

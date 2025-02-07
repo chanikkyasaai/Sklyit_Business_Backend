@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/comm
 import { CreateReviewDto } from './dto/createreview.dto';
 import { ReviewsService } from './reviews.service';
 import { Review } from './schema/reviewschema';
-import { JwtCustomerAuthGuard } from 'src/auth_customer/jwt.auth_customer.guard';
+import { JwtCustomerAuthGuard } from '../auth_customer/jwt.auth_customer.guard';
 
 @Controller('reviews')
 export class ReviewsController {

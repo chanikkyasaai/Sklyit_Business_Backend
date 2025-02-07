@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } fro
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
-import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
-import { JwtCustomerAuthGuard } from 'src/auth_customer/jwt.auth_customer.guard';
+import { JwtAuthGuard } from '../auth/jwt.auth.guard';
+import { JwtCustomerAuthGuard } from '../auth_customer/jwt.auth_customer.guard';
 
 @Controller('reviews')
 export class ReviewsController {
