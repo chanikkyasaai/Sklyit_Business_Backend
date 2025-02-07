@@ -1,12 +1,11 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RefreshToken } from 'src/auth/refreshtoken.entity';
+import { RefreshToken } from '../auth/refreshtoken.entity';
 import * as bcrypt from 'bcrypt';
-// import { BusinessClients } from 'src/business_clients/business_clients.entity';
-import { Users } from 'src/sklyit_users/sklyit_users.entity';
-import { SklyitUsersService } from 'src/sklyit_users/sklyit_users.service';
-import { Equal, Repository } from 'typeorm';
+import { Users } from '../sklyit_users/sklyit_users.entity';
+import { SklyitUsersService } from '../sklyit_users/sklyit_users.service';
+import {  Repository } from 'typeorm';
 
 @Injectable()
 export class AuthCustomerService {

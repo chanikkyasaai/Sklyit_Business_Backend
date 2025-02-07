@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
 import { In, Repository } from 'typeorm';
 import { Message } from './message.schema';
-//import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class ChatService {

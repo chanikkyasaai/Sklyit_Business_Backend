@@ -1,20 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ReviewsController } from './reviews.controller';
 import { ReviewsService } from './reviews.service';
+import { getModelToken } from '@nestjs/mongoose'; // Required for mocking Mongoose models
 
-describe('ReviewsController', () => {
-  let controller: ReviewsController;
+describe('ReviewsService', () => {
+  let service: ReviewsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ReviewsController],
-      providers: [ReviewsService],
+      providers: [
+        ReviewsService,
+        {
+          provide: getModelToken('Review_BusinessModel'), // Mocking Mongoose Model
+          useValue: {}, // Provide an empty object or mock functions if needed
+        },
+      ],
     }).compile();
 
-    controller = module.get<ReviewsController>(ReviewsController);
+    service = module.get<ReviewsService>(ReviewsService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 });

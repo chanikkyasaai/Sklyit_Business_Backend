@@ -5,6 +5,9 @@ import { ConfigService } from '@nestjs/config'; // Ensure this import exists
 
 describe('PaymentService', () => {
   let service: PaymentService;
+  let configService: ConfigService;
+
+  
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,9 +24,12 @@ describe('PaymentService', () => {
     }).compile();
 
     service = module.get<PaymentService>(PaymentService);
+    
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  
 });
