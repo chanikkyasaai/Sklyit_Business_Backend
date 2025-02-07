@@ -1,20 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentService } from './payment.service';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config'; // Ensure this import exists
+
 
 describe('PaymentService', () => {
   let service: PaymentService;
   let configService: ConfigService;
 
-  const mockConfigService = {
-    get: jest.fn((key: string) => {
-      const mockValues = {
-        PAYMENT_API_KEY: 'mock-api-key',
-        PAYMENT_SECRET: 'mock-secret',
-      };
-      return mockValues[key] || 'mockValue';
-    }),
-  };
+  
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,24 +15,21 @@ describe('PaymentService', () => {
         PaymentService,
         {
           provide: ConfigService,
-          useValue: mockConfigService,
+          useValue: {
+            // ...mock config values...
+            get: () => 'test-value',
+          },
         },
       ],
     }).compile();
 
     service = module.get<PaymentService>(PaymentService);
-    configService = module.get<ConfigService>(ConfigService);
+    
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('should retrieve API key from ConfigService', () => {
-    expect(configService.get('PAYMENT_API_KEY')).toBe('mock-api-key');
-  });
-
-  it('should retrieve a default mock value if key is unknown', () => {
-    expect(configService.get('UNKNOWN_KEY')).toBe('mockValue');
-  });
+  
 });

@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ReviewsService } from './reviews.service';
 import { getModelToken } from '@nestjs/mongoose';
 
+
 describe('ReviewsService', () => {
   let service: ReviewsService;
 
@@ -10,8 +11,8 @@ describe('ReviewsService', () => {
       providers: [
         ReviewsService,
         {
-          provide: getModelToken('ReviewModel'), // Mock the missing model
-          useValue: {}, // Empty mock or add methods if needed
+          provide: getModelToken('Review'),
+          useValue: {}, // mock or repository
         },
       ],
     }).compile();
