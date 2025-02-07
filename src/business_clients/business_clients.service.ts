@@ -126,4 +126,28 @@ export class BusinessClientsService {
         }
 
     }
+
+async deleteAddress(id: string, addressDto: AddressDto): Promise<BusinessClients> {
+    const user = await this.businessClientsRepository.findOne({ where: { BusinessId: id } });
+    if (!user) {
+        throw new NotFoundException('BusinessClient not found');
+    }
+    console.log(addressDto);
+    const addressIndex = user.addresses.findIndex(address => 
+        address.street === addressDto.street && 
+        address.city === addressDto.city && 
+        address.district === addressDto.district && 
+        address.state === addressDto.state && 
+        address.pincode === addressDto.pincode
+    );
+
+    if (addressIndex === -1) {
+        throw new Error('Address not found');
+    }
+
+    user.addresses.splice(addressIndex, 1);
+
+    return await this.businessClientsRepository.save(user);
+}
+
 }

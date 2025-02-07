@@ -112,5 +112,11 @@ export class BusinessClients {
 
     @OneToMany(() => BusinessFollower, (follower) => follower.business, { cascade: true })
     followers: BusinessFollower[];
+
+    @Column({ default: false })
+    isEmailVerified: boolean;
+
+    @Column({ default: false })
+    isPhoneVerified: boolean;
 }
 
