@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne 
 import { IsString, IsEmail, IsDate } from 'class-validator';
 import { Booking } from 'src/bsbookings/bsbookings.entity';
 import { PrBooking } from 'src/booking/entity/booking.entity';
+import { Professional } from 'src/professional-entities/entities/professional.entity';
 
 
 @Entity('SKLYIT_users')
@@ -72,10 +73,16 @@ export class Users {
   @OneToOne(() => Users, (user) => user.refreshToken)
   refreshToken: Users;
 
-  // @OneToOne(() => Professional, (professional) => professional.user)
-  // professional: Professional;
+  @OneToOne(() => Professional, (professional) => professional.user)
+  professional: Professional;
 
   @Column({ nullable: true })
   @IsString()
   fcm_token: string;
+
+  @Column({ default: false })
+  IsEmailVerified: boolean;
+
+  @Column({default:false})
+  IsPhoneVerified: boolean
 }
