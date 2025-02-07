@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne } from 'typeorm';
-import { BusinessClients } from 'src/business_clients/business_clients.entity';
+import { BusinessClients } from '../business_clients/business_clients.entity';
 
 @Entity('Subscription')
 export class Subscription {

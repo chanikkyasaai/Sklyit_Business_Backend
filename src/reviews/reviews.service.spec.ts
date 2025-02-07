@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReviewsService } from './reviews.service';
+import { getModelToken } from '@nestjs/mongoose'; // If using Mongoose
 
 describe('ReviewsService', () => {
   let service: ReviewsService;
@@ -9,8 +10,8 @@ describe('ReviewsService', () => {
       providers: [
         ReviewsService,
         {
-          provide: 'Review_BusinessModel', // Ensure this matches the expected provider name
-          useValue: {}, // Provide a mock implementation
+          provide: getModelToken('Review_BusinessModel'), // Mock the model if using Mongoose
+          useValue: {},
         },
       ],
     }).compile();

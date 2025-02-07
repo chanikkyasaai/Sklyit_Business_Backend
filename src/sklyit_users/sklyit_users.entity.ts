@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { IsString, IsEmail, IsDate } from 'class-validator';
-import { Booking } from 'src/bsbookings/bsbookings.entity';
-import { PrBooking } from 'src/booking/entity/booking.entity';
-import { Professional } from 'src/professional-entities/entities/professional.entity';
+import { Booking } from '../bsbookings/bsbookings.entity';
+import { PrBooking } from '../booking/entity/booking.entity';
+import { Professional } from '../professional-entities/entities/professional.entity';
 
 
 @Entity('SKLYIT_users')
