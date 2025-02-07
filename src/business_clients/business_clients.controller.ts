@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BusinessClientsService } from './business_clients.service';
-import { CreateBusinessClientDto, UpdateBusinessClientDto } from './business_clients.dto';
+import { AddressDto, CreateBusinessClientDto, UpdateBusinessClientDto } from './business_clients.dto';
 import { BusinessClients } from './business_clients.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
@@ -42,12 +42,21 @@ export class BusinessClientsController {
     return this.userService.updateBusinessClient(req.user.bs_id, updateUserDto, file);
   }
 
-  @Put('clients/address')
+  @Put('clients/address/add')
   @UseGuards(JwtAuthGuard)
   async addAdresses(
     @Req() req,
-    @Body() updateUserDto:UpdateBusinessClientDto
+    @Body() addresses:AddressDto[]
   ) {
-    return await this.userService.addAddresses(req.user.bs_id, updateUserDto);
+    return await this.userService.addAddresses(req.user.bs_id, addresses);
+  }
+  @Put('clients/address/')
+  @UseGuards(JwtAuthGuard)
+  async editAddress(
+    @Req() req,
+    @Body('newAddress') newAddressDto: AddressDto,
+    @Body('oldAddress') oldAddressDto: AddressDto
+  ): Promise<BusinessClients> {
+    return await this.userService.editAddress(oldAddressDto, newAddressDto, req.user.bs_id);
   }
 }

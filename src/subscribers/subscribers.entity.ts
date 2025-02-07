@@ -3,7 +3,7 @@ import { BusinessClients } from 'src/business_clients/business_clients.entity';
 
 @Entity('Subscription')
 export class Subscription {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     premiumId: number;
 
     @OneToOne(() => BusinessClients, (business) => business.subscriptions, { onDelete: 'CASCADE' })

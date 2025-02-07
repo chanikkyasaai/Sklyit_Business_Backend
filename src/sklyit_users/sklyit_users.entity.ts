@@ -6,7 +6,7 @@ import { PrBooking } from 'src/booking/entity/booking.entity';
 
 @Entity('SKLYIT_users')
 export class Users {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   userId: string;//
 
   @Column()

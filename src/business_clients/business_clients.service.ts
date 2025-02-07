@@ -2,9 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BusinessClients } from './business_clients.entity';
 import { Repository } from 'typeorm';
-import { CreateBusinessClientDto, UpdateBusinessClientDto } from './business_clients.dto';
+import { CreateBusinessClientDto, UpdateBusinessClientDto, AddressDto } from './business_clients.dto';
 import { Users } from 'src/sklyit_users/sklyit_users.entity';
 import { AzureBlobService } from 'src/imageBlob/imageBlob.service';
+
 
 @Injectable()
 export class BusinessClientsService {
@@ -87,17 +88,35 @@ export class BusinessClientsService {
         return await this.businessClientsRepository.save({ ...user, ...updateUserDto });
     }
     
-    async addAddresses(id: string, updateUserDto: UpdateBusinessClientDto) {
+    async editAddress(oldaddressDto:AddressDto,newaddressDto:AddressDto, id: string): Promise<BusinessClients> {
+        const user = await this.businessClientsRepository.findOne({ where: { BusinessId: id } });
+        if (!user) {
+            throw new NotFoundException('BusinessClient not found');
+        }
+        if (oldaddressDto) {
+            const existingAddress = user.addresses.find(address => address.street === oldaddressDto.street && address.city === oldaddressDto.city && address.district === oldaddressDto.district && address.state === oldaddressDto.state && address.pincode === oldaddressDto.pincode);
+            if (existingAddress) {
+                Object.assign(existingAddress, newaddressDto);
+            } else {
+                user.addresses.push(newaddressDto);
+            }
+        }
+        else {
+            user.addresses.push(newaddressDto);
+        }
+        return await this.businessClientsRepository.save(user);
+    }
+    async addAddresses(id: string, addresses: AddressDto[]) {
         const user = await this.businessClientsRepository.findOne({ where: { BusinessId: id } });
         if (!user) {
             throw new NotFoundException('BusinessClient not found');
         }
         
-        if (!updateUserDto.addresses || updateUserDto.addresses.length === 0) {
+        if (!addresses || addresses.length === 0) {
             throw new Error('No addresses provided');
         }
 
-        user.addresses = [...user.addresses, ...updateUserDto.addresses];
+        user.addresses = [...user.addresses, ...addresses];
 
         try {
             await this.businessClientsRepository.save(user);

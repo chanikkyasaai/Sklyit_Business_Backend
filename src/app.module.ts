@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ExampleModule } from './example/example.module';
 import { BsservicesModule } from './bsservices/bsservices.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BusinessClientsModule } from './business_clients/business_clients.module';
@@ -37,10 +36,16 @@ import { SphereModule } from './sphere/sphere.module';
 import { RefreshToken } from './auth/refreshtoken.entity';
 import { ReviewsModule } from './reviews/reviews.module';
 import { BusinessFollower } from './business_clients/business_followers.entity';
+import { Review } from './professional_reviews/schema/reviewschema';
+import { PrBooking } from './booking/entity/booking.entity';
+import { BookingModule } from './booking/booking.module';
+import { ProfessionalModule } from './professional-entities/entities/professional.module';
+import { Professional } from './professional-entities/entities/professional.entity';
+import { Service } from './professional-entities/entities/service.entity';
 
 // import * as dotenv from 'dotenv';
 @Module({
-  imports: [ExampleModule,BsservicesModule,
+  imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './../.env',
@@ -66,9 +71,11 @@ import { BusinessFollower } from './business_clients/business_followers.entity';
           username,
           password,
           database,
-          entities: [Services,BusinessClients,Customers,Booking,Orders,Subscription,HasLoyalty,Products,Users,RefreshToken,BusinessFollower],
+          entities: [Services, BusinessClients, Customers, Booking, Orders, Subscription, HasLoyalty, Products, Users, RefreshToken, BusinessFollower,
+            PrBooking,Professional,Service
+          ],
           autoLoadEntities: true,
-          synchronize: true,
+          // synchronize: true,
           ssl: {
             rejectUnauthorized: false, // Set this to false if you're using self-signed certificates
           },
@@ -86,12 +93,12 @@ import { BusinessFollower } from './business_clients/business_followers.entity';
         inject: [ConfigService],
       }
     ),
-    
     BusinessClientsModule,
     BusinessCustomersModule,
     SubscribersModule,
     SklyitUsersModule,
     BsbookingsModule,
+    BsservicesModule,
     BsordersModule,
     BsproductsModule,
     LoyaltySystemModule,
@@ -106,7 +113,9 @@ import { BusinessFollower } from './business_clients/business_followers.entity';
     SearchModule,
     SphereModule,
     UserPreferencesModule,
-    ReviewsModule
+    ReviewsModule,
+    BookingModule,
+    ProfessionalModule
   ],
   controllers: [AppController],
   providers: [AppService],

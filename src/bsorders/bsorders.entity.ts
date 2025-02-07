@@ -4,7 +4,7 @@ import { BusinessClients } from './../business_clients/business_clients.entity';
 
 @Entity('Orders')
 export class Orders {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     Oid: string;
 
     @ManyToOne(() => Customers, (customer) => customer.orders, { onDelete: 'CASCADE' })

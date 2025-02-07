@@ -6,7 +6,8 @@ import { SphereService } from './sphere.service';
 @UseGuards(JwtCustomerAuthGuard)
 export class SphereController {
     constructor(
-            private readonly postsService: SphereService,) { }
+        private readonly postsService: SphereService,
+    ) { }
     @Get('posts/top/all-time')
     async getTopAllTime(@Query('limit') limit: number) {
         return this.postsService.getTopPostsAllTime(limit);

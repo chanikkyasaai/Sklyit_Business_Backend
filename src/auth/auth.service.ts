@@ -67,7 +67,7 @@ export class AuthService {
     // Refresh Access Token
     async refreshAccessToken(refreshToken: string) {
         //console.log("Received Refresh Token:", refreshToken);
-        const payload = this.jwtService.verify(refreshToken);
+        const payload = await this.jwtService.verify(refreshToken);
         const userId = payload.sub;
         const bs_id=await this.getBusinessId(userId);
         // Fetch refresh token from DB

@@ -12,7 +12,7 @@ import { BusinessFollower } from './business_followers.entity';
 
 @Entity('SKLYIT_business_clients')
 export class BusinessClients {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     BusinessId: string;
 
     @Column({ unique: true })
@@ -53,6 +53,9 @@ export class BusinessClients {
 
     @Column('time')
     shopClosingTime: string;
+
+    @Column({nullable:true})
+    OpenStatus: Boolean;
 
     @Column('text', { array: true, nullable: true })
     BusinessMainTags?: string[];

@@ -5,9 +5,8 @@ import { Booking } from './../bsbookings/bsbookings.entity'; // Assuming Booking
 
 @Entity('Services')
 export class Services {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     Sid: string;
-
     
     @ManyToOne(() => BusinessClients, (businessClient) => businessClient.services, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'business_id' })

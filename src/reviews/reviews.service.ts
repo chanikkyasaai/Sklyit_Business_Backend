@@ -23,9 +23,9 @@ export class ReviewsService {
       .exec();
   }
 
-  async findAllByServiceId(serviceId: string) : Promise<Review_Business[]> {
+  async findAllByServiceId(serviceId: string,businessId:string) : Promise<Review_Business[]> {
     return this.reviewModel
-      .find({ serviceId: serviceId })
+      .find({ serviceId: serviceId ,businessId:businessId})
       .exec();
   }
 
@@ -52,9 +52,9 @@ export class ReviewsService {
     };
   }
 
-  async findAverageRatingByServiceId(serviceId: string) : Promise<Record<string, number>> {
+  async findAverageRatingByServiceId(serviceId: string,businessId:string) : Promise<Record<string, number>> {
     const reviews = await this.reviewModel
-      .find({ serviceId: serviceId })
+      .find({ serviceId: serviceId,businessId:businessId })
       .exec();
     const totalRatings = reviews.reduce((sum, review) => sum + review.rating, 0);
     return {

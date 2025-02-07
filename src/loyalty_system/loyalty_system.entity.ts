@@ -4,10 +4,10 @@ import { BusinessClients } from '../business_clients/business_clients.entity'; /
 
 @Entity('hasLoyalty')
 export class HasLoyalty {
-    @PrimaryColumn()
+    @PrimaryColumn('uuid')
     CustId: string;
 
-    @PrimaryColumn()
+    @PrimaryColumn('uuid')
     BusinessId: string;
 
     @Column('int', { default: 0 })

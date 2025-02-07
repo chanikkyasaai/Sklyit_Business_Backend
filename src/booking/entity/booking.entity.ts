@@ -43,15 +43,15 @@ export class PrBooking {
   @Column('uuid')
   profession_id: string;
 
-  @ManyToOne(() => Users, user => user.bookings)
+  @ManyToOne(() => Users, (user) => user.bookings)
   @JoinColumn({ name: 'userId' })
   user: Users;
 
-  @ManyToOne(() => Service, Service => Service.service_id)
+  @ManyToOne(() => Service, (Service) => Service.service_id)
   @JoinColumn({ name: 'service_id' })
   service: Service;
 
-  @ManyToOne(() => Professional, Professional => Professional.bookings)
+  @ManyToOne(() => Professional, (Professional) => Professional.bookings)
   @JoinColumn({ name: 'profession_id' })
   professional: Professional;
 }

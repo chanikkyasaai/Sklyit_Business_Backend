@@ -7,7 +7,7 @@ import { HasLoyalty } from 'src/loyalty_system/loyalty_system.entity';
 
 @Entity('Customers')
 export class Customers {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     CustId: string;
 
     @Column()

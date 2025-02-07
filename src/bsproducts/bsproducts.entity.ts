@@ -4,7 +4,7 @@ import { BusinessClients } from './../business_clients/business_clients.entity';
 
 @Entity('Products')
 export class Products {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     PId: string;
 
     @Column()
