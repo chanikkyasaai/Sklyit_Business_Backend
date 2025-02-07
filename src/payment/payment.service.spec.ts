@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentService } from './payment.service';
 import { ConfigService } from '@nestjs/config'; // Ensure this import exists
 
+
 describe('PaymentService', () => {
   let service: PaymentService;
 
@@ -10,9 +11,10 @@ describe('PaymentService', () => {
       providers: [
         PaymentService,
         {
-          provide: ConfigService, // Mock the ConfigService
+          provide: ConfigService,
           useValue: {
-            get: jest.fn().mockReturnValue('mockValue'), // Mock method
+            // ...mock config values...
+            get: () => 'test-value',
           },
         },
       ],
