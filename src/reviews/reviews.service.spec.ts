@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReviewsService } from './reviews.service';
-import { getModelToken } from '@nestjs/mongoose'; // If using Mongoose
+import { getModelToken } from '@nestjs/mongoose';
+import { Review_Business } from './entities/review.schema'; // Adjust the import path as necessary
 
 describe('ReviewsService', () => {
   let service: ReviewsService;
@@ -10,8 +11,8 @@ describe('ReviewsService', () => {
       providers: [
         ReviewsService,
         {
-          provide: getModelToken('Review_BusinessModel'), // Mock the model if using Mongoose
-          useValue: {},
+          provide: getModelToken(Review_Business.name),
+          useValue: {}, // Provide a mock implementation here
         },
       ],
     }).compile();
