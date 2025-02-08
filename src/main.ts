@@ -13,7 +13,8 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
   });
-  await app.listen(process.env.PORT || 8080);
+  const PORT = process.env.PORT || 3000; // 👈 Must use process.env.PORT for Azure
+  await app.listen(PORT);
 
 }
 bootstrap();
