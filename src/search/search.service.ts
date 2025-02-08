@@ -13,7 +13,7 @@ export class SearchService {
     constructor(
         @InjectRepository(BusinessClients)
         private readonly businessClientsRepository: Repository<BusinessClients>,
-        @Inject('CACHE_MANAGER') private readonly cacheManager: Cache,
+        @Inject('CACHE_MANAGER') private cacheManager: Cache,
         private readonly userPreferencesService: UserPreferencesService,
         @InjectRepository(Professional)
         private readonly professionalsRepository: Repository<Professional>,
@@ -76,6 +76,7 @@ export class SearchService {
 
         return result;
     }
+
 
     async getBusinessById(businessId: string) {
         return await this.businessClientsRepository.findOne({ where: { BusinessId: businessId } }); 
@@ -284,6 +285,6 @@ export class SearchService {
 
 
     async clearCache() {
-        await this.cacheManager.reset(); // Clear all cached data
+        await this.cacheManager.stores[0].clear();
     }
 }
